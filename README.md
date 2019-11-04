@@ -1,6 +1,38 @@
 Libero Article Store
 ====================
 
+Requirements
+------------
+
+- [Docker](https://www.docker.com/)
+- [GNU Bash](https://www.gnu.org/software/bash/)
+- [GNU Make](https://www.gnu.org/software/make/)
+- [Node.js](https://nodejs.org/) (for development)
+
+Running
+-------
+
+To build and run the app for production, execute:
+
+```shell
+make prod
+```
+
+Developing
+----------
+
+To build and run the app for development, execute:
+
+```shell
+make dev
+```
+
+To install dependencies locally, execute:
+
+```shell
+make install
+```
+
 Getting help
 ------------
 
