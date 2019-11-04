@@ -19,6 +19,12 @@ start: ## Start the containers
 stop: ## Stop the containers
 	${DOCKER_COMPOSE} down
 
+logs: ## Show the containers' logs
+	${DOCKER_COMPOSE} logs
+
+watch: ## Follow the containers' logs
+	${DOCKER_COMPOSE} logs --follow
+
 run: ## Build and runs the containers
 	ENV=${REAL_ENV} make --jobs=2 build stop
 	${DOCKER_COMPOSE} up --abort-on-container-exit --exit-code-from app; ${DOCKER_COMPOSE} down --volumes
