@@ -3,9 +3,9 @@ language: minimal
 services: docker
 
 install:
-  - ENV=prod make build
-  - ENV=dev make build
+  - TARGET=prod make build
+  - TARGET=dev make build
 
 script:
-  - ENV=prod .travis/smoke-test.sh
-  - ENV=dev .travis/smoke-test.sh
+  - TARGET=prod .travis/smoke-test.sh
+  - TARGET=dev .travis/smoke-test.sh
