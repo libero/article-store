@@ -3,5 +3,4 @@ version: '3.4'
 services:
   app:
     build:
-      context: .
-      target: prod
+      context: ../

@@ -2,7 +2,7 @@
 
 SHELL = /usr/bin/env bash
 REAL_ENV = $$(if [[ $${ENV} = "prod" ]]; then echo "prod"; else echo "dev"; fi)
-DOCKER_COMPOSE := docker-compose $$(if [[ ${REAL_ENV} = "prod" ]]; then echo "--file docker-compose.yml"; fi)
+DOCKER_COMPOSE := docker-compose --file .docker/docker-compose.yml --file .docker/docker-compose.${REAL_ENV}.yml
 
 help: ## Display this help text
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
