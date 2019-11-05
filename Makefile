@@ -1,5 +1,5 @@
 .DEFAULT_GOAL = help
-.PHONY = help install build start stop wait-healthy logs watch run dev prod
+.PHONY: help install build start stop wait-healthy logs watch run dev prod
 
 SHELL = /usr/bin/env bash
 
