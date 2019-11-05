@@ -1,6 +1,8 @@
 Libero Article Store
 ====================
 
+[![Build Status](https://travis-ci.com/libero/article-store.svg?branch=master)](https://travis-ci.com/libero/article-store)
+
 Getting help
 ------------
 
