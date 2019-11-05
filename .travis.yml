@@ -2,10 +2,6 @@ language: minimal
 
 services: docker
 
-env:
-  global:
-    - COMPOSE_PROJECT_NAME=articlestore
-
 install:
   - ENV=dev make build
   - ENV=prod make build

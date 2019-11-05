@@ -19,6 +19,12 @@ start: ## Start the containers
 stop: ## Stop the containers
 	${DOCKER_COMPOSE} down
 
+wait-healthy: ## Wait for the containers to be healthy
+	for service in $$(${DOCKER_COMPOSE} ps --quiet); do \
+		echo "$${service}"; \
+		.scripts/docker/wait-healthy.sh "$${service}"; \
+	done
+
 logs: ## Show the containers' logs
 	${DOCKER_COMPOSE} logs
 
