@@ -14,7 +14,7 @@ Requirements
 Running
 -------
 
-To build and run the app for production, execute:
+To build and run the app, execute:
 
 ```shell
 make prod
