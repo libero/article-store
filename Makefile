@@ -31,7 +31,12 @@ stop: ## Stop the containers
 	${DOCKER_COMPOSE} down
 
 wait-healthy: ## Wait for the containers to be healthy
-	for service in $$(${DOCKER_COMPOSE} ps --quiet); do \
+	services=($$(${DOCKER_COMPOSE} ps --quiet)); \
+	if [ $${#services[@]} -eq 0 ]; then \
+		echo "No containers running"; \
+		exit 1; \
+	fi; \
+	for service in $${services}; do \
 		.scripts/docker/wait-healthy.sh "$${service}"; \
 	done
 
