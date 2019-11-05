@@ -4,3 +4,4 @@ services:
   app:
     build:
       target: dev
+    image: libero/article-store:${IMAGE_TAG:-master}-dev
