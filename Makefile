@@ -2,10 +2,15 @@
 .PHONY = help install build start stop wait-healthy logs watch run dev prod
 
 SHELL = /usr/bin/env bash
-REAL_TARGET = $$(if [[ $${TARGET} = "prod" ]]; then echo "prod"; else echo "dev"; fi)
-DOCKER_COMPOSE := docker-compose --file .docker/docker-compose.yml --file .docker/docker-compose.${REAL_TARGET}.yml
+
+ifneq (${TARGET}, prod)
+TARGET = dev
+endif
+
+DOCKER_COMPOSE = docker-compose --file .docker/docker-compose.yml --file .docker/docker-compose.${TARGET}.yml
 
 export IMAGE_TAG
+export TARGET
 
 help: ## Display this help text
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
@@ -37,11 +42,13 @@ watch: ## Follow the containers' logs
 	${DOCKER_COMPOSE} logs --follow
 
 run: ## Build and runs the containers
-	TARGET=${REAL_TARGET} make --jobs=2 build stop
+	make --jobs=2 build stop
 	${DOCKER_COMPOSE} up --abort-on-container-exit --exit-code-from app; ${DOCKER_COMPOSE} down --volumes
 
+dev: export TARGET = dev
 dev: ## Build and runs the container for development
-	TARGET=dev make run
+	make run
 
+prod: export TARGET = prod
 prod: ## Builds and runs the container for production
-	TARGET=prod make run
+	make run
