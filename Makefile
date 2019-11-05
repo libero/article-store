@@ -41,9 +41,9 @@ logs: ## Show the containers' logs
 watch: ## Follow the containers' logs
 	${DOCKER_COMPOSE} logs --follow
 
-run: ## Build and runs the containers
+run:
 	make --jobs=2 build stop
-	${DOCKER_COMPOSE} up --abort-on-container-exit --exit-code-from app; ${DOCKER_COMPOSE} down --volumes
+	${DOCKER_COMPOSE} up --abort-on-container-exit --exit-code-from app; ${DOCKER_COMPOSE} down
 
 dev: export TARGET = dev
 dev: ## Build and runs the container for development
