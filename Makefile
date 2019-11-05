@@ -21,7 +21,6 @@ stop: ## Stop the containers
 
 wait-healthy: ## Wait for the containers to be healthy
 	for service in $$(${DOCKER_COMPOSE} ps --quiet); do \
-		echo "$${service}"; \
 		.scripts/docker/wait-healthy.sh "$${service}"; \
 	done
 
