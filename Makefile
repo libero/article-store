@@ -1,4 +1,5 @@
 .DEFAULT_GOAL = help
+.PHONY = help install build start stop wait-healthy logs watch run dev prod
 
 SHELL = /usr/bin/env bash
 REAL_TARGET = $$(if [[ $${TARGET} = "prod" ]]; then echo "prod"; else echo "dev"; fi)
@@ -7,8 +8,11 @@ DOCKER_COMPOSE := docker-compose --file .docker/docker-compose.yml --file .docke
 help: ## Display this help text
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
 
-install: ## Install dependencies locally
+install: node_modules ## Install dependencies locally
+
+node_modules: package.json package-lock.json
 	npm install
+	touch node_modules
 
 build: ## Build the containers
 	${DOCKER_COMPOSE} build
