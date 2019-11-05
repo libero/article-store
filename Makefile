@@ -42,13 +42,14 @@ watch: ## Follow the containers' logs
 	${DOCKER_COMPOSE} logs --follow
 
 run:
-	make --jobs=2 build stop
 	${DOCKER_COMPOSE} up --abort-on-container-exit --exit-code-from app; ${DOCKER_COMPOSE} down
 
 dev: export TARGET = dev
 dev: ## Build and runs the container for development
+	make --jobs=3 install build stop
 	make run
 
 prod: export TARGET = prod
 prod: ## Builds and runs the container for production
+	make --jobs=2 build stop
 	make run

@@ -29,12 +29,6 @@ To build and run the app for development, execute:
 make dev
 ```
 
-To install dependencies locally, execute:
-
-```shell
-make install
-```
-
 Getting help
 ------------
 
