@@ -2,6 +2,10 @@ language: minimal
 
 services: docker
 
+env:
+  global:
+    - IMAGE_TAG=$TRAVIS_COMMIT
+
 install:
   - TARGET=prod make build
   - TARGET=dev make build
