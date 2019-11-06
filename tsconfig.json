@@ -6,5 +6,8 @@
     "rootDir": "src",
     "alwaysStrict": true,
     "esModuleInterop": true
-  }
+  },
+  "exclude": [
+    "test"
+  ]
 }
