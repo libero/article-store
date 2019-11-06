@@ -13,3 +13,4 @@ install:
 script:
   - TARGET=prod .travis/smoke-test.sh
   - TARGET=dev .travis/smoke-test.sh
+  - make lint
