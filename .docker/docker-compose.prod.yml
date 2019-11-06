@@ -1,0 +1,7 @@
+version: '3.4'
+
+services:
+  app:
+    build:
+      target: prod
+    image: libero/article-store:${IMAGE_TAG:-master}

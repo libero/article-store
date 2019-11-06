@@ -1,0 +1,10 @@
+version: '3.4'
+
+services:
+  app:
+    build:
+      target: dev
+    image: libero/article-store:${IMAGE_TAG:-master}-dev
+    volumes:
+      - ../package.json:/app/package.json
+      - ../package-lock.json:/app/package-lock.json

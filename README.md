@@ -3,6 +3,32 @@ Libero Article Store
 
 [![Build Status](https://travis-ci.com/libero/article-store.svg?branch=master)](https://travis-ci.com/libero/article-store)
 
+Requirements
+------------
+
+- [Docker](https://www.docker.com/)
+- [GNU Bash](https://www.gnu.org/software/bash/)
+- [GNU Make](https://www.gnu.org/software/make/)
+- [Node.js](https://nodejs.org/) (for development)
+
+Running
+-------
+
+To build and run the app, execute:
+
+```shell
+make prod
+```
+
+Developing
+----------
+
+To build and run the app for development, execute:
+
+```shell
+make dev
+```
+
 Getting help
 ------------
 
