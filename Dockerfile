@@ -49,7 +49,7 @@ COPY tsconfig.json \
 COPY --from=npm-dev /app/ .
 COPY src/ src/
 
-CMD ["npm", "run", "start"]
+CMD ["npm", "run", "start:dev"]
 
 
 
@@ -69,7 +69,7 @@ RUN npm run build
 FROM base AS prod
 ENV NODE_ENV=production
 
-COPY --from=npm-prod /app/node_modules/ node_modules/
+COPY --from=npm-prod /app/ .
 COPY --from=build-prod /app/build/ build/
 
-CMD ["node", "build/index.js"]
+CMD ["npm", "run", "start"]
