@@ -5,3 +5,6 @@ services:
     build:
       target: dev
     image: libero/article-store:${IMAGE_TAG:-master}-dev
+    volumes:
+      - ../package.json:/app/package.json
+      - ../package-lock.json:/app/package-lock.json
