@@ -26,30 +26,35 @@ RUN npm install
 
 
 #
+# Stage: Base environment
+#
+FROM node AS base
+
+COPY LICENSE.md .
+
+HEALTHCHECK --interval=5s --timeout=1s \
+    CMD node --version
+
+
+
+#
 # Stage: Development environment
 #
-FROM node AS dev
+FROM base AS dev
 ENV NODE_ENV=development
 
 COPY --from=npm-dev /app/ .
 
 CMD ["sleep", "86400"]
 
-HEALTHCHECK --interval=5s --timeout=1s \
-    CMD node --version
-
 
 
 #
 # Stage: Production environment
 #
-FROM node AS prod
+FROM base AS prod
 ENV NODE_ENV=production
 
-COPY LICENSE.md .
 COPY --from=npm-prod /app/ .
 
 CMD ["sleep", "86400"]
-
-HEALTHCHECK --interval=5s --timeout=1s \
-    CMD node --version
