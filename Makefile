@@ -1,5 +1,5 @@
 .DEFAULT_GOAL = help
-.PHONY: help install build start stop wait-healthy sh logs watch run dev prod
+.PHONY: help install build start stop wait-healthy sh logs watch test run dev prod
 
 SHELL = /usr/bin/env bash
 
@@ -48,6 +48,10 @@ logs: ## Show the containers' logs
 
 watch: ## Follow the containers' logs
 	${DOCKER_COMPOSE} logs --follow
+
+test: export TARGET = dev
+test: ## Run the tests
+	${DOCKER_COMPOSE} run --rm app npm run test
 
 run:
 	${DOCKER_COMPOSE} up --abort-on-container-exit --exit-code-from app; ${DOCKER_COMPOSE} down

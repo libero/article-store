@@ -44,9 +44,11 @@ HEALTHCHECK --interval=5s --timeout=1s \
 FROM base AS dev
 ENV NODE_ENV=development
 
-COPY tsconfig.json \
+COPY jest.config.js \
+    tsconfig.json \
     ./
 COPY --from=npm-dev /app/ .
+COPY test/ test/
 COPY src/ src/
 
 CMD ["npm", "run", "start:dev"]
