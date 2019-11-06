@@ -1,5 +1,5 @@
 .DEFAULT_GOAL = help
-.PHONY: help install build start stop wait-healthy logs watch run dev prod
+.PHONY: help install build start stop wait-healthy sh logs watch run dev prod
 
 SHELL = /usr/bin/env bash
 
@@ -39,6 +39,9 @@ wait-healthy: ## Wait for the containers to be healthy
 	for service in $${services}; do \
 		.scripts/docker/wait-healthy.sh "$${service}"; \
 	done
+
+sh: ## Open a shell on the app container
+	${DOCKER_COMPOSE} exec app sh
 
 logs: ## Show the containers' logs
 	${DOCKER_COMPOSE} logs
