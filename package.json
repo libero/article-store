@@ -1,3 +1,16 @@
 {
-  "private": true
+  "private": true,
+  "dependencies": {
+    "koa": "^2.11.0"
+  },
+  "devDependencies": {
+    "@types/koa": "^2.0.51",
+    "@types/node": "^12.12.6",
+    "ts-node": "^8.4.1",
+    "typescript": "^3.7.2"
+  },
+  "scripts": {
+    "build": "tsc",
+    "start": "node --require ts-node/register ./src/index.ts"
+  }
 }

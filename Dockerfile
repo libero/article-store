@@ -29,11 +29,12 @@ RUN npm install
 # Stage: Base environment
 #
 FROM node AS base
+EXPOSE 8080
 
 COPY LICENSE.md .
 
 HEALTHCHECK --interval=5s --timeout=1s \
-    CMD node --version
+    CMD wget --quiet --tries=1 --spider http://localhost:8080/ || exit 1
 
 
 
@@ -43,9 +44,22 @@ HEALTHCHECK --interval=5s --timeout=1s \
 FROM base AS dev
 ENV NODE_ENV=development
 
+COPY tsconfig.json \
+    ./
 COPY --from=npm-dev /app/ .
+COPY src/ src/
 
-CMD ["sleep", "86400"]
+CMD ["npm", "run", "start"]
+
+
+
+#
+# Stage: Production build
+#
+FROM dev AS build-prod
+ENV NODE_ENV=production
+
+RUN npm run build
 
 
 
@@ -55,6 +69,7 @@ CMD ["sleep", "86400"]
 FROM base AS prod
 ENV NODE_ENV=production
 
-COPY --from=npm-prod /app/ .
+COPY --from=npm-prod /app/node_modules/ node_modules/
+COPY --from=build-prod /app/build/ build/
 
-CMD ["sleep", "86400"]
+CMD ["node", "build/index.js"]
