@@ -20,6 +20,8 @@ To build and run the app, execute:
 make prod
 ```
 
+You can now access the application at <http://localhost:8080>.
+
 Developing
 ----------
 
@@ -28,6 +30,8 @@ To build and run the app for development, execute:
 ```shell
 make dev
 ```
+
+You can now access the application at <http://localhost:8080>.
 
 Getting help
 ------------
