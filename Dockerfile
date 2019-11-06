@@ -46,6 +46,7 @@ HEALTHCHECK --interval=5s --timeout=1s \
 FROM node AS prod
 ENV NODE_ENV=production
 
+COPY LICENSE.md .
 COPY --from=npm-prod /app/ .
 
 CMD ["sleep", "86400"]
