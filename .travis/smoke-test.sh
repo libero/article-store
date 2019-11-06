@@ -1,8 +1,8 @@
 #!/bin/bash
 set -e
 
-function finish {
-    make logs stop
+function finish() {
+  make logs stop
 }
 
 trap finish EXIT
