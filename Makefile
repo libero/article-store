@@ -1,5 +1,5 @@
 .DEFAULT_GOAL = help
-.PHONY: help install build start stop wait-healthy sh logs watch lint fix run dev prod
+.PHONY: help install build start stop wait-healthy sh logs watch lint fix test run dev prod
 
 SHELL = /usr/bin/env bash
 
@@ -56,6 +56,10 @@ lint: ## Lint the code
 fix: export TARGET = dev
 fix: ## Fix linting issues in the code
 	${DOCKER_COMPOSE} run --rm app npm run lint:fix
+
+test: export TARGET = dev
+test: ## Run the tests
+	${DOCKER_COMPOSE} run --rm app npm run test
 
 run:
 	${DOCKER_COMPOSE} up --abort-on-container-exit --exit-code-from app; ${DOCKER_COMPOSE} down

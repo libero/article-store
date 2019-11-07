@@ -46,9 +46,11 @@ ENV NODE_ENV=development
 
 COPY .eslintignore \
     .eslintrc.js \
+    jest.config.js \
     tsconfig.json \
     ./
 COPY --from=npm-dev /app/ .
+COPY test/ test/
 COPY src/ src/
 
 CMD ["npm", "run", "start:dev"]

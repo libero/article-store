@@ -8,7 +8,9 @@ services:
     volumes:
       - ../.eslintignore:/app/.eslintignore
       - ../.eslintrc.js:/app/.eslintrc.js
+      - ../jest.config.js:/app/jest.config.js
       - ../src/:/app/src
       - ../package.json:/app/package.json
       - ../package-lock.json:/app/package-lock.json
+      - ../test/:/app/test
       - ../tsconfig.json:/app/tsconfig.json
