@@ -44,7 +44,9 @@ HEALTHCHECK --interval=5s --timeout=1s \
 FROM base AS dev
 ENV NODE_ENV=development
 
-COPY jest.config.js \
+COPY .eslintignore \
+    .eslintrc.js \
+    jest.config.js \
     tsconfig.json \
     ./
 COPY --from=npm-dev /app/ .
