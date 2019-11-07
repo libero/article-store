@@ -11,6 +11,7 @@
     "eslint": "^6.6.0",
     "eslint-config-airbnb-base": "^14.0.0",
     "eslint-plugin-import": "^2.18.2",
+    "nodemon": "^1.19.4",
     "ts-node": "^8.4.1",
     "typescript": "^3.7.2"
   },
@@ -19,6 +20,6 @@
     "lint": "eslint . --ext .js,.ts",
     "lint:fix": "eslint . --fix --ext .js,.ts",
     "start": "node ./build/index.js",
-    "start:dev": "node --require ts-node/register ./src/index.ts"
+    "start:dev": "nodemon --exec 'node --require ts-node/register ./src/index.ts' --ext .js,.json,.ts"
   }
 }
