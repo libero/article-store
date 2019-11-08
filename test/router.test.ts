@@ -4,9 +4,9 @@ import Routes from '../src/routes';
 describe('router', (): void => {
   const router = createRouter();
 
-  Object.entries(Routes).forEach(([key, value]) => {
-    it(`has a route named ${key}`, (): void => {
-      expect(router.route(value)).toBeTruthy();
+  Object.keys(Routes).forEach((name: string): void => {
+    it(`has a route named ${name}`, (): void => {
+      expect(router.route(Routes[name])).toBeTruthy();
     });
   });
 });
