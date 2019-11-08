@@ -1,12 +1,12 @@
-import Koa, { Context } from 'koa';
+import Koa from 'koa';
 import logger from 'koa-logger';
-import { constants as statusCodes } from 'http2';
+import createRouter from './router';
 
 const app = new Koa();
+const router = createRouter();
 
 app.use(logger());
-app.use(async ({ response }: Context): Promise<void> => {
-  response.status = statusCodes.HTTP_STATUS_OK;
-});
+app.use(router.routes());
+app.use(router.allowedMethods({ throw: true }));
 
 export default app;
