@@ -1,10 +1,7 @@
 import Router from '@koa/router';
-import { Context } from 'koa';
 import http from 'http2';
-
-export enum Routes {
-  'EntryPoint' = 'entry-point',
-}
+import { Context } from 'koa';
+import Routes from './routes';
 
 export default (): Router => {
   const router = new Router();
