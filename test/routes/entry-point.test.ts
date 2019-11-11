@@ -11,8 +11,8 @@ describe('entry-point', (): void => {
 
     const { response } = context;
 
-    expect(response.status).toEqual(200);
-    expect(response.type).toEqual('application/ld+json');
+    expect(response.status).toBe(200);
+    expect(response.type).toBe('application/ld+json');
 
     const graph = await jsonld.expand(response.body);
 
@@ -24,6 +24,6 @@ describe('entry-point', (): void => {
     expect(object['@type']).toContain('http://schema.org/EntryPoint');
     expect(object).toHaveProperty(['http://schema.org/name']);
 
-    expect(next).toHaveBeenCalled();
+    expect(next).toHaveBeenCalledTimes(1);
   });
 });
