@@ -1,6 +1,6 @@
 import jsonld from 'jsonld';
-import { createContext } from '.';
 import entryPoint from '../../src/routes/entry-point';
+import createContext from './context';
 
 describe('entry-point', (): void => {
   it('should return the entry point', async (): Promise<void> => {

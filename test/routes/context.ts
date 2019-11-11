@@ -4,8 +4,7 @@ import Request from 'koa/lib/request';
 import Response from 'koa/lib/response';
 import { Request as IncomingMessage, Response as ServerResponse } from 'mock-http';
 
-// eslint-disable-next-line import/prefer-default-export
-export const createContext = (route: string): RouterContext => {
+export default (route: string): RouterContext => {
   const request = Object.create(Request);
   const response = Object.create(Response);
   request.app = new Koa();
