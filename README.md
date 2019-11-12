@@ -3,6 +3,8 @@ Libero Article Store
 
 [![Build Status](https://travis-ci.com/libero/article-store.svg?branch=master)](https://travis-ci.com/libero/article-store)
 
+Implementation of a [Libero API](https://libero.pub/api).
+
 Requirements
 ------------
 
@@ -20,7 +22,7 @@ To build and run the app, execute:
 make prod
 ```
 
-You can now access the application at <http://localhost:8080>.
+You can now access the entry point at <http://localhost:8080>.
 
 Developing
 ----------
@@ -31,7 +33,7 @@ To build and run the app for development, execute:
 make dev
 ```
 
-You can now access the application at <http://localhost:8080>.
+You can now access the entry point at <http://localhost:8080>.
 
 Getting help
 ------------
