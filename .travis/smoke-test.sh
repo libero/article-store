@@ -9,5 +9,9 @@ trap finish EXIT
 
 make start wait-healthy
 
-ping=$(curl -sS 'http://localhost:8080/' 2>&1)
-[[ $ping == 'OK' ]]
+output=$(curl --silent --show-error --write-out '\n%{http_code}' 'http://localhost:8080/')
+body=$(echo "$output" | head --lines=-1)
+status=$(echo "$output" | tail --lines=1)
+
+[[ "$status" == 200 ]]
+jq --exit-status "$body" /dev/null
