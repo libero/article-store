@@ -76,4 +76,6 @@ ENV NODE_ENV=production
 COPY --from=npm-prod /app/ .
 COPY --from=build-prod /app/build/ build/
 
+USER node
+
 CMD ["npm", "run", "start"]
