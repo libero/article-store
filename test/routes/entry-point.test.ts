@@ -5,7 +5,7 @@ import runMiddleware from '../middleware';
 import createContext from './context';
 
 const makeRequest = async (next?: Next): Promise<Response> => {
-  const context = createContext('entry-point');
+  const context = createContext();
 
   return runMiddleware(entryPoint(context.router), context, next);
 };
