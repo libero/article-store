@@ -76,4 +76,7 @@ ENV NODE_ENV=production
 COPY --from=npm-prod /app/ .
 COPY --from=build-prod /app/build/ build/
 
+USER node
+
+# npm acts as PID 1, handling signals to stop the application immediately
 CMD ["npm", "run", "start"]
