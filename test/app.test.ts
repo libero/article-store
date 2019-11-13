@@ -1,6 +1,9 @@
 import request from 'supertest';
 import app from '../src/app';
 
+const trim = (value: string): string => value.trim();
+const parseHeader = (header: string): Array<string> => header.split(',').map(trim);
+
 describe('the application', (): void => {
   it('should respond with 200 OK on the root', async (): Promise<void> => {
     const response = await request(app.callback()).get('/');
@@ -18,6 +21,6 @@ describe('the application', (): void => {
     const response = await request(app.callback()).get('/').set('Origin', 'http://example.com');
 
     expect(response.get('Access-Control-Allow-Origin')).toBe('http://example.com');
-    expect(response.get('Vary')).toContain('Origin');
+    expect(parseHeader(response.get('Vary'))).toContain('Origin');
   });
 });
