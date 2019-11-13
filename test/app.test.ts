@@ -23,4 +23,10 @@ describe('the application', (): void => {
     expect(response.get('Access-Control-Allow-Origin')).toBe('http://example.com');
     expect(parseHeader(response.get('Vary'))).toContain('Origin');
   });
+
+  it('should have an API documentation link', async (): Promise<void> => {
+    const response = await request(app.callback()).get('/');
+
+    expect(response.get('Link')).toContain('rel=http://www.w3.org/ns/hydra/core#apiDocumentation');
+  });
 });
