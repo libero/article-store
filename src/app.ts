@@ -7,9 +7,7 @@ const app = new Koa();
 const router = createRouter();
 
 app.use(logger());
-app.use(cors({
-  origin: '*',
-}));
+app.use(cors());
 app.use(router.routes());
 app.use(router.allowedMethods({ throw: true }));
 

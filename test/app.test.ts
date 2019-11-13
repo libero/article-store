@@ -17,7 +17,7 @@ describe('the application', (): void => {
   it('should support cross-origin requests', async (): Promise<void> => {
     const response = await request(app.callback()).get('/').set('Origin', 'http://example.com');
 
-    expect(response.get('Access-Control-Allow-Origin')).toBe('*');
+    expect(response.get('Access-Control-Allow-Origin')).toBe('http://example.com');
     expect(response.get('Vary')).toContain('Origin');
   });
 });
