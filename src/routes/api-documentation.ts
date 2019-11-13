@@ -1,16 +1,18 @@
 import Router from '@koa/router';
 import { Context, Middleware, Next } from 'koa';
 import { hydra, owl, schema } from 'rdf-namespaces';
-import url from 'url';
 import Routes from './index';
 
 export default (router: Router): Middleware => (
   async ({ request, response }: Context, next: Next): Promise<void> => {
     response.body = {
-      '@id': url.resolve(request.origin, router.url(Routes.ApiDocumentation, {})),
+      '@context': {
+        '@base': request.origin,
+      },
+      '@id': router.url(Routes.ApiDocumentation, {}),
       '@type': hydra.ApiDocumentation,
       [hydra.entrypoint]: {
-        '@id': url.resolve(request.origin, router.url(Routes.EntryPoint, {})),
+        '@id': router.url(Routes.EntryPoint, {}),
       },
       [hydra.supportedClass]: [
         {
