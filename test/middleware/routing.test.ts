@@ -7,8 +7,8 @@ import runMiddleware from '../middleware';
 
 const makeRequest = async (method: string, path: string): Promise<Response> => {
   const router = new Router();
-  router.delete('some-route', '/correct-path', async ({ response }: Context, next: Next): Promise<void> => {
-    response.body = 'some-route';
+  router.delete('/', async ({ response }: Context, next: Next): Promise<void> => {
+    response.status = 200;
 
     await next();
   });
@@ -20,18 +20,18 @@ const makeRequest = async (method: string, path: string): Promise<Response> => {
 
 describe('routing middleware', (): void => {
   it('should match the method and path', async (): Promise<void> => {
-    const response = await makeRequest('DELETE', '/correct-path');
+    const response = await makeRequest('DELETE', '/');
 
     expect(response.status).toBe(200);
   });
 
   describe('should throw an error', (): void => {
-    it('if the path is not matched', async (): Promise<void> => {
-      await expect(makeRequest('GET', '/unknown-path')).rejects.toThrowError(new createHttpError.NotFound());
+    it('if the path is not found', async (): Promise<void> => {
+      await expect(makeRequest('GET', '/does-not-exist')).rejects.toThrowError(new createHttpError.NotFound());
     });
 
-    it('if the path is matched but the method isn\'t', async (): Promise<void> => {
-      await expect(makeRequest('GET', '/correct-path')).rejects.toThrowError(new createHttpError.MethodNotAllowed());
+    it('if the method does not match', async (): Promise<void> => {
+      await expect(makeRequest('GET', '/')).rejects.toThrowError(new createHttpError.MethodNotAllowed());
     });
   });
 });
