@@ -1,11 +1,24 @@
 import Router, { RouterContext } from '@koa/router';
-import createError from 'http-errors';
 import Koa from 'koa';
 import Request from 'koa/lib/request';
 import Response from 'koa/lib/response';
 import { Request as IncomingMessage, Response as ServerResponse } from 'mock-http';
 
-export default (): RouterContext => {
+type Options = {
+  method?: string;
+  path?: string;
+  router?: Router;
+};
+
+const dummyRouter = (): Router => (
+  {
+    url(name: string): string {
+      return `/path-to/${name}`;
+    },
+  } as unknown as Router
+);
+
+export default ({ method, path, router }: Options = {}): RouterContext => {
   const request = Object.create(Request);
   const response = Object.create(Response);
   request.app = new Koa();
@@ -13,17 +26,11 @@ export default (): RouterContext => {
   response.req = request.req;
   response.res = new ServerResponse();
 
-  const router = {
-    url(name: string): string {
-      return `/path-to/${name}`;
-    },
-  } as unknown as Router;
-
-  const throwError = (...args): never => {
-    throw createError(...args);
-  };
-
   return {
-    request, response, router, throw: throwError,
+    method,
+    path,
+    request,
+    response,
+    router: router || dummyRouter(),
   } as RouterContext;
 };
