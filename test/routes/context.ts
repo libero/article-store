@@ -1,4 +1,5 @@
 import Router, { RouterContext } from '@koa/router';
+import createError from 'http-errors';
 import Koa from 'koa';
 import Request from 'koa/lib/request';
 import Response from 'koa/lib/response';
@@ -18,5 +19,11 @@ export default (): RouterContext => {
     },
   } as unknown as Router;
 
-  return { request, response, router } as RouterContext;
+  const throwError = (...args): never => {
+    throw createError(...args);
+  };
+
+  return {
+    request, response, router, throw: throwError,
+  } as RouterContext;
 };
