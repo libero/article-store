@@ -10,15 +10,13 @@ type Options = {
   router?: Router;
 };
 
-const dummyRouter = (): Router => (
-  {
-    url(name: string): string {
-      return `/path-to/${name}`;
-    },
-  } as unknown as Router
-);
+const dummyRouter = {
+  url(name: string): string {
+    return `/path-to/${name}`;
+  },
+} as unknown as Router;
 
-export default ({ method, path, router }: Options = {}): RouterContext => {
+export default ({ method, path, router = dummyRouter }: Options = {}): RouterContext => {
   const request = Object.create(Request);
   const response = Object.create(Response);
   request.app = new Koa();
@@ -27,10 +25,6 @@ export default ({ method, path, router }: Options = {}): RouterContext => {
   response.res = new ServerResponse();
 
   return {
-    method,
-    path,
-    request,
-    response,
-    router: router || dummyRouter(),
+    method, path, request, response, router,
   } as RouterContext;
 };
