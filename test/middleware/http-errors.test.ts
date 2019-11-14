@@ -2,7 +2,7 @@ import createHttpError from 'http-errors';
 import { Context, Response } from 'koa';
 import httpErrors from '../../src/middleware/http-errors';
 import runMiddleware, { Next } from '../middleware';
-import createContext from '../routes/context';
+import createContext from '../context';
 
 const makeRequest = async (next?: Next): Promise<Response> => {
   const context = createContext();
