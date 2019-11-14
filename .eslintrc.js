@@ -18,4 +18,11 @@ module.exports = {
     'jest',
   ],
   root: true,
+  settings: {
+    'import/resolver': {
+      typescript: {
+        alwaysTryTypes: true,
+      },
+    },
+  },
 };
