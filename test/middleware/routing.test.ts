@@ -1,10 +1,9 @@
 import Router from '@koa/router';
+import createHttpError from 'http-errors';
 import { Context, Next, Response } from 'koa';
 import routing from '../../src/middleware/routing';
 import createContext from '../context';
 import runMiddleware from '../middleware';
-
-import createHttpError = require('http-errors');
 
 const makeRequest = async (method: string, path: string): Promise<Response> => {
   const router = new Router();
