@@ -5,14 +5,20 @@ import routing from '../../src/middleware/routing';
 import createContext from '../context';
 import runMiddleware from '../middleware';
 
-const makeRequest = async (method: string, path: string): Promise<Response> => {
+const createRouter = (): Router => {
   const router = new Router();
+
   router.delete('/', async ({ response }: Context, next: Next): Promise<void> => {
     response.status = 200;
 
     await next();
   });
 
+  return router;
+};
+
+const makeRequest = async (method: string, path: string): Promise<Response> => {
+  const router = createRouter();
   const context = createContext({ method, path, router });
 
   return runMiddleware(routing(context.router), context);
