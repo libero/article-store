@@ -1,5 +1,5 @@
 import Router from '@koa/router';
-import Link from 'http-link-header';
+import formatLinkHeader from 'format-link-header';
 import { Context, Middleware, Next } from 'koa';
 import { hydra } from 'rdf-namespaces';
 import Routes from '../routes';
@@ -8,11 +8,11 @@ export default (router: Router): Middleware => (
   async ({ response }: Context, next: Next): Promise<void> => {
     await next();
 
-    const link = new Link().set({
+    const link = {
       rel: hydra.apiDocumentation,
-      uri: router.url(Routes.ApiDocumentation, {}),
-    });
+      url: router.url(Routes.ApiDocumentation, {}),
+    };
 
-    response.append('Link', link.toString());
+    response.append('Link', formatLinkHeader({ hydra: link }));
   }
 );
