@@ -6,7 +6,7 @@ import entryPoint from './routes/entry-point';
 export default (): Router => {
   const router = new Router();
 
-  router.get(Routes.ApiDocumentation, '/docs', apiDocumentation(router));
+  router.get(Routes.ApiDocumentation, '/doc', apiDocumentation(router));
   router.get(Routes.EntryPoint, '/', entryPoint(router));
 
   return router;
