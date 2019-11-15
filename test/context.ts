@@ -1,10 +1,13 @@
 import Router, { RouterContext } from '@koa/router';
-import Koa from 'koa';
+import Koa, { Context } from 'koa';
 import Request from 'koa/lib/request';
 import Response from 'koa/lib/response';
 import { Request as IncomingMessage, Response as ServerResponse } from 'mock-http';
 
+export type ErrorListener = (error: unknown, context: Context) => void;
+
 type Options = {
+  errorListener?: ErrorListener;
   method?: string;
   path?: string;
   router?: Router;
@@ -16,15 +19,20 @@ const dummyRouter = {
   },
 } as unknown as Router;
 
-export default ({ method, path, router = dummyRouter }: Options = {}): RouterContext => {
+export default ({
+  errorListener, method, path, router = dummyRouter,
+}: Options = {}): RouterContext => {
+  const app = new Koa();
+  app.on('error', errorListener || jest.fn());
+
   const request = Object.create(Request);
   const response = Object.create(Response);
-  request.app = new Koa();
+  request.app = app;
   request.req = new IncomingMessage({ headers: { host: 'example.com' } });
   response.req = request.req;
   response.res = new ServerResponse();
 
   return {
-    method, path, request, response, router,
+    app, method, path, request, response, router,
   } as RouterContext;
 };
