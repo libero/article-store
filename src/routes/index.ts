@@ -1,4 +1,5 @@
 enum Routes {
+  'ApiDocumentation' = 'api-documentation',
   'EntryPoint' = 'entry-point',
 }
 
