@@ -11,25 +11,29 @@ export default (router: Router): Middleware => (
       },
       '@id': router.url(Routes.ApiDocumentation),
       '@type': hydra.ApiDocumentation,
-      [hydra.entrypoint]: {
-        '@id': router.url(Routes.EntryPoint),
-      },
+      [hydra.entrypoint]: { '@id': router.url(Routes.EntryPoint) },
       [hydra.supportedClass]: [
         {
           '@id': schema.EntryPoint,
           '@type': hydra.Class,
-          [hydra.title]: 'API entry point',
+          [hydra.title]: { '@value': 'API entry point', '@language': 'en' },
           [hydra.supportedOperation]: {
             '@type': hydra.Operation,
-            [hydra.title]: 'Get the entry point',
-            [hydra.method]: 'GET',
-            [hydra.expects]: {
-              '@id': owl.Nothing,
-            },
-            [hydra.returns]: {
-              '@id': schema.EntryPoint,
-            },
+            [hydra.title]: { '@value': 'Get the entry point', '@language': 'en' },
+            [hydra.method]: { '@value': 'GET' },
+            [hydra.expects]: { '@id': owl.Nothing },
+            [hydra.returns]: { '@id': schema.EntryPoint },
           },
+          [hydra.supportedProperty]: [
+            {
+              '@type': hydra.SupportedProperty,
+              [hydra.title]: 'Name',
+              [hydra.property]: { '@id': schema.name },
+              [hydra.required]: true,
+              [hydra.readable]: true,
+              [hydra.writeable]: false,
+            },
+          ],
         },
       ],
     };
