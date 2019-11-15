@@ -9,10 +9,10 @@ export default (router: Router): Middleware => (
       '@context': {
         '@base': request.origin,
       },
-      '@id': router.url(Routes.ApiDocumentation, {}),
+      '@id': router.url(Routes.ApiDocumentation),
       '@type': hydra.ApiDocumentation,
       [hydra.entrypoint]: {
-        '@id': router.url(Routes.EntryPoint, {}),
+        '@id': router.url(Routes.EntryPoint),
       },
       [hydra.supportedClass]: [
         {

@@ -11,7 +11,7 @@ export default (router: Router): Middleware => (
 
     const link = {
       rel: hydra.apiDocumentation,
-      url: url.resolve(request.origin, router.url(Routes.ApiDocumentation, {})),
+      url: url.resolve(request.origin, router.url(Routes.ApiDocumentation)),
     };
 
     response.append('Link', formatLinkHeader({ hydra: link }));
