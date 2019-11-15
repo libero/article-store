@@ -1,3 +1,4 @@
+import parseLinkHeader from 'parse-link-header';
 import request from 'supertest';
 import app from '../src/app';
 
@@ -22,5 +23,12 @@ describe('the application', (): void => {
 
     expect(response.get('Access-Control-Allow-Origin')).toBe('http://example.com');
     expect(parseHeader(response.get('Vary'))).toContain('Origin');
+    expect(parseHeader(response.get('Access-Control-Expose-Headers'))).toContain('Link');
+  });
+
+  it('should have an API documentation link', async (): Promise<void> => {
+    const response = await request(app.callback()).get('/');
+
+    expect(parseLinkHeader(response.get('Link'))).toHaveProperty(['http://www.w3.org/ns/hydra/core#apiDocumentation']);
   });
 });
