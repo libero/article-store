@@ -9,7 +9,7 @@ export default (router: Router): Middleware => (
       '@context': {
         '@base': request.origin,
       },
-      '@id': router.url(Routes.EntryPoint, {}),
+      '@id': router.url(Routes.EntryPoint),
       '@type': schema.EntryPoint,
       [schema.name]: { '@value': 'Article Store', '@language': 'en' },
     };
