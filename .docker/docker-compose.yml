@@ -7,7 +7,7 @@ services:
     ports:
       - '8080:8080'
   console:
-    image: tpluscode/hypermedia-app:version-0.12.0
+    image: tpluscode/hypermedia-app:version-0.12.1
     environment:
       - 'API_ENTRYPOINTS={ "http://localhost:8080/": "Article Store" }'
       - 'BASE_URL=http://localhost:8080/'
