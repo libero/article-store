@@ -1,6 +1,6 @@
 import Router from '@koa/router';
 import { Context, Middleware, Next } from 'koa';
-import { hydra, rdf, schema, } from 'rdf-namespaces';
+import { hydra, rdf, schema } from 'rdf-namespaces';
 import Routes from './index';
 
 export default (router: Router): Middleware => (
