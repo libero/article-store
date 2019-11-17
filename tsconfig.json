@@ -4,6 +4,7 @@
     "module": "commonjs",
     "outDir": "build",
     "alwaysStrict": true,
+    "noImplicitAny": true,
     "esModuleInterop": true
   },
   "include": [
