@@ -29,7 +29,7 @@ describe('entry-point', (): void => {
     expect(object['@id']).toBe('http://example.com/path-to/entry-point');
     expect(object['@type']).toContain('http://schema.org/EntryPoint');
     expect(object).toHaveProperty(['http://schema.org/name']);
-    expect(object).toHaveProperty(['http://schema.org/collection']);
+    expect(object).toHaveProperty(['http://www.w3.org/ns/hydra/core#collection']);
   });
 
   it('should call the next middleware', async (): Promise<void> => {
