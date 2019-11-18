@@ -9,8 +9,8 @@ services:
   console:
     image: tpluscode/hypermedia-app:version-0.12.1
     environment:
-      - 'API_ENTRYPOINTS={ "http://localhost:8080/": "Article Store" }'
-      - 'BASE_URL=http://localhost:8080/'
+      API_ENTRYPOINTS: '{ "http://localhost:8080/": "Article Store" }'
+      BASE_URL: http://localhost:8080/
     ports:
       - '8081:8000'
     depends_on:
