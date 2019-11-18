@@ -1,9 +1,9 @@
 import Router, { RouterContext } from '@koa/router';
 import createHttpError from 'http-errors';
-import { Middleware, Next, DefaultContext } from 'koa';
+import { Middleware, Next, DefaultState } from 'koa';
 import compose from 'koa-compose';
 
-const notFound = (): Middleware<DefaultContext, RouterContext> => (
+const notFound = (): Middleware<DefaultState, RouterContext> => (
   async ({ _matchedRoute }, next: Next): Promise<void> => {
     await next();
 
@@ -13,7 +13,7 @@ const notFound = (): Middleware<DefaultContext, RouterContext> => (
   }
 );
 
-export default (router: Router): Middleware<DefaultContext, RouterContext> => (
+export default (router: Router): Middleware<DefaultState, RouterContext> => (
   compose([
     router.routes(),
     notFound(),
