@@ -4,7 +4,7 @@ import { Middleware, Next, DefaultState } from 'koa';
 import compose from 'koa-compose';
 
 const notFound = (): Middleware<DefaultState, RouterContext> => (
-  async ({ _matchedRoute }, next: Next): Promise<void> => {
+  async ({ _matchedRoute }: RouterContext, next: Next): Promise<void> => {
     await next();
 
     if (typeof _matchedRoute === 'undefined') {
