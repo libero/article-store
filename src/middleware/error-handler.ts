@@ -1,10 +1,6 @@
-import createError, { HttpError, CreateHttpError } from 'http-errors';
+import createError, { HttpError, UnknownError } from 'http-errors';
 import { Context, Middleware, Next } from 'koa';
 import { hydra } from 'rdf-namespaces';
-
-type UnknownError<T = CreateHttpError> = T extends (
-    (event: infer ErrorShape, ...args: unknown[]) => HttpError
-  ) ? ErrorShape : never;
 
 const handleHttpError = (error: HttpError, { response }: Context): void => {
   response.status = error.status;
@@ -20,8 +16,8 @@ const handleHttpError = (error: HttpError, { response }: Context): void => {
   response.type = 'jsonld';
 };
 
-const toHttpError = (error: unknown): HttpError => (
-  error instanceof HttpError ? error : createError(error as UnknownError)
+const toHttpError = (error: UnknownError): HttpError => (
+  error instanceof HttpError ? error : createError(error)
 );
 
 export default (): Middleware => (

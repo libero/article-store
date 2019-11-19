@@ -1,10 +1,11 @@
 import Router, { RouterContext } from '@koa/router';
+import { UnknownError } from 'http-errors';
 import Koa, { Context } from 'koa';
 import Request from 'koa/lib/request';
 import Response from 'koa/lib/response';
 import { Request as IncomingMessage, Response as ServerResponse } from 'mock-http';
 
-export type ErrorListener = (error: unknown, context: Context) => void;
+export type ErrorListener = (error: UnknownError, context: Context) => void;
 
 type Options = {
   errorListener?: ErrorListener;
