@@ -22,7 +22,7 @@ To build and run the app, execute:
 make prod
 ```
 
-You can now access the entry point at <http://localhost:8080>.
+You can now access the entry point at <http://localhost:8080>, or view the console at <http://localhost:8081>.
 
 Developing
 ----------
@@ -33,7 +33,7 @@ To build and run the app for development, execute:
 make dev
 ```
 
-You can now access the entry point at <http://localhost:8080>.
+You can now access the entry point at <http://localhost:8080>, or view the console at <http://localhost:8081>.
 
 Getting help
 ------------
