@@ -1,16 +1,16 @@
 import jsonld from 'jsonld';
 import { Next, Response } from 'koa';
-import entryPoint from '../../src/routes/entry-point';
-import runMiddleware from '../middleware';
+import articleList from '../../src/routes/article-list';
 import createContext from '../context';
+import runMiddleware from '../middleware';
 
 const makeRequest = async (next?: Next): Promise<Response> => {
   const context = createContext();
 
-  return runMiddleware(entryPoint(context.router), context, next);
+  return runMiddleware(articleList(context.router), context, next);
 };
 
-describe('entry-point', (): void => {
+describe('article list', (): void => {
   it('should return a successful response', async (): Promise<void> => {
     const response = await makeRequest();
 
@@ -18,7 +18,7 @@ describe('entry-point', (): void => {
     expect(response.type).toBe('application/ld+json');
   });
 
-  it('should return the entry point', async (): Promise<void> => {
+  it('should return the list', async (): Promise<void> => {
     const response = await makeRequest();
     const graph = await jsonld.expand(response.body);
 
@@ -26,10 +26,12 @@ describe('entry-point', (): void => {
 
     const object = graph[0];
 
-    expect(object['@id']).toBe('http://example.com/path-to/entry-point');
-    expect(object['@type']).toContain('http://schema.org/EntryPoint');
-    expect(object).toHaveProperty(['http://schema.org/name']);
-    expect(object).toHaveProperty(['http://www.w3.org/ns/hydra/core#collection']);
+    expect(object['@id']).toBe('http://example.com/path-to/article-list');
+    expect(object['@type']).toContain('http://www.w3.org/ns/hydra/core#Collection');
+    expect(object).toHaveProperty(['http://www.w3.org/ns/hydra/core#title']);
+    expect(object).toHaveProperty(['http://www.w3.org/ns/hydra/core#manages']);
+    expect(object).toHaveProperty(['http://www.w3.org/ns/hydra/core#totalItems']);
+    expect(object).toHaveProperty(['http://www.w3.org/ns/hydra/core#member']);
   });
 
   it('should call the next middleware', async (): Promise<void> => {
