@@ -13,5 +13,7 @@ install:
 script:
   - TARGET=prod .travis/smoke-test.sh
   - TARGET=dev .travis/smoke-test.sh
+  - TARGET=prod .travis/analyse.sh
+  - TARGET=dev .travis/analyse.sh
   - make lint
   - make test

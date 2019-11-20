@@ -1,5 +1,5 @@
 .DEFAULT_GOAL = help
-.PHONY: help install build start stop wait-healthy sh logs watch lint fix test run dev prod
+.PHONY: help install build start stop wait-healthy sh exec logs watch lint fix test run dev prod
 
 SHELL = /usr/bin/env bash
 
@@ -41,7 +41,10 @@ wait-healthy: ## Wait for the containers to be healthy
 	done
 
 sh: ## Open a shell on the app container
-	${DOCKER_COMPOSE} exec app sh
+	make exec command="sh"
+
+exec: ## Run a command on the app container
+	${DOCKER_COMPOSE} exec app $(command)
 
 logs: ## Show the containers' logs
 	${DOCKER_COMPOSE} logs
