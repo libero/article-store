@@ -1,4 +1,4 @@
-import createHttpError from 'http-errors';
+import createHttpError, { UnknownError } from 'http-errors';
 import jsonld from 'jsonld';
 import { Response } from 'koa';
 import errorHandler from '../../src/middleware/error-handler';
@@ -11,7 +11,7 @@ const makeRequest = async (next?: Next, errorListener?: ErrorListener): Promise<
   return runMiddleware(errorHandler(), context, next);
 };
 
-const next = (error: unknown) => async (): Promise<void> => {
+const next = (error: UnknownError) => async (): Promise<void> => {
   throw error;
 };
 
