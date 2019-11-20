@@ -1,4 +1,4 @@
-import createError, { HttpError } from 'http-errors';
+import createError, { HttpError, UnknownError } from 'http-errors';
 import { Context, Middleware, Next } from 'koa';
 import { hydra } from 'rdf-namespaces';
 
@@ -16,7 +16,7 @@ const handleHttpError = (error: HttpError, { response }: Context): void => {
   response.type = 'jsonld';
 };
 
-const toHttpError = (error: unknown): HttpError => (
+const toHttpError = (error: UnknownError): HttpError => (
   error instanceof HttpError ? error : createError(error)
 );
 
