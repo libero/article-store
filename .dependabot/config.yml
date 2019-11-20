@@ -12,7 +12,7 @@ update_configs:
 
   - package_manager: javascript
     directory: /
-    update_schedule: live
+    update_schedule: daily
     commit_message:
       prefix: chore
       include_scope: true
