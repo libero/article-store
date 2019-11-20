@@ -1,3 +1,4 @@
+import { format as formatContentType } from 'content-type';
 import jsonld from 'jsonld';
 import { Context as JsonLdContext } from 'jsonld/jsonld-spec';
 import {
@@ -14,7 +15,12 @@ export default (context: JsonLdContext): Middleware => (
       return;
     }
 
+    const contentType = {
+      type: 'application/ld+json',
+      parameters: { profile: 'http://www.w3.org/ns/json-ld#compacted' },
+    };
+
     response.body = await jsonld.compact(response.body, context);
-    response.set('Content-Type', 'application/ld+json; profile=http://www.w3.org/ns/json-ld#compacted');
+    response.set('Content-Type', formatContentType(contentType));
   }
 );
