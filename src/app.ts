@@ -17,6 +17,7 @@ app.use(cors({
 app.use(jsonld({
   '@language': 'en',
   '@vocab': 'http://schema.org/',
+  hydra: 'http://www.w3.org/ns/hydra/core#',
 }));
 app.use(apiDocumentation(router));
 app.use(errorHandler());
