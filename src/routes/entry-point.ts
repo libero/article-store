@@ -1,6 +1,6 @@
 import Router from '@koa/router';
 import { Context, Middleware, Next } from 'koa';
-import { schema } from 'rdf-namespaces';
+import { hydra, schema } from 'rdf-namespaces';
 import Routes from './index';
 
 export default (router: Router): Middleware => (
@@ -12,6 +12,7 @@ export default (router: Router): Middleware => (
       '@id': router.url(Routes.EntryPoint),
       '@type': schema.EntryPoint,
       [schema.name]: { '@value': 'Article Store', '@language': 'en' },
+      [hydra.collection]: { '@id': router.url(Routes.ArticleList) },
     };
     response.type = 'jsonld';
 
