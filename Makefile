@@ -15,11 +15,15 @@ export TARGET
 help: ## Display this help text
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
 
-install: node_modules ## Install dependencies locally
+install: node_modules .scripts ## Install dependencies locally
 
 node_modules: package.json package-lock.json
 	npm install
 	touch node_modules
+
+.scripts: .gitmodules
+	git submodule update --init --recursive .scripts
+	touch .scripts
 
 build: ## Build the containers
 	${DOCKER_COMPOSE} build
