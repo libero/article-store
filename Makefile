@@ -15,7 +15,8 @@ export TARGET
 help: ## Display this help text
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
 
-install: node_modules gitmodules ## Install dependencies locally
+install: ## Install dependencies locally
+	make --jobs=2 node_modules gitmodules
 
 node_modules: package.json package-lock.json
 	npm install
