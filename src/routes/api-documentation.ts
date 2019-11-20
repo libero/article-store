@@ -41,13 +41,20 @@ export default (router: Router): Middleware => (
           '@id': hydra.Collection,
           '@type': hydra.Class,
           [hydra.title]: { '@value': 'Collection', '@language': 'en' },
-          [hydra.supportedOperation]: {
-            '@type': hydra.Operation,
-            [hydra.title]: { '@value': 'Get the collection', '@language': 'en' },
-            [hydra.method]: { '@value': 'GET' },
-            [hydra.expects]: { '@id': owl.Nothing },
-            [hydra.returns]: { '@id': hydra.Collection },
-          },
+          [hydra.supportedOperation]: [
+            {
+              '@type': hydra.Operation,
+              [hydra.title]: { '@value': 'Get the collection', '@language': 'en' },
+              [hydra.method]: { '@value': 'GET' },
+              [hydra.expects]: { '@id': owl.Nothing },
+              [hydra.returns]: { '@id': hydra.Collection },
+            },
+            {
+              '@type': schema.AddAction,
+              [hydra.title]: { '@value': 'Add an article', '@language': 'en' },
+              [hydra.method]: { '@value': 'POST' },
+            },
+          ],
           [hydra.supportedProperty]: [
             {
               '@type': hydra.SupportedProperty,
