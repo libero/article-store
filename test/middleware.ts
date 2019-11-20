@@ -1,9 +1,18 @@
+import { RouterContext } from '@koa/router';
 import {
-  Context, Middleware, Next, Response,
+  DefaultState, Middleware, ParameterizedContext, Response,
 } from 'koa';
 
-export default async (middleware: Middleware, context: Context, next?: Next): Promise<Response> => {
-  await middleware(context, next || jest.fn());
+export type Next<StateT = DefaultState, CustomT = RouterContext> = (
+  context: ParameterizedContext<StateT, CustomT>
+) => Promise<void>;
+
+export default async <StateT = DefaultState, CustomT = RouterContext>(
+  middleware: Middleware<StateT, CustomT>,
+  context: ParameterizedContext<StateT, CustomT>,
+  next?: Next<StateT, CustomT>,
+): Promise<Response> => {
+  await middleware(context, next ? (): Promise<void> => next(context) : jest.fn());
 
   const { response } = context;
 

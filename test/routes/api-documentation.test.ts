@@ -1,16 +1,16 @@
 import jsonld from 'jsonld';
 import { Next, Response } from 'koa';
-import entryPoint from '../../src/routes/entry-point';
+import apiDocumentation from '../../src/routes/api-documentation';
 import runMiddleware from '../middleware';
 import createContext from '../context';
 
 const makeRequest = async (next?: Next): Promise<Response> => {
   const context = createContext();
 
-  return runMiddleware(entryPoint(context.router), context, next);
+  return runMiddleware(apiDocumentation(context.router), context, next);
 };
 
-describe('entry-point', (): void => {
+describe('API documentation', (): void => {
   it('should return a successful response', async (): Promise<void> => {
     const response = await makeRequest();
 
@@ -18,7 +18,7 @@ describe('entry-point', (): void => {
     expect(response.type).toBe('application/ld+json');
   });
 
-  it('should return the entry point', async (): Promise<void> => {
+  it('should return the API documentation', async (): Promise<void> => {
     const response = await makeRequest();
     const graph = await jsonld.expand(response.body);
 
@@ -26,10 +26,9 @@ describe('entry-point', (): void => {
 
     const object = graph[0];
 
-    expect(object['@id']).toBe('http://example.com/path-to/entry-point');
-    expect(object['@type']).toContain('http://schema.org/EntryPoint');
-    expect(object).toHaveProperty(['http://schema.org/name']);
-    expect(object).toHaveProperty(['http://www.w3.org/ns/hydra/core#collection']);
+    expect(object['@id']).toBe('http://example.com/path-to/api-documentation');
+    expect(object['@type']).toContain('http://www.w3.org/ns/hydra/core#ApiDocumentation');
+    expect(object).toHaveProperty(['http://www.w3.org/ns/hydra/core#entrypoint']);
   });
 
   it('should call the next middleware', async (): Promise<void> => {
