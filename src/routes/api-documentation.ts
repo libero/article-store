@@ -50,9 +50,11 @@ export default (router: Router): Middleware => (
               [hydra.returns]: { '@id': hydra.Collection },
             },
             {
-              '@type': schema.AddAction,
+              '@type': hydra.Operation,
               [hydra.title]: { '@value': 'Add an article', '@language': 'en' },
               [hydra.method]: { '@value': 'POST' },
+              [hydra.expects]: { '@id': schema.Article },
+              [hydra.returns]: { '@id': schema.Article },
             },
           ],
           [hydra.supportedProperty]: [
