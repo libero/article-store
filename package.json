@@ -23,7 +23,7 @@
     "@types/node": "^12.12.6",
     "@types/parse-link-header": "^1.0.0",
     "@types/supertest": "^2.0.8",
-    "@typescript-eslint/eslint-plugin": "^2.6.1",
+    "@typescript-eslint/eslint-plugin": "^2.8.0",
     "@typescript-eslint/parser": "^2.6.1",
     "eslint": "^6.6.0",
     "eslint-config-airbnb-base": "^14.0.0",
