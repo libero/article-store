@@ -48,6 +48,10 @@ sh: ## Open a shell on the app container
 	make exec command="sh"
 
 exec: ## Run a command on the app container
+	if [ -z "$(command)" ]; then \
+		echo "No command provided"; \
+		exit 1; \
+	fi; \
 	${DOCKER_COMPOSE} exec app $(command)
 
 logs: ## Show the containers' logs
