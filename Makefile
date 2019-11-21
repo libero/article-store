@@ -45,7 +45,6 @@ wait-healthy: ## Wait for the containers to be healthy
 	done
 
 sh: ## Open a shell on the app container
-	${DOCKER_COMPOSE} exec app sh
 	make exec command="sh"
 
 exec: ## Run a command on the app container
