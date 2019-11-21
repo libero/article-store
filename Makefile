@@ -16,7 +16,7 @@ help: ## Display this help text
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
 
 install: ## Install dependencies locally
-	make --jobs=2 node_modules gitmodules
+	make --jobs=2 $(MAKEFLAGS) node_modules gitmodules
 
 node_modules: package.json package-lock.json
 	npm install
@@ -70,7 +70,7 @@ run:
 
 dev: export TARGET = dev
 dev: ## Build and runs the container for development
-	make --jobs=3 install build stop
+	make --jobs=4 install build stop
 	make run
 
 prod: export TARGET = prod
