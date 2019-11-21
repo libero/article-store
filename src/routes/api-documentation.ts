@@ -101,6 +101,9 @@ export default (router: Router): Middleware => (
               '@type': hydra.SupportedProperty,
               [hydra.title]: { '@value': 'Name', '@language': 'en' },
               [hydra.property]: { '@id': schema.name },
+              [hydra.readable]: true,
+              [hydra.required]: true,
+              [hydra.writeable]: true,
             },
           ]
         }
