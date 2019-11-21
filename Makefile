@@ -2,6 +2,7 @@
 .PHONY: help install gitmodules build start stop wait-healthy sh exec logs watch lint fix test run dev prod
 
 SHELL = /usr/bin/env bash
+MAKEFLAGS += --jobs=4
 
 ifneq (${TARGET}, prod)
 TARGET = dev
