@@ -55,6 +55,11 @@ export default (router: Router): Middleware => (
               [hydra.method]: { '@value': 'POST' },
               [hydra.expects]: { '@id': schema.Article },
               [hydra.returns]: { '@id': schema.Article },
+              [hydra.possibleStatus]: [
+                {
+                  [hydra.statusCode]: 201,
+                }
+              ],
             },
           ],
           [hydra.supportedProperty]: [
@@ -105,8 +110,8 @@ export default (router: Router): Middleware => (
               [hydra.required]: true,
               [hydra.writeable]: true,
             },
-          ]
-        }
+          ],
+        },
       ],
     };
     response.type = 'jsonld';
