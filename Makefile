@@ -77,8 +77,8 @@ run:
 
 dev: export TARGET = dev
 dev: install build stop ## Build and runs the container for development
-	make run
+	$(MAKE) run
 
 prod: export TARGET = prod
 prod: build stop ## Builds and runs the container for production
-	make run
+	$(MAKE) run
