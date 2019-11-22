@@ -2,7 +2,7 @@
 set -e
 
 function finish() {
-  make logs stop
+  make logs && make stop
 }
 
 trap finish EXIT
