@@ -1,7 +1,7 @@
 import Router from '@koa/router';
 import { Context, Middleware, Next } from 'koa';
 import {
-  hydra, owl, rdfs, schema,
+  hydra, owl, rdf, rdfs, schema,
 } from 'rdf-namespaces';
 import Routes from './index';
 
@@ -31,6 +31,14 @@ export default (router: Router): Middleware => (
               '@type': hydra.SupportedProperty,
               [hydra.title]: { '@value': 'Name', '@language': 'en' },
               [hydra.property]: { '@id': schema.name },
+              [hydra.required]: true,
+              [hydra.readable]: true,
+              [hydra.writeable]: false,
+            },
+            {
+              '@type': hydra.SupportedProperty,
+              [hydra.title]: { '@value': 'Collection', '@language': 'en' },
+              [hydra.property]: { '@id': hydra.collection, '@type': [rdf.Property, hydra.Link] },
               [hydra.required]: true,
               [hydra.readable]: true,
               [hydra.writeable]: false,
