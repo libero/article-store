@@ -77,9 +77,11 @@ run:
 	${DOCKER_COMPOSE} up --abort-on-container-exit --exit-code-from app; ${DOCKER_COMPOSE} down
 
 dev: export TARGET = dev
-dev: install build stop ## Build and runs the container for development
+dev: ## Build and runs the container for development
+	$(MAKE) install build stop
 	$(MAKE) run
 
 prod: export TARGET = prod
-prod: build stop ## Builds and runs the container for production
+prod: ## Builds and runs the container for production
+	$(MAKE) build stop
 	$(MAKE) run
