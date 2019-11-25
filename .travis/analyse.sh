@@ -7,6 +7,6 @@ function finish() {
 
 trap finish EXIT
 
-make start wait-healthy
+make start && make wait-healthy
 
 make exec command="npx hydra-validator analyse http://localhost:8080/"
