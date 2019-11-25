@@ -7,7 +7,7 @@ function finish() {
 
 trap finish EXIT
 
-make start && wait-healthy
+make start && make wait-healthy
 
 output=$(curl --silent --show-error --write-out '\n%{http_code}' 'http://localhost:8080/')
 body=$(echo "$output" | head --lines=-1)
