@@ -1,18 +1,13 @@
 import jsonld from 'jsonld';
 import { Next, Response } from 'koa';
-import { JsonLdObj } from 'jsonld/jsonld-spec';
 import articleList from '../../src/routes/article-list';
 import createContext from '../context';
 import runMiddleware from '../middleware';
+import InMemoryNodes from '../../src/nodes';
 
 const makeRequest = async (next?: Next): Promise<Response> => {
   const context = createContext();
-  const articles = {
-    all: (): Iterable<JsonLdObj> => [],
-    add: jest.fn(),
-    get: jest.fn(),
-    has: jest.fn(),
-  };
+  const articles = new InMemoryNodes;
 
   return runMiddleware(articleList(articles, context.router), context, next);
 };

@@ -18,12 +18,13 @@ export default class InMemoryNodes implements Nodes {
     private i = 0;
 
     [Symbol.asyncIterator](): AsyncIterator<JsonLdObj> {
-      const article = this.get(Object.keys(this.nodes)[this.i]);
+      const isDone = Object.keys(this.nodes)[this.i] === undefined;
+      const article = !isDone ? this.nodes[Object.keys(this.nodes)[this.i]] : undefined;
       this.i += 1;
       return {
         next(): Promise<IteratorResult<JsonLdObj>> {
           return Promise.resolve({
-            done: false,
+            done: isDone,
             value: article,
           });
         },
