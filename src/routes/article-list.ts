@@ -6,6 +6,10 @@ import { Nodes } from '../nodes';
 
 export default (articles: Nodes, router: Router): Middleware => (
   async ({ request, response }: Context, next: Next): Promise<void> => {
+    let list = [];
+    for await (const article of articles) {
+      list.push(article);
+    }
     response.body = {
       '@context': {
         '@base': request.origin,
@@ -17,8 +21,10 @@ export default (articles: Nodes, router: Router): Middleware => (
         'http://www.w3.org/ns/hydra/core#property': rdf.type,
         'http://www.w3.org/ns/hydra/core#object': schema.Article,
       },
-      [hydra.totalItems]: [...articles.all()].length,
-      [hydra.member]: { '@list': articles.all() },
+      [hydra.totalItems]: await articles.count(),
+      [hydra.member]: {
+        '@list': list,
+      },
     };
     response.type = 'jsonld';
 
