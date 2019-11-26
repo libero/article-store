@@ -1,14 +1,12 @@
 import jsonld from 'jsonld';
 import { Next, Response } from 'koa';
 import apiDocumentation from '../../src/routes/api-documentation';
-import runMiddleware from '../middleware';
 import createContext from '../context';
+import runMiddleware from '../middleware';
 
-const makeRequest = async (next?: Next): Promise<Response> => {
-  const context = createContext();
-
-  return runMiddleware(apiDocumentation(context.router), context, next);
-};
+const makeRequest = async (next?: Next): Promise<Response> => (
+  runMiddleware(apiDocumentation(), createContext(), next)
+);
 
 describe('API documentation', (): void => {
   it('should return a successful response', async (): Promise<void> => {

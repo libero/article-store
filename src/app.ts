@@ -7,14 +7,13 @@ import routing from './middleware/routing';
 import createRouter from './router';
 
 const app = new Koa();
-const router = createRouter();
 
 app.use(logger());
 app.use(cors({
   exposeHeaders: ['Link'],
 }));
-app.use(apiDocumentation(router));
 app.use(errorHandler());
-app.use(routing(router));
+app.use(routing(createRouter()));
+app.use(apiDocumentation());
 
 export default app;

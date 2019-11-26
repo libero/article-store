@@ -1,14 +1,12 @@
 import jsonld from 'jsonld';
 import { Next, Response } from 'koa';
 import entryPoint from '../../src/routes/entry-point';
-import runMiddleware from '../middleware';
 import createContext from '../context';
+import runMiddleware from '../middleware';
 
-const makeRequest = async (next?: Next): Promise<Response> => {
-  const context = createContext();
-
-  return runMiddleware(entryPoint(context.router), context, next);
-};
+const makeRequest = async (next?: Next): Promise<Response> => (
+  runMiddleware(entryPoint(), createContext(), next)
+);
 
 describe('entry-point', (): void => {
   it('should return a successful response', async (): Promise<void> => {

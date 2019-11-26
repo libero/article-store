@@ -4,11 +4,9 @@ import articleList from '../../src/routes/article-list';
 import createContext from '../context';
 import runMiddleware from '../middleware';
 
-const makeRequest = async (next?: Next): Promise<Response> => {
-  const context = createContext();
-
-  return runMiddleware(articleList(context.router), context, next);
-};
+const makeRequest = async (next?: Next): Promise<Response> => (
+  runMiddleware(articleList(), createContext(), next)
+);
 
 describe('article list', (): void => {
   it('should return a successful response', async (): Promise<void> => {

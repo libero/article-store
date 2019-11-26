@@ -1,12 +1,12 @@
-import Router from '@koa/router';
+import { RouterContext } from '@koa/router';
 import formatLinkHeader from 'format-link-header';
-import { Context, Middleware, Next } from 'koa';
+import { DefaultState, Middleware, Next } from 'koa';
 import { hydra } from 'rdf-namespaces';
 import url from 'url';
 import Routes from '../routes';
 
-export default (router: Router): Middleware => (
-  async ({ request, response }: Context, next: Next): Promise<void> => {
+export default (): Middleware<DefaultState, RouterContext> => (
+  async ({ request, response, router }: RouterContext, next: Next): Promise<void> => {
     await next();
 
     const link = {
