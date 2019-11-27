@@ -7,7 +7,7 @@ import NullArticles from '../../src/adaptors/null-articles';
 
 const makeRequest = async (next?: Next): Promise<Response> => {
   const context = createContext();
-  const articles = new NullArticles;
+  const articles = new NullArticles();
 
   return runMiddleware(articleList(articles, context.router), context, next);
 };
