@@ -2,11 +2,11 @@ import Router from '@koa/router';
 import { Context, Middleware, Next } from 'koa';
 import { hydra, rdf, schema } from 'rdf-namespaces';
 import Routes from './index';
-import { Nodes } from '../nodes';
+import Articles from '../adaptors/articles';
 
-export default (articles: Nodes, router: Router): Middleware => (
+export default (articles: Articles, router: Router): Middleware => (
   async ({ request, response }: Context, next: Next): Promise<void> => {
-    let list = [];
+    const list = [];
     for await (const article of articles) {
       list.push(article);
     }

@@ -1,27 +1,17 @@
-import { Iri, JsonLdObj } from 'jsonld/jsonld-spec';
+import { JsonLdObj, Iri } from 'jsonld/jsonld-spec';
+import Articles from './articles';
 
-export interface Nodes extends AsyncIterable<JsonLdObj> {
-    count(): Promise<number>;
-
-    get(id: Iri): Promise<JsonLdObj>;
-
-    set(article: JsonLdObj): Promise<void>;
-
-    delete(id: Iri): Promise<void>;
-
-    has(id: Iri): Promise<boolean>;
-}
-
-export default class InMemoryNodes implements Nodes {
+export default class InMemoryArticles implements Articles {
     private nodes: { [key: string]: JsonLdObj } = {};
 
     [Symbol.asyncIterator](): AsyncIterator<JsonLdObj> {
-      const nodes = this.nodes;
+      const { nodes } = this;
       let i = 0;
       return {
         next(): Promise<IteratorResult<JsonLdObj>> {
-          const isDone = Object.keys(nodes)[i] === undefined;
-          const article = !isDone ? nodes[Object.keys(nodes)[i]] : undefined;
+          const iri = Object.keys(nodes)[i];
+          const isDone = iri === undefined;
+          const article = !isDone ? nodes[iri] : undefined;
           i += 1;
           return Promise.resolve({
             done: isDone,
@@ -36,7 +26,10 @@ export default class InMemoryNodes implements Nodes {
     }
 
     async get(id: Iri): Promise<JsonLdObj> {
-      return this.nodes[id];
+      if (this.has(id)) {
+        return this.nodes[id];
+      }
+      throw new RangeError();
     }
 
     async set(node: JsonLdObj): Promise<void> {

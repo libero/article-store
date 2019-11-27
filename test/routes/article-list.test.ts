@@ -3,11 +3,24 @@ import { Next, Response } from 'koa';
 import articleList from '../../src/routes/article-list';
 import createContext from '../context';
 import runMiddleware from '../middleware';
-import InMemoryNodes from '../../src/nodes';
 
 const makeRequest = async (next?: Next): Promise<Response> => {
   const context = createContext();
-  const articles = new InMemoryNodes;
+  const articles = {
+    [Symbol.asyncIterator]: (): AsyncIterator<{}> => ({
+      next(): Promise<IteratorResult<{}>> {
+        return Promise.resolve({
+          done: true,
+          value: undefined,
+        });
+      },
+    }),
+    count: (): Promise<number> => Promise.resolve(0),
+    set: jest.fn(),
+    get: jest.fn(),
+    delete: jest.fn(),
+    has: jest.fn(),
+  };
 
   return runMiddleware(articleList(articles, context.router), context, next);
 };
