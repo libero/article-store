@@ -15,14 +15,14 @@ export interface Nodes extends AsyncIterable<JsonLdObj> {
 export default class InMemoryNodes implements Nodes {
     private nodes: { [key: string]: JsonLdObj } = {};
 
-    private i = 0;
-
     [Symbol.asyncIterator](): AsyncIterator<JsonLdObj> {
-      const isDone = Object.keys(this.nodes)[this.i] === undefined;
-      const article = !isDone ? this.nodes[Object.keys(this.nodes)[this.i]] : undefined;
-      this.i += 1;
+      const nodes = this.nodes;
+      let i = 0;
       return {
         next(): Promise<IteratorResult<JsonLdObj>> {
+          const isDone = Object.keys(nodes)[i] === undefined;
+          const article = !isDone ? nodes[Object.keys(nodes)[i]] : undefined;
+          i += 1;
           return Promise.resolve({
             done: isDone,
             value: article,
