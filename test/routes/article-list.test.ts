@@ -7,12 +7,12 @@ import runMiddleware from '../middleware';
 const makeRequest = async (next?: Next): Promise<Response> => {
   const context = createContext();
   const articles = {
-    [Symbol.asyncIterator]: (): AsyncIterator<{}> => ({
-      next(): Promise<IteratorResult<{}>> {
-        return Promise.resolve({
+    [Symbol.iterator]: (): Iterator<{}> => ({
+      next(): IteratorResult<{}> {
+        return {
           done: true,
           value: undefined,
-        });
+        };
       },
     }),
     count: (): Promise<number> => Promise.resolve(0),

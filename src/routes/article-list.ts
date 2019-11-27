@@ -6,10 +6,6 @@ import Articles from '../adaptors/articles';
 
 export default (articles: Articles, router: Router): Middleware => (
   async ({ request, response }: Context, next: Next): Promise<void> => {
-    const list = [];
-    for await (const article of articles) {
-      list.push(article);
-    }
     response.body = {
       '@context': {
         '@base': request.origin,
@@ -23,7 +19,7 @@ export default (articles: Articles, router: Router): Middleware => (
       },
       [hydra.totalItems]: await articles.count(),
       [hydra.member]: {
-        '@list': list,
+        '@list': [...articles],
       },
     };
     response.type = 'jsonld';
