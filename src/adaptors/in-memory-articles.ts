@@ -29,7 +29,7 @@ export default class InMemoryArticles implements Articles {
       if (this.has(id)) {
         return this.nodes[id];
       }
-      throw new RangeError();
+      throw new RangeError(`An item with the ID ${id} could not be found`);
     }
 
     async set(node: JsonLdObj): Promise<void> {
