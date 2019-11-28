@@ -1,6 +1,8 @@
 import Router from '@koa/router';
 import { Context, Middleware, Next } from 'koa';
-import { hydra, owl, schema } from 'rdf-namespaces';
+import {
+  hydra, owl, rdf, schema,
+} from 'rdf-namespaces';
 import Routes from './index';
 
 export default (router: Router): Middleware => (
@@ -28,7 +30,10 @@ export default (router: Router): Middleware => (
             {
               '@type': hydra.SupportedProperty,
               [hydra.title]: { '@value': 'Name', '@language': 'en' },
-              [hydra.property]: { '@id': schema.name },
+              [hydra.property]: {
+                '@id': schema.name,
+                '@type': rdf.Property,
+              },
               [hydra.required]: true,
               [hydra.readable]: true,
               [hydra.writeable]: false,
@@ -50,7 +55,10 @@ export default (router: Router): Middleware => (
             {
               '@type': hydra.SupportedProperty,
               [hydra.title]: { '@value': 'Title', '@language': 'en' },
-              [hydra.property]: { '@id': hydra.title },
+              [hydra.property]: {
+                '@id': hydra.title,
+                '@type': rdf.Property,
+              },
               [hydra.readable]: true,
               [hydra.required]: true,
               [hydra.writeable]: false,
@@ -58,7 +66,10 @@ export default (router: Router): Middleware => (
             {
               '@type': hydra.SupportedProperty,
               [hydra.title]: { '@value': 'What the collection manages', '@language': 'en' },
-              [hydra.property]: { '@id': 'http://www.w3.org/ns/hydra/core#manages' },
+              [hydra.property]: {
+                '@id': 'http://www.w3.org/ns/hydra/core#manages',
+                '@type': rdf.Property,
+              },
               [hydra.readable]: true,
               [hydra.required]: true,
               [hydra.writeable]: false,
@@ -66,7 +77,10 @@ export default (router: Router): Middleware => (
             {
               '@type': hydra.SupportedProperty,
               [hydra.title]: { '@value': 'Total items', '@language': 'en' },
-              [hydra.property]: { '@id': hydra.totalItems },
+              [hydra.property]: {
+                '@id': hydra.totalItems,
+                '@type': rdf.Property,
+              },
               [hydra.readable]: true,
               [hydra.required]: true,
               [hydra.writeable]: false,
@@ -74,7 +88,10 @@ export default (router: Router): Middleware => (
             {
               '@type': hydra.SupportedProperty,
               [hydra.title]: { '@value': 'Members of this collection', '@language': 'en' },
-              [hydra.property]: { '@id': hydra.member },
+              [hydra.property]: {
+                '@id': hydra.member,
+                '@type': [rdf.Property, hydra.Link],
+              },
               [hydra.readable]: true,
               [hydra.required]: false,
               [hydra.writeable]: false,
