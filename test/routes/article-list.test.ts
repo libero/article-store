@@ -1,13 +1,18 @@
-import jsonld from 'jsonld';
+import dataFactory, {
+  blankNode, literal, namedNode, quad,
+} from '@rdfjs/data-model';
+import 'jest-rdf';
 import { Next, Response } from 'koa';
+import { toRdf } from 'rdf-literal';
 import articleList from '../../src/routes/article-list';
+import { captureQuads } from '../rdf';
 import createContext from '../context';
 import runMiddleware from '../middleware';
 
 const makeRequest = async (next?: Next): Promise<Response> => {
   const context = createContext();
 
-  return runMiddleware(articleList(context.router), context, next);
+  return runMiddleware(articleList(context.router, dataFactory), context, next);
 };
 
 describe('article list', (): void => {
@@ -15,23 +20,26 @@ describe('article list', (): void => {
     const response = await makeRequest();
 
     expect(response.status).toBe(200);
-    expect(response.type).toBe('application/ld+json');
   });
 
   it('should return the list', async (): Promise<void> => {
-    const response = await makeRequest();
-    const graph = await jsonld.expand(response.body);
+    const quads = await makeRequest().then(captureQuads);
 
-    expect(graph).toHaveLength(1);
+    const id = namedNode('http://example.com/path-to/article-list');
+    const manages = blankNode();
+    const members = blankNode();
 
-    const object = graph[0];
+    const expected = [
+      quad(id, namedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'), namedNode('http://www.w3.org/ns/hydra/core#Collection')),
+      quad(id, namedNode('http://www.w3.org/ns/hydra/core#title'), literal('List of articles', 'en')),
+      quad(id, namedNode('http://www.w3.org/ns/hydra/core#manages'), manages),
+      quad(manages, namedNode('http://www.w3.org/ns/hydra/core#property'), namedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#type')),
+      quad(manages, namedNode('http://www.w3.org/ns/hydra/core#object'), namedNode('http://schema.org/Article')),
+      quad(id, namedNode('http://www.w3.org/ns/hydra/core#totalItems'), toRdf(0)),
+      quad(id, namedNode('http://www.w3.org/ns/hydra/core#member'), members),
+    ];
 
-    expect(object['@id']).toBe('http://example.com/path-to/article-list');
-    expect(object['@type']).toContain('http://www.w3.org/ns/hydra/core#Collection');
-    expect(object).toHaveProperty(['http://www.w3.org/ns/hydra/core#title']);
-    expect(object).toHaveProperty(['http://www.w3.org/ns/hydra/core#manages']);
-    expect(object).toHaveProperty(['http://www.w3.org/ns/hydra/core#totalItems']);
-    expect(object).toHaveProperty(['http://www.w3.org/ns/hydra/core#member']);
+    expect(quads).toBeRdfIsomorphic(expected);
   });
 
   it('should call the next middleware', async (): Promise<void> => {

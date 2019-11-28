@@ -1,15 +1,17 @@
+import dataFactory, {
+  blankNode, literal, namedNode, quad,
+} from '@rdfjs/data-model';
 import createHttpError, { UnknownError } from 'http-errors';
-import jsonld from 'jsonld';
+import 'jest-rdf';
 import { Response } from 'koa';
 import errorHandler from '../../src/middleware/error-handler';
+import { captureQuads } from '../rdf';
 import createContext, { ErrorListener } from '../context';
 import runMiddleware, { Next } from '../middleware';
 
-const makeRequest = async (next?: Next, errorListener?: ErrorListener): Promise<Response> => {
-  const context = createContext({ errorListener });
-
-  return runMiddleware(errorHandler(), context, next);
-};
+const makeRequest = async (next?: Next, errorListener?: ErrorListener): Promise<Response> => (
+  runMiddleware(errorHandler(dataFactory), createContext({ errorListener }), next)
+);
 
 const next = (error: UnknownError) => async (): Promise<void> => {
   throw error;
@@ -21,7 +23,6 @@ describe('error-handler middleware', (): void => {
       const response = await makeRequest(next(new createHttpError.ServiceUnavailable()));
 
       expect(response.status).toBe(503);
-      expect(response.type).toBe('application/ld+json');
     });
 
     it('should emit the error', async (): Promise<void> => {
@@ -35,13 +36,15 @@ describe('error-handler middleware', (): void => {
     });
 
     it('should return details about the error', async (): Promise<void> => {
-      const response = await makeRequest(next(new createHttpError.ServiceUnavailable()));
-      const object = await jsonld.compact(response.body, { '@language': 'en' });
+      const error = new createHttpError.ServiceUnavailable();
+      const quads = await makeRequest(next(error)).then(captureQuads);
 
-      expect(object).not.toHaveProperty('@id');
-      expect(object['@type']).toBe('http://www.w3.org/ns/hydra/core#Status');
-      expect(object['http://www.w3.org/ns/hydra/core#title']).toBe('Service Unavailable');
-      expect(object).not.toHaveProperty(['http://www.w3.org/ns/hydra/core#description']);
+      const expected = [
+        quad(blankNode(), namedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'), namedNode('http://www.w3.org/ns/hydra/core#Status')),
+        quad(blankNode(), namedNode('http://www.w3.org/ns/hydra/core#title'), literal('Service Unavailable', 'en')),
+      ];
+
+      expect(quads).toEqualRdfQuadArray(expected);
     });
   });
 
@@ -50,7 +53,6 @@ describe('error-handler middleware', (): void => {
       const response = await makeRequest(next('some-error'));
 
       expect(response.status).toBe(500);
-      expect(response.type).toBe('application/ld+json');
     });
 
     it('should emit the error', async (): Promise<void> => {
@@ -64,13 +66,15 @@ describe('error-handler middleware', (): void => {
     });
 
     it('should return details about the error', async (): Promise<void> => {
-      const response = await makeRequest(next('Some Error'));
-      const object = await jsonld.compact(response.body, { '@language': 'en' });
+      const quads = await makeRequest(next('Some Error')).then(captureQuads);
 
-      expect(object).not.toHaveProperty('@id');
-      expect(object['@type']).toBe('http://www.w3.org/ns/hydra/core#Status');
-      expect(object['http://www.w3.org/ns/hydra/core#title']).toBe('Internal Server Error');
-      expect(object['http://www.w3.org/ns/hydra/core#description']).toBe('Some Error');
+      const expected = [
+        quad(blankNode(), namedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'), namedNode('http://www.w3.org/ns/hydra/core#Status')),
+        quad(blankNode(), namedNode('http://www.w3.org/ns/hydra/core#title'), literal('Internal Server Error', 'en')),
+        quad(blankNode(), namedNode('http://www.w3.org/ns/hydra/core#description'), literal('Some Error', 'en')),
+      ];
+
+      expect(quads).toEqualRdfQuadArray(expected);
     });
   });
 

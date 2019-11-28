@@ -1,13 +1,15 @@
-import jsonld from 'jsonld';
+import dataFactory, { namedNode } from '@rdfjs/data-model';
+import 'jest-rdf';
 import { Next, Response } from 'koa';
 import apiDocumentation from '../../src/routes/api-documentation';
-import runMiddleware from '../middleware';
 import createContext from '../context';
+import runMiddleware from '../middleware';
+import { captureSource, toArray } from '../rdf';
 
 const makeRequest = async (next?: Next): Promise<Response> => {
   const context = createContext();
 
-  return runMiddleware(apiDocumentation(context.router), context, next);
+  return runMiddleware(apiDocumentation(context.router, dataFactory), context, next);
 };
 
 describe('API documentation', (): void => {
@@ -15,20 +17,15 @@ describe('API documentation', (): void => {
     const response = await makeRequest();
 
     expect(response.status).toBe(200);
-    expect(response.type).toBe('application/ld+json');
   });
 
   it('should return the API documentation', async (): Promise<void> => {
-    const response = await makeRequest();
-    const graph = await jsonld.expand(response.body);
+    const source = await makeRequest().then(captureSource);
 
-    expect(graph).toHaveLength(1);
+    const id = namedNode('http://example.com/path-to/api-documentation');
 
-    const object = graph[0];
-
-    expect(object['@id']).toBe('http://example.com/path-to/api-documentation');
-    expect(object['@type']).toContain('http://www.w3.org/ns/hydra/core#ApiDocumentation');
-    expect(object).toHaveProperty(['http://www.w3.org/ns/hydra/core#entrypoint']);
+    expect(await toArray(source.match(id, namedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'), namedNode('http://www.w3.org/ns/hydra/core#ApiDocumentation')))).toHaveLength(1);
+    expect(await toArray(source.match(id, namedNode('http://www.w3.org/ns/hydra/core#entrypoint')))).toHaveLength(1);
   });
 
   it('should call the next middleware', async (): Promise<void> => {

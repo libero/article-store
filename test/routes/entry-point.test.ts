@@ -1,13 +1,15 @@
-import jsonld from 'jsonld';
+import dataFactory, { literal, namedNode, quad } from '@rdfjs/data-model';
+import 'jest-rdf';
 import { Next, Response } from 'koa';
 import entryPoint from '../../src/routes/entry-point';
-import runMiddleware from '../middleware';
+import { captureQuads } from '../rdf';
 import createContext from '../context';
+import runMiddleware from '../middleware';
 
 const makeRequest = async (next?: Next): Promise<Response> => {
   const context = createContext();
 
-  return runMiddleware(entryPoint(context.router), context, next);
+  return runMiddleware(entryPoint(context.router, dataFactory), context, next);
 };
 
 describe('entry-point', (): void => {
@@ -15,21 +17,22 @@ describe('entry-point', (): void => {
     const response = await makeRequest();
 
     expect(response.status).toBe(200);
-    expect(response.type).toBe('application/ld+json');
   });
 
   it('should return the entry point', async (): Promise<void> => {
-    const response = await makeRequest();
-    const graph = await jsonld.expand(response.body);
+    const quads = await makeRequest().then(captureQuads);
 
-    expect(graph).toHaveLength(1);
+    const id = namedNode('http://example.com/path-to/entry-point');
+    const collection = namedNode('http://example.com/path-to/article-list');
 
-    const object = graph[0];
+    const expected = [
+      quad(id, namedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'), namedNode('http://schema.org/EntryPoint')),
+      quad(id, namedNode('http://schema.org/name'), literal('Article Store', 'en')),
+      quad(id, namedNode('http://www.w3.org/ns/hydra/core#collection'), collection),
+      quad(collection, namedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'), namedNode('http://www.w3.org/ns/hydra/core#Collection')),
+    ];
 
-    expect(object['@id']).toBe('http://example.com/path-to/entry-point');
-    expect(object['@type']).toContain('http://schema.org/EntryPoint');
-    expect(object).toHaveProperty(['http://schema.org/name']);
-    expect(object).toHaveProperty(['http://www.w3.org/ns/hydra/core#collection']);
+    expect(quads).toBeRdfIsomorphic(expected);
   });
 
   it('should call the next middleware', async (): Promise<void> => {
