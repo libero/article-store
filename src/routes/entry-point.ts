@@ -3,7 +3,7 @@ import { Context, Middleware, Next } from 'koa';
 import { DataFactory } from 'rdf-js';
 import { storeStream } from 'rdf-store-stream';
 import url from 'url';
-import streamifyArray from 'streamify-array';
+import streamArray from 'stream-array';
 import { hydra, rdf, schema } from '../namespaces';
 import Routes from './index';
 
@@ -19,7 +19,7 @@ export default (router: Router, { namedNode, literal, quad }: DataFactory): Midd
       quad(articleList, rdf('type'), hydra('Collection')),
     ];
 
-    response.body = await storeStream(streamifyArray(quads));
+    response.body = await storeStream(streamArray(quads));
 
     await next();
   }
