@@ -4,21 +4,8 @@ import Articles from './articles';
 export default class InMemoryArticles implements Articles {
     private nodes: { [key: string]: JsonLdObj } = {};
 
-    [Symbol.iterator](): Iterator<JsonLdObj> {
-      const { nodes } = this;
-      let i = 0;
-      return {
-        next(): IteratorResult<JsonLdObj> {
-          const iri = Object.keys(nodes)[i];
-          const isDone = iri === undefined;
-          const article = !isDone ? nodes[iri] : undefined;
-          i += 1;
-          return {
-            done: isDone,
-            value: article,
-          };
-        },
-      };
+    * [Symbol.iterator](): Iterator<JsonLdObj> {
+      yield* Object.values<JsonLdObj>(this.nodes);
     }
 
     async count(): Promise<number> {
