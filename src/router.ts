@@ -3,7 +3,7 @@ import Routes from './routes';
 import apiDocumentation from './routes/api-documentation';
 import articleList from './routes/article-list';
 import entryPoint from './routes/entry-point';
-import Articles from './adaptors/articles';
+import { Articles } from './adaptors/articles';
 
 export default (articles: Articles): Router => {
   const router = new Router();
