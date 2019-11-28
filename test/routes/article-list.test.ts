@@ -3,11 +3,11 @@ import { Next, Response } from 'koa';
 import articleList from '../../src/routes/article-list';
 import createContext from '../context';
 import runMiddleware from '../middleware';
-import NullArticles from '../../src/adaptors/null-articles';
+import InMemoryArticles from '../../src/adaptors/in-memory-articles';
 
 const makeRequest = async (next?: Next): Promise<Response> => {
   const context = createContext();
-  const articles = new NullArticles();
+  const articles = new InMemoryArticles();
 
   return runMiddleware(articleList(articles, context.router), context, next);
 };
