@@ -1,25 +1,36 @@
 import Router from '@koa/router';
 import { Context, Middleware, Next } from 'koa';
-import { hydra, rdf, schema } from 'rdf-namespaces';
+import { DataFactory } from 'rdf-js';
+import { toRdf } from 'rdf-literal';
+import { storeStream } from 'rdf-store-stream';
+import url from 'url';
+import { hydra, rdf, schema } from '../namespaces';
+import { fromArray } from '../stream';
 import Routes from './index';
 
-export default (router: Router): Middleware => (
+export default (
+  router: Router,
+  {
+    blankNode, namedNode, literal, quad,
+  }: DataFactory,
+): Middleware => (
   async ({ request, response }: Context, next: Next): Promise<void> => {
-    response.body = {
-      '@context': {
-        '@base': request.origin,
-      },
-      '@id': router.url(Routes.ArticleList),
-      '@type': hydra.Collection,
-      [hydra.title]: { '@value': 'List of articles', '@language': 'en' },
-      'http://www.w3.org/ns/hydra/core#manages': {
-        'http://www.w3.org/ns/hydra/core#property': { '@id': rdf.type },
-        'http://www.w3.org/ns/hydra/core#object': { '@id': schema.Article },
-      },
-      [hydra.totalItems]: 0,
-      [hydra.member]: { '@list': [] },
-    };
-    response.type = 'jsonld';
+    const articleList = namedNode(url.resolve(request.origin, router.url(Routes.ArticleList)));
+
+    const manages = blankNode();
+    const members = blankNode();
+
+    const quads = [
+      quad(articleList, rdf('type'), hydra('Collection')),
+      quad(articleList, hydra('title'), literal('List of articles', 'en')),
+      quad(articleList, hydra('manages'), manages),
+      quad(manages, hydra('property'), rdf('type')),
+      quad(manages, hydra('object'), schema('Article')),
+      quad(articleList, hydra('totalItems'), toRdf(0)),
+      quad(articleList, hydra('member'), members),
+    ];
+
+    response.body = await storeStream(fromArray(quads));
 
     await next();
   }
