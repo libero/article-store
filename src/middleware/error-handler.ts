@@ -2,8 +2,8 @@ import createError, { HttpError, UnknownError } from 'http-errors';
 import { Context, Middleware, Next } from 'koa';
 import { DataFactory } from 'rdf-js';
 import { storeStream } from 'rdf-store-stream';
+import streamifyArray from 'streamify-array';
 import { hydra, rdf } from '../namespaces';
-import { fromArray } from '../stream';
 
 const handleHttpError = async (
   error: HttpError,
@@ -25,7 +25,7 @@ const handleHttpError = async (
     );
   }
 
-  response.body = await storeStream(fromArray(quads));
+  response.body = await storeStream(streamifyArray(quads));
 };
 
 const toHttpError = (error: UnknownError): HttpError => (

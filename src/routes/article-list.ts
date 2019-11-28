@@ -4,8 +4,8 @@ import { DataFactory } from 'rdf-js';
 import { toRdf } from 'rdf-literal';
 import { storeStream } from 'rdf-store-stream';
 import url from 'url';
+import streamifyArray from 'streamify-array';
 import { hydra, rdf, schema } from '../namespaces';
-import { fromArray } from '../stream';
 import Routes from './index';
 
 export default (
@@ -30,7 +30,7 @@ export default (
       quad(articleList, hydra('member'), members),
     ];
 
-    response.body = await storeStream(fromArray(quads));
+    response.body = await storeStream(streamifyArray(quads));
 
     await next();
   }

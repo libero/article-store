@@ -3,11 +3,11 @@ import { Context, Middleware, Next } from 'koa';
 import { DataFactory } from 'rdf-js';
 import { toRdf } from 'rdf-literal';
 import { storeStream } from 'rdf-store-stream';
+import streamifyArray from 'streamify-array';
 import url from 'url';
 import {
   hydra, owl, rdf, schema,
 } from '../namespaces';
-import { fromArray } from '../stream';
 import Routes from './index';
 
 export default (
@@ -102,7 +102,7 @@ export default (
       quad(collectionMember, hydra('writeable'), toRdf(false)),
     );
 
-    response.body = await storeStream(fromArray(quads));
+    response.body = await storeStream(streamifyArray(quads));
 
     await next();
   }

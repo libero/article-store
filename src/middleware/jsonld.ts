@@ -1,7 +1,6 @@
 import { JsonLdSerializer } from 'jsonld-streaming-serializer';
 import { Context, Middleware, Next } from 'koa';
 import isSource from '../is-source';
-import { toReadable } from '../stream';
 
 const createSerializer = (): JsonLdSerializer => (
   new JsonLdSerializer({ useNativeTypes: true })
@@ -15,7 +14,7 @@ export default (): Middleware => (
       return;
     }
 
-    response.body = toReadable(response.body.match()).pipe(createSerializer());
+    response.body = createSerializer().import(response.body.match());
     response.type = 'application/ld+json';
   }
 );
