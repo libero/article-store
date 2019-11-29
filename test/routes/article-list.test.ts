@@ -41,7 +41,7 @@ describe('article list', (): void => {
     expect(object['http://www.w3.org/ns/hydra/core#member'][0]['@list']).toHaveLength(0);
   });
 
-  it('should return the list', async (): Promise<void> => {
+  it('should return articles in the list', async (): Promise<void> => {
     const articles = new InMemoryArticles();
 
     await articles.add({
@@ -62,13 +62,6 @@ describe('article list', (): void => {
 
     const object = graph[0];
 
-    expect(object['@id']).toBe('http://example.com/path-to/article-list');
-    expect(object['@type']).toContain('http://www.w3.org/ns/hydra/core#Collection');
-    expect(object).toHaveProperty(['http://www.w3.org/ns/hydra/core#title']);
-    expect(object).toHaveProperty(['http://www.w3.org/ns/hydra/core#manages']);
-    expect(object).toHaveProperty(['http://www.w3.org/ns/hydra/core#totalItems']);
-    expect(object['http://www.w3.org/ns/hydra/core#totalItems'][0]['@value']).toEqual(2);
-    expect(object).toHaveProperty(['http://www.w3.org/ns/hydra/core#member']);
     expect(object['http://www.w3.org/ns/hydra/core#member'][0]['@list']).toHaveLength(2);
   });
 
