@@ -1,14 +1,14 @@
 import { Iri, JsonLdObj } from 'jsonld/jsonld-spec';
 import Articles from '../articles';
 import ArticleNotFound from '../errors/article-not-found';
-import InvalidId from '../errors/invalid-id';
+import ArticleHasNoId from '../errors/article-has-no-id';
 
 export default class InMemoryArticles implements Articles {
   private nodes: { [key: string]: JsonLdObj } = {};
 
   async add(node: JsonLdObj): Promise<void> {
     if (node['@id'] === undefined) {
-      throw new InvalidId();
+      throw new ArticleHasNoId();
     }
     this.nodes[node['@id']] = node;
   }
