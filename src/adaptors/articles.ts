@@ -5,7 +5,7 @@ export interface Articles extends Iterable<JsonLdObj> {
 
     get(id: Iri): Promise<JsonLdObj>;
 
-    set(article: JsonLdObj): Promise<void>;
+    add(article: JsonLdObj): Promise<void>;
 
     delete(id: Iri): Promise<void>;
 

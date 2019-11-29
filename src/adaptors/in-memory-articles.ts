@@ -13,13 +13,13 @@ export default class InMemoryArticles implements Articles {
     }
 
     async get(id: Iri): Promise<JsonLdObj> {
-      if (this.has(id)) {
-        return this.nodes[id];
+      if (!this.has(id)) {
+        throw new RangeError(`An item with the ID ${id} could not be found`);
       }
-      throw new RangeError(`An item with the ID ${id} could not be found`);
+      return this.nodes[id];
     }
 
-    async set(node: JsonLdObj): Promise<void> {
+    async add(node: JsonLdObj): Promise<void> {
       this.nodes[node['@id']] = node;
     }
 
