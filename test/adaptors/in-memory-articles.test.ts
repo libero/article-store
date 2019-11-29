@@ -1,6 +1,7 @@
 import { Iri, JsonLdObj } from 'jsonld/jsonld-spec';
 import InMemoryArticles from '../../src/adaptors/in-memory-articles';
 import ArticleNotFound from '../../src/errors/article-not-found';
+import InvalidId from '../../src/errors/invalid-id';
 
 const article = (id: Iri, message?: string): JsonLdObj => ({
   '@id': id,
@@ -44,6 +45,12 @@ describe('in-memory articles', (): void => {
     expect(await articles.count()).toBe(1);
     expect(await articles.contains('_:1')).toBe(true);
     expect((await articles.get('_:1'))['http://schema.org/name']['@value']).toEqual('Article _:1 v2');
+  });
+
+  it('throws an error if no id set for article', async (): Promise<void> => {
+    const articles = new InMemoryArticles();
+
+    await expect(articles.add({})).rejects.toThrow(new InvalidId());
   });
 
   it('can remove articles', async (): Promise<void> => {
