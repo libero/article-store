@@ -30,7 +30,7 @@ describe('in-memory articles', (): void => {
     expect(await articles.contains('_:1')).toBe(true);
   });
 
-  it('can replace an exisitng article', async (): Promise<void> => {
+  it('can replace an existing article', async (): Promise<void> => {
     const articles = new InMemoryArticles();
 
     expect(await articles.contains('_:1')).toBe(false);
