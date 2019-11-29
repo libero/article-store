@@ -1,5 +1,6 @@
 import { Iri, JsonLdObj } from 'jsonld/jsonld-spec';
 import Articles from '../articles';
+import ArticleNotFound from '../error/article-not-found';
 
 export default class InMemoryArticles implements Articles {
     private nodes: { [key: string]: JsonLdObj } = {};
@@ -14,7 +15,7 @@ export default class InMemoryArticles implements Articles {
 
     async get(id: Iri): Promise<JsonLdObj> {
       if (!this.has(id)) {
-        throw new RangeError(`An item with the ID ${id} could not be found`);
+        throw new ArticleNotFound(id);
       }
       return this.nodes[id];
     }
