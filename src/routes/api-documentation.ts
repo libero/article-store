@@ -98,6 +98,24 @@ export default (router: Router): Middleware => (
             },
           ],
         },
+        {
+          '@id': schema.Article,
+          '@type': hydra.Class,
+          [hydra.title]: { '@value': 'Article', '@language': 'en' },
+          [hydra.supportedProperty]: [
+            {
+              '@type': hydra.SupportedProperty,
+              [hydra.title]: { '@value': 'Title', '@language': 'en' },
+              [hydra.property]: {
+                '@id': schema.name,
+                '@type': rdf.Property,
+              },
+              [hydra.required]: true,
+              [hydra.readable]: true,
+              [hydra.writeable]: true,
+            },
+          ],
+        },
       ],
     };
     response.type = 'jsonld';
