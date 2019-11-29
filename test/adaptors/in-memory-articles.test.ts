@@ -88,7 +88,26 @@ describe('in-memory articles', (): void => {
 
     await articles.add(article('_:1'));
     await articles.add(article('_:2'));
-
-    expect([...articles]).toHaveLength(2);
+    const articlesIterator = articles[Symbol.iterator]();
+    expect(articlesIterator.next()).toEqual({
+      'done': false,
+      'value': {
+        '@id': '_:1',
+        '@type': 'http://schema.org/Article',
+        'http://schema.org/name': { '@value': 'Article _:1', '@language': 'en' },
+      },
+    });
+    expect(articlesIterator.next()).toEqual({
+      'done': false,
+      'value': {
+        '@id': '_:2',
+        '@type': 'http://schema.org/Article',
+        'http://schema.org/name': { '@value': 'Article _:2', '@language': 'en' },
+      },
+    });
+    expect(articlesIterator.next()).toEqual({
+      'done': true,
+      'value': undefined,
+    });
   });
 });
