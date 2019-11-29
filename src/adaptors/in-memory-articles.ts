@@ -9,7 +9,7 @@ export default class InMemoryArticles implements Articles {
   async add(node: JsonLdObj): Promise<void> {
     if (node['@id'] === undefined) {
       throw new InvalidId();
-    } 
+    }
     this.nodes[node['@id']] = node;
   }
 
