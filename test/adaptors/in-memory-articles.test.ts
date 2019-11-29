@@ -58,7 +58,6 @@ describe('in-memory articles', (): void => {
   it('can handle removal request of article not in list', async (): Promise<void> => {
     const articles = new InMemoryArticles();
 
-
     expect(await articles.contains('_:1')).toBe(false);
     await articles.remove('_:1');
   });
@@ -67,5 +66,18 @@ describe('in-memory articles', (): void => {
     const articles = new InMemoryArticles();
 
     await expect(articles.get('_:67890')).rejects.toThrow(new ArticleNotFound('_:67890'));
+  });
+
+  it('can retrieve an article', async (): Promise<void> => {
+    const articles = new InMemoryArticles();
+
+    expect(await articles.contains('_:67890')).toBe(false);
+    await articles.add(article('_:67890'));
+
+    await expect(await articles.get('_:67890')).toEqual({
+      '@id': '_:67890',
+      '@type': 'http://schema.org/Article',
+      'http://schema.org/name': { '@value': 'Article _:67890', '@language': 'en' },
+    });
   });
 });
