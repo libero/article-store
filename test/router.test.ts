@@ -1,7 +1,7 @@
 import Layer from '@koa/router/lib/layer';
+import InMemoryArticles from '../src/adaptors/in-memory-articles';
 import createRouter from '../src/router';
 import Routes from '../src/routes';
-import InMemoryArticles from '../src/adaptors/in-memory-articles';
 
 describe('router', (): void => {
   const router = createRouter(new InMemoryArticles());
