@@ -44,20 +44,16 @@ describe('article list', (): void => {
   it('should return the list', async (): Promise<void> => {
     const articles = new InMemoryArticles();
 
-    await (async (): Promise<void> => {
-      Promise.all([
-        articles.add({
-          '@type': 'http://schema.org/Article',
-          '@id': '_:09560',
-          'http://schema.org/name': 'Homo naledi, a new species of the genus Homo from the Dinaledi Chamber, South Africa',
-        }),
-        articles.add({
-          '@type': 'http://schema.org/Article',
-          '@id': '_:24231',
-          'http://schema.org/name': 'The age of Homo naledi and associated sediments in the Rising Star Cave, South Africa',
-        }),
-      ]);
-    })();
+    await articles.add({
+      '@type': 'http://schema.org/Article',
+      '@id': '_:09560',
+      'http://schema.org/name': 'Homo naledi, a new species of the genus Homo from the Dinaledi Chamber, South Africa',
+    });
+    await articles.add({
+      '@type': 'http://schema.org/Article',
+      '@id': '_:24231',
+      'http://schema.org/name': 'The age of Homo naledi and associated sediments in the Rising Star Cave, South Africa',
+    });
 
     const response = await makeRequest(undefined, articles);
     const graph = await jsonld.expand(response.body);
