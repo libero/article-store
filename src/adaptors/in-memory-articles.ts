@@ -10,7 +10,7 @@ export default class InMemoryArticles implements Articles {
   }
 
   async get(id: Iri): Promise<JsonLdObj> {
-    if (!this.contains(id)) {
+    if (!(id in this.nodes)) {
       throw new ArticleNotFound(id);
     }
 
