@@ -6,7 +6,7 @@ export default class InMemoryArticles implements Articles {
   private nodes: { [key: string]: JsonLdObj } = {};
 
   * [Symbol.iterator](): Iterator<JsonLdObj> {
-    yield* Object.values<JsonLdObj>(this.nodes);
+    yield* Object.values(this.nodes);
   }
 
   async count(): Promise<number> {
