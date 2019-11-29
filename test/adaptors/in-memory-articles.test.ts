@@ -80,4 +80,15 @@ describe('in-memory articles', (): void => {
       'http://schema.org/name': { '@value': 'Article _:67890', '@language': 'en' },
     });
   });
+
+  it('can retrieve the list of articles', async (): Promise<void> => {
+    const articles = new InMemoryArticles();
+
+    expect([...articles]).toEqual([]);
+
+    await articles.add(article('_:1'));
+    await articles.add(article('_:2'));
+
+    expect([...articles]).toHaveLength(2);
+  });
 });
