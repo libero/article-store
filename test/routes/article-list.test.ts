@@ -1,10 +1,10 @@
 import jsonld from 'jsonld';
 import { Next, Response } from 'koa';
+import InMemoryArticles from '../../src/adaptors/in-memory-articles';
+import Articles from '../../src/articles';
 import articleList from '../../src/routes/article-list';
 import createContext from '../context';
 import runMiddleware from '../middleware';
-import InMemoryArticles from '../../src/adaptors/in-memory-articles';
-import { Articles } from '../../src/articles';
 
 const makeRequest = async (
   next?: Next,

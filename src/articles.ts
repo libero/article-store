@@ -1,6 +1,6 @@
 import { Iri, JsonLdObj } from 'jsonld/jsonld-spec';
 
-export interface Articles extends Iterable<JsonLdObj> {
+interface Articles extends Iterable<JsonLdObj> {
     count(): Promise<number>;
 
     get(id: Iri): Promise<JsonLdObj>;
@@ -11,3 +11,5 @@ export interface Articles extends Iterable<JsonLdObj> {
 
     has(id: Iri): Promise<boolean>;
 }
+
+export default Articles;

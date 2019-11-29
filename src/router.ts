@@ -1,9 +1,9 @@
 import Router from '@koa/router';
+import Articles from './articles';
 import Routes from './routes';
 import apiDocumentation from './routes/api-documentation';
 import articleList from './routes/article-list';
 import entryPoint from './routes/entry-point';
-import { Articles } from './articles';
 
 export default (articles: Articles): Router => {
   const router = new Router();

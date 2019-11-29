@@ -1,8 +1,8 @@
 import Router from '@koa/router';
 import { Context, Middleware, Next } from 'koa';
 import { hydra, rdf, schema } from 'rdf-namespaces';
+import Articles from '../articles';
 import Routes from './index';
-import { Articles } from '../articles';
 
 export default (articles: Articles, router: Router): Middleware => (
   async ({ request, response }: Context, next: Next): Promise<void> => {

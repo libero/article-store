@@ -1,11 +1,11 @@
 import cors from '@koa/cors';
 import Koa from 'koa';
 import logger from 'koa-logger';
+import InMemoryArticles from './adaptors/in-memory-articles';
 import apiDocumentation from './middleware/api-documentation';
 import errorHandler from './middleware/error-handler';
 import routing from './middleware/routing';
 import createRouter from './router';
-import InMemoryArticles from './adaptors/in-memory-articles';
 
 const app = new Koa();
 const router = createRouter(new InMemoryArticles());
