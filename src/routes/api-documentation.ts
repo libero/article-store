@@ -22,7 +22,6 @@ export default (
     );
     const entryPoint = namedNode(url.resolve(request.origin, router.url(Routes.EntryPoint)));
 
-
     const quads = [
       quad(apiDocumentation, rdf('type'), hydra('ApiDocumentation')),
       quad(apiDocumentation, hydra('entrypoint'), entryPoint),
