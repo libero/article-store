@@ -1,6 +1,6 @@
 import ArticleHasNoID from '../../src/errors/article-has-no-id';
 
-describe('article has no id error', (): void => {
+describe('article has no ID error', (): void => {
   it('should be an error', async (): Promise<void> => {
     const error = new ArticleHasNoID();
 
