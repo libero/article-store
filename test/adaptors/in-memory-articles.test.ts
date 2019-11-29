@@ -2,10 +2,10 @@ import { Iri, JsonLdObj } from 'jsonld/jsonld-spec';
 import InMemoryArticles from '../../src/adaptors/in-memory-articles';
 import ArticleNotFound from '../../src/errors/article-not-found';
 
-const article = (id: Iri): JsonLdObj => ({
+const article = (id: Iri, message?: string): JsonLdObj => ({
   '@id': id,
   '@type': 'http://schema.org/Article',
-  'http://schema.org/name': { '@value': `Article ${id}`, '@language': 'en' },
+  'http://schema.org/name': { '@value': message ? message : `Article ${id}`, '@language': 'en' },
 });
 
 describe('in-memory articles', (): void => {
@@ -30,6 +30,22 @@ describe('in-memory articles', (): void => {
     expect(await articles.contains('_:1')).toBe(true);
   });
 
+  it('can replace an exisitng article', async (): Promise<void> => {
+    const articles = new InMemoryArticles();
+
+    expect(await articles.contains('_:1')).toBe(false);
+
+    await articles.add(article('_:1'));
+    expect(await articles.count()).toBe(1);
+    expect(await articles.contains('_:1')).toBe(true);
+    expect((await articles.get('_:1'))['http://schema.org/name']['@value']).toEqual('Article _:1');
+
+    await articles.add(article('_:1', 'Article _:1 v2'));
+    expect(await articles.count()).toBe(1);
+    expect(await articles.contains('_:1')).toBe(true);
+    expect((await articles.get('_:1'))['http://schema.org/name']['@value']).toEqual('Article _:1 v2');
+  });
+
   it('can remove articles', async (): Promise<void> => {
     const articles = new InMemoryArticles();
 
@@ -37,6 +53,14 @@ describe('in-memory articles', (): void => {
     await articles.remove('_:1');
 
     expect(await articles.contains('_:1')).toBe(false);
+  });
+
+  it('can handle removal request of article not in list', async (): Promise<void> => {
+    const articles = new InMemoryArticles();
+
+
+    expect(await articles.contains('_:1')).toBe(false);
+    await articles.remove('_:1');
   });
 
   it('throws an error if the article is not found', async (): Promise<void> => {
