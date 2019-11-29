@@ -5,7 +5,7 @@ import ArticleNotFound from '../../src/errors/article-not-found';
 const article = (id: Iri, message?: string): JsonLdObj => ({
   '@id': id,
   '@type': 'http://schema.org/Article',
-  'http://schema.org/name': { '@value': message ? message : `Article ${id}`, '@language': 'en' },
+  'http://schema.org/name': { '@value': message || `Article ${id}`, '@language': 'en' },
 });
 
 describe('in-memory articles', (): void => {
@@ -88,24 +88,24 @@ describe('in-memory articles', (): void => {
     await articles.add(article('_:2'));
     const articlesIterator = articles[Symbol.iterator]();
     expect(articlesIterator.next()).toEqual({
-      'done': false,
-      'value': {
+      done: false,
+      value: {
         '@id': '_:1',
         '@type': 'http://schema.org/Article',
         'http://schema.org/name': { '@value': 'Article _:1', '@language': 'en' },
       },
     });
     expect(articlesIterator.next()).toEqual({
-      'done': false,
-      'value': {
+      done: false,
+      value: {
         '@id': '_:2',
         '@type': 'http://schema.org/Article',
         'http://schema.org/name': { '@value': 'Article _:2', '@language': 'en' },
       },
     });
     expect(articlesIterator.next()).toEqual({
-      'done': true,
-      'value': undefined,
+      done: true,
+      value: undefined,
     });
   });
 });
