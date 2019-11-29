@@ -1,15 +1,15 @@
 import { Iri, JsonLdObj } from 'jsonld/jsonld-spec';
 
 interface Articles extends Iterable<JsonLdObj> {
-  count(): Promise<number>;
+  add(article: JsonLdObj): Promise<void>;
 
   get(id: Iri): Promise<JsonLdObj>;
 
-  add(article: JsonLdObj): Promise<void>;
+  remove(id: Iri): Promise<void>;
 
-  delete(id: Iri): Promise<void>;
+  contains(id: Iri): Promise<boolean>;
 
-  has(id: Iri): Promise<boolean>;
+  count(): Promise<number>;
 }
 
 export default Articles;
