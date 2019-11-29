@@ -84,8 +84,6 @@ describe('in-memory articles', (): void => {
   it('can retrieve the list of articles', async (): Promise<void> => {
     const articles = new InMemoryArticles();
 
-    expect([...articles]).toEqual([]);
-
     await articles.add(article('_:1'));
     await articles.add(article('_:2'));
     const articlesIterator = articles[Symbol.iterator]();
