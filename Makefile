@@ -1,5 +1,5 @@
 .DEFAULT_GOAL = help
-.PHONY: help install build start stop wait-healthy sh logs watch lint fix test run dev prod
+.PHONY: help install gitmodules build start stop wait-healthy sh exec logs watch lint fix test run dev prod
 
 SHELL = /usr/bin/env bash
 
@@ -15,11 +15,15 @@ export TARGET
 help: ## Display this help text
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
 
-install: node_modules ## Install dependencies locally
+install: ## Install dependencies locally
+	make --jobs=2 $(MAKEFLAGS) node_modules gitmodules
 
 node_modules: package.json package-lock.json
 	npm install
 	touch node_modules
+
+gitmodules:
+	git submodule update --init --recursive
 
 build: ## Build the containers
 	${DOCKER_COMPOSE} build
@@ -41,7 +45,14 @@ wait-healthy: ## Wait for the containers to be healthy
 	done
 
 sh: ## Open a shell on the app container
-	${DOCKER_COMPOSE} exec app sh
+	make exec command="sh"
+
+exec: ## Run a command on the app container
+	if [ -z "$(command)" ]; then \
+		echo "No command provided"; \
+		exit 1; \
+	fi; \
+	${DOCKER_COMPOSE} exec app $(command)
 
 logs: ## Show the containers' logs
 	${DOCKER_COMPOSE} logs
@@ -66,7 +77,7 @@ run:
 
 dev: export TARGET = dev
 dev: ## Build and runs the container for development
-	make --jobs=3 install build stop
+	make --jobs=4 install build stop
 	make run
 
 prod: export TARGET = prod
