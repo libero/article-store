@@ -3,8 +3,8 @@ import { Context, Middleware, Next } from 'koa';
 import { Store as N3Store } from 'n3';
 import { DataFactory, Quad, Store } from 'rdf-js';
 import url from 'url';
-import { toArray } from '../../test/rdf';
 import { hydra, rdf, schema } from '../namespaces';
+import streamToArray from '../stream-to-array';
 import Routes from './index';
 
 export default (
@@ -26,7 +26,7 @@ export default (
       quad(manages, hydra('property'), rdf('type')),
       quad(manages, hydra('object'), schema('Article')),
     ];
-    const found = await toArray(articles.match(null, rdf('type'), schema('Article')));
+    const found = await streamToArray(articles.match(null, rdf('type'), schema('Article')));
 
     const newQuads = found.reduce(
       async (carryPromise: Promise<Array<Quad>>, { subject }: Quad): Promise<Array<Quad>> => {
@@ -34,7 +34,7 @@ export default (
 
         carry.push(quad(articleList, hydra('member'), subject));
 
-        (await toArray(articles.match(null, null, null, subject)))
+        (await streamToArray(articles.match(null, null, null, subject)))
           .forEach(({ predicate, object }: Quad): void => {
             carry.push(quad(subject, predicate, object));
           });

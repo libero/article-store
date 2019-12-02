@@ -1,7 +1,7 @@
 import { Response } from 'koa';
-import { Quad, Source, Stream } from 'rdf-js';
-import streamToArray from 'stream-to-array';
+import { Quad, Source } from 'rdf-js';
 import isSource from '../src/is-source';
+import streamToArray from '../src/stream-to-array';
 
 export const captureSource = (response: Response): Source => {
   if (!isSource(response.body)) {
@@ -11,10 +11,6 @@ export const captureSource = (response: Response): Source => {
   return response.body;
 };
 
-export const toArray = async (stream: Stream): Promise<Array<Quad>> => (
-  streamToArray(stream as Stream & NodeJS.ReadableStream)
-);
-
 export const captureQuads = async (response: Response): Promise<Array<Quad>> => (
-  toArray(captureSource(response).match())
+  streamToArray(captureSource(response).match())
 );

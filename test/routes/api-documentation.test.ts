@@ -2,9 +2,10 @@ import 'jest-rdf';
 import { Next, Response } from 'koa';
 import { DataFactory } from 'n3';
 import apiDocumentation from '../../src/routes/api-documentation';
+import streamToArray from '../../src/stream-to-array';
 import createContext from '../context';
 import runMiddleware from '../middleware';
-import { captureSource, toArray } from '../rdf';
+import { captureSource } from '../rdf';
 
 const { namedNode } = DataFactory;
 
@@ -26,8 +27,8 @@ describe('API documentation', (): void => {
 
     const id = namedNode('http://example.com/path-to/api-documentation');
 
-    expect(await toArray(source.match(id, namedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'), namedNode('http://www.w3.org/ns/hydra/core#ApiDocumentation')))).toHaveLength(1);
-    expect(await toArray(source.match(id, namedNode('http://www.w3.org/ns/hydra/core#entrypoint')))).toHaveLength(1);
+    expect(await streamToArray(source.match(id, namedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'), namedNode('http://www.w3.org/ns/hydra/core#ApiDocumentation')))).toHaveLength(1);
+    expect(await streamToArray(source.match(id, namedNode('http://www.w3.org/ns/hydra/core#entrypoint')))).toHaveLength(1);
   });
 
   it('should call the next middleware', async (): Promise<void> => {
