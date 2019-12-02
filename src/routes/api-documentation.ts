@@ -61,7 +61,7 @@ export default (router: Router): Middleware => (
               [hydra.possibleStatus]: [
                 {
                   [hydra.statusCode]: 201,
-                }
+                },
               ],
             },
           ],
