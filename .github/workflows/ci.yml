@@ -15,3 +15,8 @@ jobs:
         set -e
         TARGET=prod make build
         TARGET=dev make build
+
+    - name: Step 2
+      run: |
+        set -e
+        echo "answer is 42"
