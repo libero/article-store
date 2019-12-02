@@ -2,6 +2,9 @@ name: CI
 
 on: [pull_request] # TODO: also `master`
 
+env:
+  IMAGE_TAG: github.sha
+
 jobs:
 
   build:
