@@ -1,16 +1,18 @@
-import dataFactory, {
-  blankNode, literal, namedNode, quad,
-} from '@rdfjs/data-model';
 import createHttpError, { UnknownError } from 'http-errors';
 import 'jest-rdf';
 import { Response } from 'koa';
+import { DataFactory } from 'n3';
 import errorHandler from '../../src/middleware/error-handler';
-import { captureQuads } from '../rdf';
 import createContext, { ErrorListener } from '../context';
 import runMiddleware, { Next } from '../middleware';
+import { captureQuads } from '../rdf';
+
+const {
+  blankNode, literal, namedNode, quad,
+} = DataFactory;
 
 const makeRequest = async (next?: Next, errorListener?: ErrorListener): Promise<Response> => (
-  runMiddleware(errorHandler(dataFactory), createContext({ errorListener }), next)
+  runMiddleware(errorHandler(DataFactory), createContext({ errorListener }), next)
 );
 
 const next = (error: UnknownError) => async (): Promise<void> => {

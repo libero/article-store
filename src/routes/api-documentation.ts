@@ -1,9 +1,8 @@
 import Router from '@koa/router';
 import { Context, Middleware, Next } from 'koa';
+import { Store } from 'n3';
 import { DataFactory } from 'rdf-js';
 import { toRdf } from 'rdf-literal';
-import { storeStream } from 'rdf-store-stream';
-import streamArray from 'stream-array';
 import url from 'url';
 import {
   hydra, owl, rdf, schema,
@@ -101,7 +100,7 @@ export default (
       quad(collectionMember, hydra('writeable'), toRdf(false)),
     );
 
-    response.body = await storeStream(streamArray(quads));
+    response.body = new Store(quads);
 
     await next();
   }

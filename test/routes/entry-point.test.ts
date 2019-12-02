@@ -1,15 +1,17 @@
-import dataFactory, { literal, namedNode, quad } from '@rdfjs/data-model';
 import 'jest-rdf';
 import { Next, Response } from 'koa';
+import { DataFactory } from 'n3';
 import entryPoint from '../../src/routes/entry-point';
-import { captureQuads } from '../rdf';
 import createContext from '../context';
 import runMiddleware from '../middleware';
+import { captureQuads } from '../rdf';
+
+const { literal, namedNode, quad } = DataFactory;
 
 const makeRequest = async (next?: Next): Promise<Response> => {
   const context = createContext();
 
-  return runMiddleware(entryPoint(context.router, dataFactory), context, next);
+  return runMiddleware(entryPoint(context.router, DataFactory), context, next);
 };
 
 describe('entry-point', (): void => {

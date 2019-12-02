@@ -1,10 +1,10 @@
 import Layer from '@koa/router/lib/layer';
-import dataFactory from '@rdfjs/data-model';
+import { DataFactory, Store } from 'n3';
 import createRouter from '../src/router';
 import Routes from '../src/routes';
 
 describe('router', (): void => {
-  const router = createRouter(dataFactory);
+  const router = createRouter(new Store(), DataFactory);
 
   Object.keys(Routes).forEach((name: string): void => {
     it(`has a route named ${name}`, (): void => {

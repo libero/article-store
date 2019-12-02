@@ -1,15 +1,17 @@
-import dataFactory, { namedNode } from '@rdfjs/data-model';
 import 'jest-rdf';
 import { Next, Response } from 'koa';
+import { DataFactory } from 'n3';
 import apiDocumentation from '../../src/routes/api-documentation';
 import createContext from '../context';
 import runMiddleware from '../middleware';
 import { captureSource, toArray } from '../rdf';
 
+const { namedNode } = DataFactory;
+
 const makeRequest = async (next?: Next): Promise<Response> => {
   const context = createContext();
 
-  return runMiddleware(apiDocumentation(context.router, dataFactory), context, next);
+  return runMiddleware(apiDocumentation(context.router, DataFactory), context, next);
 };
 
 describe('API documentation', (): void => {

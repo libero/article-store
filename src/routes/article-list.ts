@@ -1,14 +1,14 @@
 import Router from '@koa/router';
 import { Context, Middleware, Next } from 'koa';
-import { DataFactory } from 'rdf-js';
-import { toRdf } from 'rdf-literal';
-import { storeStream } from 'rdf-store-stream';
+import { Store as N3Store } from 'n3';
+import { DataFactory, Quad, Store } from 'rdf-js';
 import url from 'url';
-import streamArray from 'stream-array';
+import { toArray } from '../../test/rdf';
 import { hydra, rdf, schema } from '../namespaces';
 import Routes from './index';
 
 export default (
+  articles: Store,
   router: Router,
   {
     blankNode, namedNode, literal, quad,
@@ -17,8 +17,7 @@ export default (
   async ({ request, response }: Context, next: Next): Promise<void> => {
     const articleList = namedNode(url.resolve(request.origin, router.url(Routes.ArticleList)));
 
-    const manages = blankNode();
-    const members = blankNode();
+    const manages = blankNode('manages');
 
     const quads = [
       quad(articleList, rdf('type'), hydra('Collection')),
@@ -26,11 +25,25 @@ export default (
       quad(articleList, hydra('manages'), manages),
       quad(manages, hydra('property'), rdf('type')),
       quad(manages, hydra('object'), schema('Article')),
-      quad(articleList, hydra('totalItems'), toRdf(0)),
-      quad(articleList, hydra('member'), members),
     ];
+    const found = await toArray(articles.match(null, rdf('type'), schema('Article')));
 
-    response.body = await storeStream(streamArray(quads));
+    const newQuads = found.reduce(
+      async (carryPromise: Promise<Array<Quad>>, { subject }: Quad): Promise<Array<Quad>> => {
+        const carry = await carryPromise;
+
+        carry.push(quad(articleList, hydra('member'), subject));
+
+        (await toArray(articles.match(null, null, null, subject)))
+          .forEach(({ predicate, object }: Quad): void => {
+            carry.push(quad(subject, predicate, object));
+          });
+
+        return carry;
+      }, Promise.resolve(quads),
+    );
+
+    response.body = new N3Store(await newQuads);
 
     await next();
   }
