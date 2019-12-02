@@ -52,7 +52,7 @@ exec: ## Run a command on the app container
 		echo "No command provided"; \
 		exit 1; \
 	fi; \
-	${DOCKER_COMPOSE} exec app $(command)
+	${DOCKER_COMPOSE} exec -T app $(command)
 
 logs: ## Show the containers' logs
 	${DOCKER_COMPOSE} logs
