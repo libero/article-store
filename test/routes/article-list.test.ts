@@ -6,11 +6,8 @@ import articleList from '../../src/routes/article-list';
 import createContext from '../context';
 import runMiddleware from '../middleware';
 
-const makeRequest = async (
-  next?: Next,
-  articles: Articles = new InMemoryArticles(),
-): Promise<Response> => (
-  runMiddleware(articleList(articles), createContext(), next)
+const makeRequest = async (next?: Next, articles?: Articles): Promise<Response> => (
+  runMiddleware(articleList(), createContext({ articles }), next)
 );
 
 describe('article list', (): void => {
