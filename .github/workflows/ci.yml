@@ -1,0 +1,17 @@
+name: CI
+
+on: [pull_request] # TODO: also `master`
+
+jobs:
+
+  make:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v1
+    - name: Build Docker images
+      run: |
+        set -e
+        TARGET=prod make build
+        TARGET=dev make build
