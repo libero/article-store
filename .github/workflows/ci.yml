@@ -17,7 +17,17 @@ jobs:
         TARGET=prod make build
         TARGET=dev make build
 
-    - name: Step 2
+    - name: Smoke tests
       run: |
         set -e
-        echo "answer is 42"
+        TARGET=prod .travis/smoke-test.sh
+        TARGET=dev .travis/smoke-test.sh
+
+    - name: Lint
+      run: make lint
+
+    - name: Test
+      run: make test
+
+    - name: Analyse
+      run: .travis/analyse.sh
