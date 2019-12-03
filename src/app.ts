@@ -14,7 +14,11 @@ const articles: Articles = new InMemoryArticles();
 const router = createRouter(articles);
 
 app.use(logger());
-app.use(bodyParser());
+app.use(bodyParser({
+  extendTypes: {
+      json: ['application/ld+json'],
+  },
+}));
 app.use(cors({
   exposeHeaders: ['Link'],
 }));

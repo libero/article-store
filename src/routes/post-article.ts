@@ -4,8 +4,8 @@ import Articles from '../articles';
 
 export default (articles: Articles): Middleware => (
   async ({ request, response }: Context, next: Next): Promise<void> => {
-    // TODO: Add the article received in the request.
-    response.status = constants.HTTP_STATUS_OK;
+    articles.add(request.body);
+    response.status = constants.HTTP_STATUS_NO_CONTENT;
     response.type = 'jsonld';
 
     await next();
