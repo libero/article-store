@@ -47,5 +47,15 @@ jobs:
         TARGET=dev .travis/smoke-test.sh
       if: always()
 
-    - name: Analyse
-      run: .travis/analyse.sh
+  analyse:
+
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v1
+
+    - name: Download Docker image artifact
+      uses: actions/download-artifact@v1
+      with:
+        name: article-store.dev
