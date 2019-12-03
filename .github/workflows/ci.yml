@@ -24,13 +24,15 @@ jobs:
         set -e
         TARGET=prod make build
         TARGET=dev make build
-        docker save -o article-store.dev libero/article-store:${IMAGE_TAG}-dev
+        mkdir -p docker-images
+        docker save -o docker-images/article-store libero/article-store:${IMAGE_TAG}
+        docker save -o docker-images/article-store.dev libero/article-store:${IMAGE_TAG}-dev
 
     - name: Upload Docker image artifact
       uses: actions/upload-artifact@v1
       with:
-        name: docker-image
-        path: article-store.dev
+        name: docker-images
+        path: docker-images
 
     - name: Lint
       run: make lint
@@ -40,12 +42,31 @@ jobs:
       run: make test
       if: always()
 
-    - name: Smoke tests
+
+  smoke-tests:
+
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v1
+
+    - name: Download Docker image artifact
+      uses: actions/download-artifact@v1
+      with:
+        name: docker-images
+
+    - name: Prod
       run: |
         set -e
+        docker load -i docker-images/article-store
         TARGET=prod .travis/smoke-test.sh
+
+    - name: Dev
+      run: |
+        set -e
+        docker load -i docker-images/article-store.dev
         TARGET=dev .travis/smoke-test.sh
-      if: always()
 
 
   analyse:
@@ -59,11 +80,11 @@ jobs:
     - name: Download Docker image artifact
       uses: actions/download-artifact@v1
       with:
-        name: docker-image
+        name: docker-images
 
     - name: Analyse
       run: |
         set -e
-        ls -l docker-image
-        docker load -i docker-image/article-store.dev
+        ls -l docker-images
+        docker load -i docker-images/article-store.dev
         .travis/analyse.sh
