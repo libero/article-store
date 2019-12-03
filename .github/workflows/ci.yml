@@ -24,7 +24,7 @@ jobs:
         set -e
         TARGET=prod make build
         TARGET=dev make build
-        docker save -o article-store.dev libero/article-store:${IMAGE_TAG}
+        docker save -o article-store.dev libero/article-store:${IMAGE_TAG}-dev
 
     - name: Upload Docker image artifact
       uses: actions/upload-artifact@v1
