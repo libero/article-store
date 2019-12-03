@@ -20,17 +20,20 @@ jobs:
         TARGET=prod make build
         TARGET=dev make build
 
+    - name: Lint
+      run: make lint
+      if: always()
+
+    - name: Test
+      run: make test
+      if: always()
+
     - name: Smoke tests
       run: |
         set -e
         TARGET=prod .travis/smoke-test.sh
         TARGET=dev .travis/smoke-test.sh
-
-    - name: Lint
-      run: make lint
-
-    - name: Test
-      run: make test
+      if: always()
 
     - name: Analyse
       run: .travis/analyse.sh
