@@ -37,7 +37,7 @@ jobs:
       if: always()
 
     - name: Test
-      run: make test && exit 42
+      run: make test
       if: always()
 
     - name: Smoke tests
