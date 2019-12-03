@@ -9,4 +9,4 @@ trap finish EXIT
 
 make start wait-healthy
 
-make exec tty=0 command="npx hydra-validator analyse http://localhost:8080/"
+make exec tty= command="npx hydra-validator analyse http://localhost:8080/"
