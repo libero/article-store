@@ -19,7 +19,6 @@ jobs:
     - name: Build Docker images
       run: |
         TARGET=prod make build
-        false 
         TARGET=dev make build
 
     - name: Lint
@@ -32,7 +31,6 @@ jobs:
 
     - name: Smoke tests
       run: |
-        set -e
         TARGET=prod .travis/smoke-test.sh
         TARGET=dev .travis/smoke-test.sh
       if: always()
