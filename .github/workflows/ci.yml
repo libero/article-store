@@ -24,15 +24,20 @@ jobs:
         set -e
         TARGET=prod make build
         TARGET=dev make build
-        mkdir -p docker-images
-        docker save -o docker-images/article-store libero/article-store:${IMAGE_TAG}
-        docker save -o docker-images/article-store.dev libero/article-store:${IMAGE_TAG}-dev
+        docker save -o docker-image-prod/article-store.tar libero/article-store:${IMAGE_TAG}
+        docker save -o docker-image-dev/article-store.tar libero/article-store:${IMAGE_TAG}-dev
 
-    - name: Upload Docker image artifact
+    - name: Upload prod Docker image
       uses: actions/upload-artifact@v1
       with:
-        name: docker-images
-        path: docker-images
+        name: docker-image-prod
+        path: docker-image-prod
+
+    - name: Upload dev Docker image
+      uses: actions/upload-artifact@v1
+      with:
+        name: docker-image-dev
+        path: docker-image-dev
 
     - name: Lint
       run: make lint
@@ -43,7 +48,7 @@ jobs:
       if: always()
 
 
-  smoke-tests:
+  smoke-tests-prod:
 
     needs: build
     runs-on: ubuntu-latest
@@ -54,18 +59,32 @@ jobs:
     - name: Download Docker image artifact
       uses: actions/download-artifact@v1
       with:
-        name: docker-images
+        name: docker-image-prod
 
     - name: Prod
       run: |
         set -e
-        docker load -i docker-images/article-store
+        docker load -i docker-image-prod/article-store.tar
         TARGET=prod .travis/smoke-test.sh
+
+
+  smoke-tests-dev:
+
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v1
+
+    - name: Download Docker image artifact
+      uses: actions/download-artifact@v1
+      with:
+        name: docker-image-dev
 
     - name: Dev
       run: |
         set -e
-        docker load -i docker-images/article-store.dev
+        docker load -i docker-image-dev/article-store.tar
         TARGET=dev .travis/smoke-test.sh
 
 
@@ -80,11 +99,10 @@ jobs:
     - name: Download Docker image artifact
       uses: actions/download-artifact@v1
       with:
-        name: docker-images
+        name: docker-image-dev
 
     - name: Analyse
       run: |
         set -e
-        ls -l docker-images
-        docker load -i docker-images/article-store.dev
+        docker load -i docker-image-dev/article-store.tar
         .travis/analyse.sh
