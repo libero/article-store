@@ -1,3 +1,4 @@
+import { constants } from 'http2';
 import Router from '@koa/router';
 import { Context, Middleware, Next } from 'koa';
 import {
@@ -57,10 +58,10 @@ export default (router: Router): Middleware => (
               [hydra.title]: { '@value': 'Add an article', '@language': 'en' },
               [hydra.method]: { '@value': 'POST' },
               [hydra.expects]: { '@id': schema.Article },
-              [hydra.returns]: { '@id': schema.Article },
+              [hydra.returns]: { '@id': owl.Nothing },
               [hydra.possibleStatus]: [
                 {
-                  [hydra.statusCode]: 201,
+                  [hydra.statusCode]: constants.HTTP_STATUS_NO_CONTENT,
                 },
               ],
             },
