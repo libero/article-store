@@ -6,9 +6,10 @@ import postArticle from '../../src/routes/post-article';
 import createContext from '../context';
 import runMiddleware from '../middleware';
 import createArticle from '../create-article';
+import createHttpError = require('http-errors');
 
 const makeRequest = async (
-  body?: JsonLdObj,
+  body: JsonLdObj = {},
   next?: Next,
   articles: Articles = new InMemoryArticles(),
 ): Promise<Response> => {
@@ -24,5 +25,9 @@ describe('post article', (): void => {
 
     expect(response.status).toBe(204);
     expect(response.type).toBe('application/ld+json');
+  });
+
+  it('throws an error if the article is not able to be added', async (): Promise<void> => {
+    await expect(makeRequest()).rejects.toThrow(new createHttpError.NotImplemented());
   });
 });
