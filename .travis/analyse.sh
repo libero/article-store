@@ -9,4 +9,4 @@ trap finish EXIT
 
 make start wait-healthy
 
-make docker-compose command="exec -T app npx hydra-validator analyse http://localhost:8080/"
+make exec tty=0 command="npx hydra-validator analyse http://localhost:8080/"

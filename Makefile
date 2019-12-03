@@ -47,19 +47,18 @@ wait-healthy: ## Wait for the containers to be healthy
 sh: ## Open a shell on the app container
 	make exec command="sh"
 
+tty=1
+ifeq ($(tty), 0)
+	options=-T
+else
+	options=
+endif
 exec: ## Run a command on the app container
 	if [ -z "$(command)" ]; then \
 		echo "No command provided"; \
 		exit 1; \
-	fi; \
-	${DOCKER_COMPOSE} exec app $(command)
-
-docker-compose: ## Run an arbitrary docker-compose command
-	if [ -z "$(command)" ]; then \
-		echo "No command provided"; \
-		exit 1; \
-	fi; \
-	${DOCKER_COMPOSE} $(command)
+	fi;
+	${DOCKER_COMPOSE} exec $(options) app $(command)
 
 logs: ## Show the containers' logs
 	${DOCKER_COMPOSE} logs
