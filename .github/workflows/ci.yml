@@ -18,8 +18,8 @@ jobs:
 
     - name: Build Docker images
       run: |
-        set -e
         TARGET=prod make build
+        false 
         TARGET=dev make build
 
     - name: Lint
