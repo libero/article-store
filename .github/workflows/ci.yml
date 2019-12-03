@@ -3,7 +3,7 @@ name: CI
 on: [push, pull_request]
 
 env:
-  IMAGE_TAG: github.sha
+  IMAGE_TAG: ${{ github.sha }}
 
 jobs:
 
