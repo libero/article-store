@@ -1,7 +1,7 @@
 Libero Article Store
 ====================
 
-[![Build Status](https://travis-ci.com/libero/article-store.svg?branch=master)](https://travis-ci.com/libero/article-store)
+[![Build Status](https://github.com/libero/article-store/workflows/CI/badge.svg)](https://github.com/libero/article-store/actions?query=branch%3Amaster)
 
 Implementation of a [Libero API](https://libero.pub/api).
 
