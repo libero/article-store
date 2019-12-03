@@ -54,7 +54,7 @@ jobs:
       with:
         name: docker-image-dev
 
-    - name: Test
+    - name: Lint
       run: |
         set -e
         docker load -i docker-image-dev/article-store.tar
