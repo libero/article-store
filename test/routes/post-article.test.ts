@@ -1,6 +1,5 @@
 import { Next, Response } from 'koa';
 import { JsonLdObj } from 'jsonld/jsonld-spec';
-import createHttpError from 'http-errors';
 import InMemoryArticles from '../../src/adaptors/in-memory-articles';
 import Articles from '../../src/articles';
 import postArticle from '../../src/routes/post-article';
@@ -12,7 +11,7 @@ import createArticle from '../create-article';
 const makeRequest = async (
   body: JsonLdObj = {},
   next?: Next,
-  articles: Articles = new InMemoryArticles(),
+  articles: Articles = new InMemoryArticles((id: string) => id),
 ): Promise<Response> => {
   const context = createContext();
   context.request.body = body;
@@ -22,13 +21,9 @@ const makeRequest = async (
 
 describe('post article', (): void => {
   it('should return a successful response', async (): Promise<void> => {
-    const response = await makeRequest(createArticle('_:1'));
+    const response = await makeRequest(createArticle());
 
     expect(response.status).toBe(204);
     expect(response.type).toBe('application/ld+json');
-  });
-
-  it('throws an error if the article is not able to be added', async (): Promise<void> => {
-    await expect(makeRequest()).rejects.toThrow(new createHttpError.NotImplemented());
   });
 });

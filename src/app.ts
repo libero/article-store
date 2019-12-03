@@ -10,7 +10,8 @@ import routing from './middleware/routing';
 import createRouter from './router';
 
 const app = new Koa();
-const articles: Articles = new InMemoryArticles();
+// We need to get the /articles path from the router
+const articles: Articles = new InMemoryArticles((id: string) => `/articles/${id}`);
 const router = createRouter(articles);
 
 app.use(logger());

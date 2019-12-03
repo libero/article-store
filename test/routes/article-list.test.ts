@@ -8,7 +8,7 @@ import runMiddleware from '../middleware';
 
 const makeRequest = async (
   next?: Next,
-  articles: Articles = new InMemoryArticles(),
+  articles: Articles = new InMemoryArticles((id: string) => id),
 ): Promise<Response> => {
   const context = createContext();
 
@@ -42,7 +42,7 @@ describe('article list', (): void => {
   });
 
   it('should return articles in the list', async (): Promise<void> => {
-    const articles = new InMemoryArticles();
+    const articles = new InMemoryArticles((id: string) => id);
 
     await articles.add({
       '@id': '_:24231',

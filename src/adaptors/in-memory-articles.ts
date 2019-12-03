@@ -1,40 +1,49 @@
 import { Iri, JsonLdObj } from 'jsonld/jsonld-spec';
+import uniqueString from 'unique-string';
 import Articles from '../articles';
-import ArticleHasNoId from '../errors/article-has-no-id';
 import ArticleNotFound from '../errors/article-not-found';
 
-export default class InMemoryArticles implements Articles {
-  private nodes: { [key: string]: JsonLdObj } = {};
+type IdGenerator = (id: string) => Iri;
 
-  async add(node: JsonLdObj): Promise<void> {
-    if (!('@id' in node)) {
-      throw new ArticleHasNoId();
+export default class InMemoryArticles implements Articles {
+  private articles: { [key: string]: JsonLdObj } = {};
+
+  private readonly idGenerator: IdGenerator;
+
+  constructor(idGenerator: IdGenerator) {
+    this.idGenerator = idGenerator;
+  }
+
+  async add(article: JsonLdObj): Promise<void> {
+    const data = article;
+    if (!('@id' in data)) {
+      data['@id'] = this.idGenerator(uniqueString());
     }
 
-    this.nodes[node['@id']] = node;
+    this.articles[data['@id']] = data;
   }
 
   async get(id: Iri): Promise<JsonLdObj> {
-    if (!(id in this.nodes)) {
+    if (!(id in this.articles)) {
       throw new ArticleNotFound(id);
     }
 
-    return this.nodes[id];
+    return this.articles[id];
   }
 
   async remove(id: Iri): Promise<void> {
-    delete this.nodes[id];
+    delete this.articles[id];
   }
 
   async contains(id: Iri): Promise<boolean> {
-    return id in this.nodes;
+    return id in this.articles;
   }
 
   async count(): Promise<number> {
-    return Object.values(this.nodes).length;
+    return Object.values(this.articles).length;
   }
 
   * [Symbol.iterator](): Iterator<JsonLdObj> {
-    yield* Object.values(this.nodes);
+    yield* Object.values(this.articles);
   }
 }
