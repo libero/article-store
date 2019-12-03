@@ -29,8 +29,8 @@ jobs:
     - name: Upload Docker image artifact
       uses: actions/upload-artifact@v1
       with:
-        name: article-store.dev
-        path: .
+        name: docker-image
+        path: article-store.dev
 
     - name: Lint
       run: make lint
@@ -59,11 +59,11 @@ jobs:
     - name: Download Docker image artifact
       uses: actions/download-artifact@v1
       with:
-        name: article-store.dev
+        name: docker-image
 
     - name: Analyse
       run: |
         set -e
         ls -l article-store.dev
-        docker load -i article-store.dev
+        docker load -i docker-image/article-store.dev
         .travis/analyse.sh
