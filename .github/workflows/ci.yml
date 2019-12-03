@@ -2,6 +2,11 @@ name: CI
 
 on: [push, pull_request]
 
+#[10:02:05][giorgio@Newton:~/code/article-store]$ docker save -o article-store.master-dev libero/article-store:master-dev
+#[10:02:35][giorgio@Newton:~/code/article-store]$ ls -l article-store.master-dev
+#-rw------- 1 giorgio giorgio 213813248 Dec  3 10:02 article-store.master-dev
+#[10:02:45][giorgio@Newton:~/code/article-store]$ docker load -i article-store.master-dev
+
 env:
   IMAGE_TAG: github.sha
 
@@ -19,6 +24,13 @@ jobs:
         set -e
         TARGET=prod make build
         TARGET=dev make build
+        docker save -o article-store.dev libero/article-store:${IMAGE_TAG}
+
+    - name: Upload Docker image artifact
+      uses: actions/upload-artifact@v1
+      with:
+        name: article-store.dev
+        path: article-store.dev
 
     - name: Lint
       run: make lint
