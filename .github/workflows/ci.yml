@@ -47,6 +47,7 @@ jobs:
         TARGET=dev .travis/smoke-test.sh
       if: always()
 
+
   analyse:
 
     needs: build
@@ -59,3 +60,9 @@ jobs:
       uses: actions/download-artifact@v1
       with:
         name: article-store.dev
+
+    - name: Analyse
+      run: |
+        set -e
+        docker load -i article-store.dev
+        .travis/analyse.sh
