@@ -24,6 +24,7 @@ jobs:
         set -e
         TARGET=prod make build
         TARGET=dev make build
+        mkdir -p docker-image-prod docker-image-dev
         docker save -o docker-image-prod/article-store.tar libero/article-store:${IMAGE_TAG}
         docker save -o docker-image-dev/article-store.tar libero/article-store:${IMAGE_TAG}-dev
 
