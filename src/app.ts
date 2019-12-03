@@ -16,7 +16,7 @@ const router = createRouter(articles);
 app.use(logger());
 app.use(bodyParser({
   extendTypes: {
-      json: ['application/ld+json'],
+    json: ['application/ld+json'],
   },
 }));
 app.use(cors({
