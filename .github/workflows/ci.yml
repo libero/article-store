@@ -64,6 +64,6 @@ jobs:
     - name: Analyse
       run: |
         set -e
-        ls -l article-store.dev
+        ls -l docker-image
         docker load -i docker-image/article-store.dev
         .travis/analyse.sh
