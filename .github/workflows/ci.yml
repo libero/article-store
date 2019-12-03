@@ -39,13 +39,45 @@ jobs:
         name: docker-image-dev
         path: docker-image-dev
 
-    - name: Lint
-      run: make lint
-      if: always()
+
+  lint:
+
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v1
+
+    - name: Download Docker image artifact
+      uses: actions/download-artifact@v1
+      with:
+        name: docker-image-dev
 
     - name: Test
-      run: make test
-      if: always()
+      run: |
+        set -e
+        docker load -i docker-image-dev/article-store.tar
+        make lint
+
+
+  test:
+
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v1
+
+    - name: Download Docker image artifact
+      uses: actions/download-artifact@v1
+      with:
+        name: docker-image-dev
+
+    - name: Test
+      run: |
+        set -e
+        docker load -i docker-image-dev/article-store.tar
+        make test
 
 
   smoke-tests-prod:
