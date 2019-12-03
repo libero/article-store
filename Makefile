@@ -34,7 +34,7 @@ start: ## Start the containers
 stop: ## Stop the containers
 	${DOCKER_COMPOSE} down
 
-wait-healthy: gitmodules ## Wait for the containers to be healthy
+wait-healthy: ## Wait for the containers to be healthy
 	services=($$(${DOCKER_COMPOSE} ps --quiet)); \
 	if [ $${#services[@]} -eq 0 ]; then \
 		echo "No containers running"; \
