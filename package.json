@@ -33,7 +33,7 @@
     "eslint-import-resolver-typescript": "^2.0.0",
     "eslint-plugin-import": "^2.18.2",
     "eslint-plugin-jest": "^23.1.1",
-    "hydra-validator": "^1.0.11",
+    "hydra-validator": "^1.0.12",
     "hydra-validator-analyse": "^0.1.6",
     "jest": "^24.9.0",
     "jsonld": "^1.8.1",
