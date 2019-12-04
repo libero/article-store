@@ -1,9 +1,9 @@
-import { DefaultState, Middleware, Next } from 'koa';
+import { Next } from 'koa';
 import { hydra, schema } from 'rdf-namespaces';
-import AppContext from '../context';
+import { AppContext, AppMiddleware } from '../app';
 import Routes from './index';
 
-export default (): Middleware<DefaultState, AppContext> => (
+export default (): AppMiddleware => (
   async ({ request, response, router }: AppContext, next: Next): Promise<void> => {
     response.body = {
       '@context': {

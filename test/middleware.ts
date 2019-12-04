@@ -1,13 +1,11 @@
-import {
-  DefaultState, Middleware, ParameterizedContext, Response,
-} from 'koa';
-import AppContext from '../src/context';
+import { Middleware, ParameterizedContext, Response } from 'koa';
+import { AppContext, AppState } from '../src/app';
 
-export type Next<StateT = DefaultState, CustomT = AppContext> = (
+export type Next<StateT = AppState, CustomT = AppContext> = (
   context: ParameterizedContext<StateT, CustomT>
 ) => Promise<void>;
 
-export default async <StateT = DefaultState, CustomT = AppContext>(
+export default async <StateT = AppState, CustomT = AppContext>(
   middleware: Middleware<StateT, CustomT>,
   context: ParameterizedContext<StateT, CustomT>,
   next?: Next<StateT, CustomT>,

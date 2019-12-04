@@ -1,24 +1,15 @@
-import cors from '@koa/cors';
-import Koa, { DefaultState } from 'koa';
-import logger from 'koa-logger';
-import InMemoryArticles from './adaptors/in-memory-articles';
-import AppContext from './context';
-import apiDocumentation from './middleware/api-documentation';
-import errorHandler from './middleware/error-handler';
-import routing from './middleware/routing';
-import createRouter from './router';
+import { RouterContext } from '@koa/router';
+import Koa, { DefaultState, Middleware } from 'koa';
+import Articles from './articles';
 
-const app = new Koa<DefaultState, AppContext>();
+export type AppState = DefaultState;
 
-app.context.articles = new InMemoryArticles();
-app.context.router = createRouter();
+export type AppContext = RouterContext<AppState, {
+  articles: Articles;
+}>;
 
-app.use(logger());
-app.use(cors({
-  exposeHeaders: ['Link'],
-}));
-app.use(apiDocumentation());
-app.use(errorHandler());
-app.use(routing(app.context.router));
+export type AppMiddleware = Middleware<AppState, AppContext>;
 
-export default app;
+type App = Koa<AppState, AppContext>;
+
+export default App;
