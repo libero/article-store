@@ -44,7 +44,8 @@ jobs:
     steps:
     - uses: actions/checkout@v1
 
-    - name: Download Docker image artifact
+    - &docker-image-dev
+      name: Download Docker image artifact
       uses: actions/download-artifact@v1
       with:
         name: docker-image-dev
@@ -64,10 +65,7 @@ jobs:
     steps:
     - uses: actions/checkout@v1
 
-    - name: Download Docker image artifact
-      uses: actions/download-artifact@v1
-      with:
-        name: docker-image-dev
+    - *docker-image-dev
 
     - name: Test
       run: |
