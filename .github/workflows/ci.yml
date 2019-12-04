@@ -28,17 +28,17 @@ jobs:
 
     - name: Lint
       run: make lint
-      if: always()
+      if: success() || failure()
 
     - name: Test
       run: make test
-      if: always()
+      if: success() || failure()
 
     - name: Smoke tests
       run: |
         TARGET=prod .travis/smoke-test.sh
         TARGET=dev .travis/smoke-test.sh
-      if: always()
+      if: success() || failure()
 
     - name: Analyse
       run: .travis/analyse.sh
