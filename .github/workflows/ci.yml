@@ -28,7 +28,6 @@ jobs:
 
     - name: Lint
       run: make lint
-      if: success() || failure()
 
     - name: Test
       run: make test && false
