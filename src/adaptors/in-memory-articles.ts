@@ -1,26 +1,17 @@
 import { Iri, JsonLdObj } from 'jsonld/jsonld-spec';
-import uniqueString from 'unique-string';
 import Articles from '../articles';
 import ArticleNotFound from '../errors/article-not-found';
-
-type IdGenerator = (id: string) => Iri;
+import ArticleHasNoId from '../errors/article-has-no-id';
 
 export default class InMemoryArticles implements Articles {
   private articles: { [key: string]: JsonLdObj } = {};
 
-  private readonly idGenerator: IdGenerator;
-
-  constructor(idGenerator: IdGenerator) {
-    this.idGenerator = idGenerator;
-  }
-
   async add(article: JsonLdObj): Promise<void> {
-    const data = article;
-    if (!('@id' in data)) {
-      data['@id'] = this.idGenerator(uniqueString());
+    if (!('@id' in article)) {
+      throw new ArticleHasNoId();
     }
 
-    this.articles[data['@id']] = data;
+    this.articles[article['@id']] = article;
   }
 
   async get(id: Iri): Promise<JsonLdObj> {

@@ -6,12 +6,13 @@ import postArticle from '../../src/routes/post-article';
 import createContext from '../context';
 import runMiddleware from '../middleware';
 import createArticle from '../create-article';
+import ArticleIdAlreadySet from '../../src/errors/article-id-already-set';
 
 
 const makeRequest = async (
   body: JsonLdObj = {},
   next?: Next,
-  articles: Articles = new InMemoryArticles((id: string) => id),
+  articles: Articles = new InMemoryArticles(),
 ): Promise<Response> => {
   const context = createContext();
   context.request.body = body;
@@ -24,6 +25,9 @@ describe('post article', (): void => {
     const response = await makeRequest(createArticle());
 
     expect(response.status).toBe(204);
-    expect(response.type).toBe('application/ld+json');
+  });
+
+  it('should throw an error if id is already set', async (): Promise<void> => {
+    await expect(makeRequest(createArticle('_:1'))).rejects.toThrow(new ArticleIdAlreadySet('_:1'));
   });
 });
