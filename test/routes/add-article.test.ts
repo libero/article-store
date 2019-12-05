@@ -18,9 +18,11 @@ const makeRequest = async (
 
 describe('add article', (): void => {
   it('should return a successful response', async (): Promise<void> => {
-    const response = await makeRequest(createArticle());
+    const articles = new InMemoryArticles();
+    const response = await makeRequest(createArticle(), undefined, articles);
 
     expect(response.status).toBe(204);
+    expect(await articles.count()).toBe(1);
   });
 
   it('should throw an error if id is already set', async (): Promise<void> => {
