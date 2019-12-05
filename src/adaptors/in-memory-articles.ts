@@ -1,7 +1,7 @@
 import { Iri, JsonLdObj } from 'jsonld/jsonld-spec';
 import Articles from '../articles';
-import ArticleNotFound from '../errors/article-not-found';
 import ArticleHasNoId from '../errors/article-has-no-id';
+import ArticleNotFound from '../errors/article-not-found';
 
 export default class InMemoryArticles implements Articles {
   private articles: { [key: string]: JsonLdObj } = {};

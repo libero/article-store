@@ -1,5 +1,5 @@
-import { constants } from 'http2';
 import Router from '@koa/router';
+import { constants } from 'http2';
 import { Context, Middleware, Next } from 'koa';
 import {
   hydra, owl, rdf, schema,

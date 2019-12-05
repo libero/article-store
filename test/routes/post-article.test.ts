@@ -8,7 +8,6 @@ import runMiddleware from '../middleware';
 import createArticle from '../create-article';
 import ArticleIdAlreadySet from '../../src/errors/article-id-already-set';
 
-
 const makeRequest = async (
   body: JsonLdObj = {},
   next?: Next,

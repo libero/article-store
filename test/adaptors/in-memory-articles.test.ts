@@ -1,6 +1,7 @@
 import { Iri, JsonLdObj } from 'jsonld/jsonld-spec';
 import InMemoryArticles from '../../src/adaptors/in-memory-articles';
 import ArticleNotFound from '../../src/errors/article-not-found';
+import ArticleHasNoId from '../../src/errors/article-has-no-id';
 import createArticle from '../create-article';
 
 describe('in-memory articles', (): void => {
@@ -35,6 +36,12 @@ describe('in-memory articles', (): void => {
     const articles = new InMemoryArticles();
 
     await expect(articles.get('_:1')).rejects.toThrow(new ArticleNotFound('_:1'));
+  });
+
+  it('throws an error if the article does not have an ID', async (): Promise<void> => {
+    const articles = new InMemoryArticles();
+
+    await expect(articles.add({})).rejects.toThrow(new ArticleHasNoId());
   });
 
   it('can remove an article', async (): Promise<void> => {
