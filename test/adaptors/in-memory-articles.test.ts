@@ -24,6 +24,12 @@ describe('in-memory articles', (): void => {
     expect((await articles.get('_:1'))['http://schema.org/name']).toBe('Updated');
   });
 
+  it('throws an error if the article does not have an ID', async (): Promise<void> => {
+    const articles = new InMemoryArticles();
+
+    await expect(articles.add({})).rejects.toThrow(new ArticleHasNoId());
+  });
+
   it('can retrieve an article', async (): Promise<void> => {
     const articles = new InMemoryArticles();
 
@@ -36,12 +42,6 @@ describe('in-memory articles', (): void => {
     const articles = new InMemoryArticles();
 
     await expect(articles.get('_:1')).rejects.toThrow(new ArticleNotFound('_:1'));
-  });
-
-  it('throws an error if the article does not have an ID', async (): Promise<void> => {
-    const articles = new InMemoryArticles();
-
-    await expect(articles.add({})).rejects.toThrow(new ArticleHasNoId());
   });
 
   it('can remove an article', async (): Promise<void> => {
