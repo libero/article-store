@@ -1,23 +1,20 @@
-import { Next, Response } from 'koa';
-import { JsonLdObj } from 'jsonld/jsonld-spec';
 import createHttpError from 'http-errors';
+import { JsonLdObj } from 'jsonld/jsonld-spec';
+import { Next, Response } from 'koa';
 import InMemoryArticles from '../../src/adaptors/in-memory-articles';
 import Articles from '../../src/articles';
 import postArticle from '../../src/routes/post-article';
 import createContext from '../context';
-import runMiddleware from '../middleware';
 import createArticle from '../create-article';
+import runMiddleware from '../middleware';
 
 const makeRequest = async (
   body: JsonLdObj = {},
   next?: Next,
   articles: Articles = new InMemoryArticles(),
-): Promise<Response> => {
-  const context = createContext();
-  context.request.body = body;
-
-  return runMiddleware(postArticle(articles), context, next);
-};
+): Promise<Response> => (
+  runMiddleware(postArticle(articles), createContext({ body }), next)
+);
 
 describe('post article', (): void => {
   it('should return a successful response', async (): Promise<void> => {
