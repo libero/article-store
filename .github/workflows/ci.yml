@@ -17,27 +17,62 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v1
-      with:
-        submodules: true
+      - uses: actions/checkout@v1
+        with:
+          submodules: true
 
-    - name: Build Docker images
-      run: |
-        TARGET=prod make build
-        TARGET=dev make build
+      - name: Build Docker images
+        run: |
+          TARGET=prod make build
+          TARGET=dev make build
 
-    - name: Lint
-      run: make lint
+      - name: Save Docker images
+        run: |
+          mkdir -p docker-image-prod docker-image-dev
+          docker save -o docker-image-prod/article-store.tar libero/article-store:${IMAGE_TAG}
+          docker save -o docker-image-dev/article-store.tar libero/article-store:${IMAGE_TAG}-dev
 
-    - name: Test
-      run: make test
-      if: success() || failure()
+      - name: Upload prod Docker image
+        uses: actions/upload-artifact@v1
+        with:
+          name: docker-image-prod
+          path: docker-image-prod
 
-    - name: Smoke tests
-      run: |
-        TARGET=prod .travis/smoke-test.sh
-        TARGET=dev .travis/smoke-test.sh
-      if: success() || failure()
+      - name: Upload dev Docker image
+        uses: actions/upload-artifact@v1
+        with:
+          name: docker-image-dev
+          path: docker-image-dev
 
-    - name: Analyse
-      run: .travis/analyse.sh
+  test:
+
+    needs: build
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        env: [dev]
+        test:
+          - make lint
+          - make test
+          - .travis/smoke-test.sh
+          - .travis/analyse.sh
+        include:
+          - env: prod
+            test: .travis/smoke-test.sh
+
+    steps:
+      - uses: actions/checkout@v1
+        with:
+          submodules: true
+
+      - name: Download Docker image artifact
+        uses: actions/download-artifact@v1
+        with:
+          name: docker-image-${{ matrix.env }}
+
+      - name: Load Docker image
+        run: docker load -i docker-image-${{ matrix.env }}/article-store.tar
+
+      - name: Run test
+        run: TARGET=${{ matrix.env }} ${{ matrix.test }}
