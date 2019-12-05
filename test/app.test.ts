@@ -10,7 +10,7 @@ const parseHeader = (header: string): Array<string> => header.split(',').map(tri
 let app: Koa;
 
 beforeEach((): void => {
-  app = createApp({ articles: new InMemoryArticles() });
+  app = createApp(new InMemoryArticles());
 });
 
 describe('the application', (): void => {

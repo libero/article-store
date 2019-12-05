@@ -3,6 +3,6 @@ import createApp from './app';
 
 const articles = new InMemoryArticles();
 
-const app = createApp({ articles });
+const app = createApp(articles);
 
 app.listen(8080);

@@ -1,5 +1,4 @@
 import cors from '@koa/cors';
-import Router from '@koa/router';
 import Koa from 'koa';
 import bodyParser from 'koa-bodyparser';
 import logger from 'koa-logger';
@@ -7,28 +6,9 @@ import Articles from './articles';
 import apiDocumentationLink from './middleware/api-documentation';
 import errorHandler from './middleware/error-handler';
 import routing from './middleware/routing';
-import Routes from './routes';
-import addArticle from './routes/add-article';
-import apiDocumentation from './routes/api-documentation';
-import articleList from './routes/article-list';
-import entryPoint from './routes/entry-point';
+import createRouter from './router';
 
-type LocalContext = {
-  articles: Articles;
-}
-
-const createRouter = (articles: Articles): Router => {
-  const router = new Router();
-
-  router.get(Routes.ApiDocumentation, '/doc', apiDocumentation(router));
-  router.get(Routes.ArticleList, '/articles', articleList(articles, router));
-  router.post(Routes.AddArticle, '/articles', addArticle(articles));
-  router.get(Routes.EntryPoint, '/', entryPoint(router));
-
-  return router;
-};
-
-export default ({ articles }: LocalContext): Koa => {
+export default (articles: Articles): Koa => {
   const app = new Koa();
   const router = createRouter(articles);
 
