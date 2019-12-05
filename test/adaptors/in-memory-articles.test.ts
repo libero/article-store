@@ -2,12 +2,7 @@ import { Iri, JsonLdObj } from 'jsonld/jsonld-spec';
 import InMemoryArticles from '../../src/adaptors/in-memory-articles';
 import ArticleNotFound from '../../src/errors/article-not-found';
 import ArticleHasNoId from '../../src/errors/article-has-no-id';
-
-const createArticle = (id: Iri, name = `Article ${id}`): JsonLdObj => ({
-  '@id': id,
-  '@type': 'http://schema.org/Article',
-  'http://schema.org/name': name,
-});
+import createArticle from '../create-article';
 
 describe('in-memory articles', (): void => {
   it('can add an article', async (): Promise<void> => {

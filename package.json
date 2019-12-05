@@ -6,9 +6,11 @@
     "format-link-header": "^2.1.0",
     "http-errors": "^1.7.3",
     "koa": "^2.11.0",
+    "koa-bodyparser": "^4.2.1",
     "koa-compose": "^4.1.0",
     "koa-logger": "^3.2.1",
-    "rdf-namespaces": "^1.6.0"
+    "rdf-namespaces": "^1.6.0",
+    "unique-string": "^2.0.0"
   },
   "devDependencies": {
     "@types/format-link-header": "^2.1.0",
@@ -16,6 +18,7 @@
     "@types/jest": "^24.0.23",
     "@types/jsonld": "^1.5.0",
     "@types/koa": "^2.11.0",
+    "@types/koa-bodyparser": "^4.3.0",
     "@types/koa-compose": "^3.2.5",
     "@types/koa-logger": "^3.1.1",
     "@types/koa__cors": "^2.2.3",
@@ -25,6 +28,7 @@
     "@types/supertest": "^2.0.8",
     "@typescript-eslint/eslint-plugin": "^2.10.0",
     "@typescript-eslint/parser": "^2.10.0",
+    "deep-filter": "^1.0.2",
     "eslint": "^6.7.2",
     "eslint-config-airbnb-base": "^14.0.0",
     "eslint-import-resolver-typescript": "^2.0.0",
@@ -40,7 +44,7 @@
     "supertest": "^4.0.2",
     "ts-jest": "^24.2.0",
     "ts-node": "^8.5.4",
-    "typescript": "^3.7.2"
+    "typescript": "^3.7.3"
   },
   "scripts": {
     "build": "tsc",
