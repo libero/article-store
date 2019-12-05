@@ -62,7 +62,7 @@ export default (router: Router): Middleware => (
               [hydra.possibleStatus]: [
                 {
                   [hydra.statusCode]: constants.HTTP_STATUS_NO_CONTENT,
-                  [hydra.description]: { '@value': 'If the article was added successfully.', '@language': 'en' },
+                  [hydra.description]: { '@value': 'If the article was added successfully', '@language': 'en' },
                 },
               ],
             },
