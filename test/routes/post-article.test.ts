@@ -6,7 +6,7 @@ import postArticle from '../../src/routes/post-article';
 import createContext from '../context';
 import runMiddleware from '../middleware';
 import createArticle from '../create-article';
-import ArticleIdAlreadySet from '../../src/errors/article-id-already-set';
+import createHttpError = require('http-errors');
 
 const makeRequest = async (
   body: JsonLdObj = {},
@@ -27,6 +27,6 @@ describe('post article', (): void => {
   });
 
   it('should throw an error if id is already set', async (): Promise<void> => {
-    await expect(makeRequest(createArticle('_:1'))).rejects.toThrow(new ArticleIdAlreadySet('_:1'));
+    await expect(makeRequest(createArticle('_:1'))).rejects.toThrow(new createHttpError.Forbidden('Article ID is not permitted'));
   });
 });

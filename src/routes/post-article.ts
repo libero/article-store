@@ -3,13 +3,13 @@ import { Context, Middleware, Next } from 'koa';
 import { JsonLdObj } from 'jsonld/jsonld-spec';
 import uniqueString from 'unique-string';
 import Articles from '../articles';
-import ArticleIdAlreadySet from '../errors/article-id-already-set';
+import createHttpError from 'http-errors';
 
 export default (articles: Articles): Middleware => (
   async ({ request, response }: Context, next: Next): Promise<void> => {
     const article = request.body as JsonLdObj;
     if ('@id' in article) {
-      throw new ArticleIdAlreadySet(article['@id']);
+      throw new createHttpError.Forbidden('Article ID is not permitted');
     }
 
     article['@id'] = `_:${uniqueString()}`;
