@@ -58,7 +58,7 @@ jobs:
           - TARGET=prod .travis/smoke-test.sh
           - .travis/analyse.sh
         include:
-          - env: prod
+          - target: prod
             test: TARGET=prod .travis/smoke-test.sh
 
     steps:
@@ -69,10 +69,10 @@ jobs:
       - name: Download Docker image artifact
         uses: actions/download-artifact@v1
         with:
-          name: docker-image-${{ matrix.env || 'dev' }}
+          name: docker-image-${{ matrix.target || 'dev' }}
 
       - name: Load Docker image
-        run: docker load -i docker-image-${{ matrix.env || 'dev' }}/article-store.tar
+        run: docker load -i docker-image-${{ matrix.target || 'dev' }}/article-store.tar
 
       - name: Run test
         run: ${{ matrix.test }}
