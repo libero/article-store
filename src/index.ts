@@ -1,24 +1,8 @@
-import cors from '@koa/cors';
-import Koa from 'koa';
-import logger from 'koa-logger';
 import InMemoryArticles from './adaptors/in-memory-articles';
-import Articles from './articles';
-import apiDocumentation from './middleware/api-documentation';
-import errorHandler from './middleware/error-handler';
-import routing from './middleware/routing';
-import createRouter from './router';
+import createApp from './app';
 
-const app = new Koa();
+const articles = new InMemoryArticles();
 
-const articles: Articles = new InMemoryArticles();
-const router = createRouter(articles);
+const app = createApp({ articles });
 
-app.use(logger());
-app.use(cors({
-  exposeHeaders: ['Link'],
-}));
-app.use(apiDocumentation(router));
-app.use(errorHandler());
-app.use(routing(router));
-
-export default app.listen(8080);
+app.listen(8080);
