@@ -45,7 +45,7 @@ wait-healthy: ## Wait for the containers to be healthy
 	done
 
 sh: ## Open a shell on the app container
-	make exec command="sh"
+	$(MAKE) exec command="sh"
 
 tty = 1
 exec: ## Run a command on the app container
@@ -78,10 +78,10 @@ run:
 
 dev: export TARGET = dev
 dev: ## Build and runs the container for development
-	make --jobs=4 install build stop
-	make run
+	$(MAKE) --jobs=4 install build stop
+	$(MAKE) run
 
 prod: export TARGET = prod
 prod: ## Builds and runs the container for production
-	make --jobs=2 build stop
-	make run
+	$(MAKE) --jobs=2 build stop
+	$(MAKE) run
