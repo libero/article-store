@@ -1,4 +1,5 @@
 import Router from '@koa/router';
+import { constants } from 'http2';
 import { Context, Middleware, Next } from 'koa';
 import {
   hydra, owl, rdf, schema,
@@ -44,13 +45,28 @@ export default (router: Router): Middleware => (
           '@id': hydra.Collection,
           '@type': hydra.Class,
           [hydra.title]: { '@value': 'Collection', '@language': 'en' },
-          [hydra.supportedOperation]: {
-            '@type': hydra.Operation,
-            [hydra.title]: { '@value': 'Get the collection', '@language': 'en' },
-            [hydra.method]: { '@value': 'GET' },
-            [hydra.expects]: { '@id': owl.Nothing },
-            [hydra.returns]: { '@id': hydra.Collection },
-          },
+          [hydra.supportedOperation]: [
+            {
+              '@type': hydra.Operation,
+              [hydra.title]: { '@value': 'Get the collection', '@language': 'en' },
+              [hydra.method]: { '@value': 'GET' },
+              [hydra.expects]: { '@id': owl.Nothing },
+              [hydra.returns]: { '@id': hydra.Collection },
+            },
+            {
+              '@type': hydra.Operation,
+              [hydra.title]: { '@value': 'Add an article', '@language': 'en' },
+              [hydra.method]: { '@value': 'POST' },
+              [hydra.expects]: { '@id': schema.Article },
+              [hydra.returns]: { '@id': owl.Nothing },
+              [hydra.possibleStatus]: [
+                {
+                  [hydra.statusCode]: constants.HTTP_STATUS_NO_CONTENT,
+                  [hydra.description]: { '@value': 'If the article was added successfully', '@language': 'en' },
+                },
+              ],
+            },
+          ],
           [hydra.supportedProperty]: [
             {
               '@type': hydra.SupportedProperty,

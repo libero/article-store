@@ -1,5 +1,6 @@
 import cors from '@koa/cors';
 import Koa from 'koa';
+import bodyParser from 'koa-bodyparser';
 import logger from 'koa-logger';
 import InMemoryArticles from './adaptors/in-memory-articles';
 import Articles from './articles';
@@ -13,6 +14,11 @@ const articles: Articles = new InMemoryArticles();
 const router = createRouter(articles);
 
 app.use(logger());
+app.use(bodyParser({
+  extendTypes: {
+    json: ['application/ld+json'],
+  },
+}));
 app.use(cors({
   exposeHeaders: ['Link'],
 }));
