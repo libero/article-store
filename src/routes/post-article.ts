@@ -2,8 +2,8 @@ import { constants } from 'http2';
 import { Context, Middleware, Next } from 'koa';
 import { JsonLdObj } from 'jsonld/jsonld-spec';
 import uniqueString from 'unique-string';
-import Articles from '../articles';
 import createHttpError from 'http-errors';
+import Articles from '../articles';
 
 export default (articles: Articles): Middleware => (
   async ({ request, response }: Context, next: Next): Promise<void> => {

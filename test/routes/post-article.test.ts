@@ -1,12 +1,12 @@
 import { Next, Response } from 'koa';
 import { JsonLdObj } from 'jsonld/jsonld-spec';
+import createHttpError from 'http-errors';
 import InMemoryArticles from '../../src/adaptors/in-memory-articles';
 import Articles from '../../src/articles';
 import postArticle from '../../src/routes/post-article';
 import createContext from '../context';
 import runMiddleware from '../middleware';
 import createArticle from '../create-article';
-import createHttpError = require('http-errors');
 
 const makeRequest = async (
   body: JsonLdObj = {},
