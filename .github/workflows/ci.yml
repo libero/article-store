@@ -57,6 +57,9 @@ jobs:
           - TARGET=dev .travis/smoke-test.sh
           - TARGET=prod .travis/smoke-test.sh
           - .travis/analyse.sh
+        include:
+          - env: prod
+            test: TARGET=prod .travis/smoke-test.sh
 
     steps:
       - uses: actions/checkout@v1
