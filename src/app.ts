@@ -4,11 +4,12 @@ import Koa from 'koa';
 import bodyParser from 'koa-bodyparser';
 import logger from 'koa-logger';
 import Articles from './articles';
-import apiDocumentation from './middleware/api-documentation';
+import apiDocumentationLink from './middleware/api-documentation';
 import errorHandler from './middleware/error-handler';
 import routing from './middleware/routing';
 import Routes from './routes';
 import addArticle from './routes/add-article';
+import apiDocumentation from './routes/api-documentation';
 import articleList from './routes/article-list';
 import entryPoint from './routes/entry-point';
 
@@ -40,7 +41,7 @@ export default ({ articles }: LocalContext): Koa => {
   app.use(cors({
     exposeHeaders: ['Link'],
   }));
-  app.use(apiDocumentation(router));
+  app.use(apiDocumentationLink(router));
   app.use(errorHandler());
   app.use(routing(router));
 
