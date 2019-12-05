@@ -16,7 +16,7 @@ help: ## Display this help text
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
 
 install: ## Install dependencies locally
-	make --jobs=2 $(MAKEFLAGS) node_modules gitmodules
+	$(MAKE) node_modules gitmodules
 
 node_modules: package.json package-lock.json
 	npm install
