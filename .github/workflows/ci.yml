@@ -54,11 +54,12 @@ jobs:
         test:
           - make lint
           - make test
-          - .travis/smoke-test.sh
+          - TARGET=dev .travis/smoke-test.sh
+          - TARGET=prod .travis/smoke-test.sh
           - .travis/analyse.sh
         include:
           - env: prod
-            test: .travis/smoke-test.sh
+            test: TARGET=prod .travis/smoke-test.sh
 
     steps:
       - uses: actions/checkout@v1
@@ -74,6 +75,4 @@ jobs:
         run: docker load -i docker-image-${{ matrix.env || 'dev' }}/article-store.tar
 
       - name: Run test
-        env:
-          TARGET: ${{ matrix.env || 'dev' }}
         run: ${{ matrix.test }}
