@@ -1,6 +1,6 @@
-import bodyParser from 'koa-bodyparser';
 import cors from '@koa/cors';
 import Koa from 'koa';
+import bodyParser from 'koa-bodyparser';
 import logger from 'koa-logger';
 import InMemoryArticles from './adaptors/in-memory-articles';
 import Articles from './articles';

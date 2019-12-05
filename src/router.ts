@@ -1,9 +1,9 @@
 import Router from '@koa/router';
 import Articles from './articles';
 import Routes from './routes';
+import addArticle from './routes/add-article';
 import apiDocumentation from './routes/api-documentation';
 import articleList from './routes/article-list';
-import addArticle from './routes/add-article';
 import entryPoint from './routes/entry-point';
 
 export default (articles: Articles): Router => {

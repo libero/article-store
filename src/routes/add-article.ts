@@ -1,8 +1,8 @@
-import { constants } from 'http2';
-import { Context, Middleware, Next } from 'koa';
-import { JsonLdObj } from 'jsonld/jsonld-spec';
-import uniqueString from 'unique-string';
 import createHttpError from 'http-errors';
+import { constants } from 'http2';
+import { JsonLdObj } from 'jsonld/jsonld-spec';
+import { Context, Middleware, Next } from 'koa';
+import uniqueString from 'unique-string';
 import Articles from '../articles';
 
 export default (articles: Articles): Middleware => (
