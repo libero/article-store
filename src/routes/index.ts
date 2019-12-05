@@ -1,7 +1,7 @@
 enum Routes {
   'ApiDocumentation' = 'api-documentation',
   'ArticleList' = 'article-list',
-  'PostArticle' = 'post-article',
+  'AddArticle' = 'add-article',
   'EntryPoint' = 'entry-point',
 }
 

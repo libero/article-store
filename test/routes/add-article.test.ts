@@ -3,7 +3,7 @@ import { JsonLdObj } from 'jsonld/jsonld-spec';
 import { Next, Response } from 'koa';
 import InMemoryArticles from '../../src/adaptors/in-memory-articles';
 import Articles from '../../src/articles';
-import postArticle from '../../src/routes/post-article';
+import addArticle from '../../src/routes/add-article';
 import createContext from '../context';
 import createArticle from '../create-article';
 import runMiddleware from '../middleware';
@@ -13,10 +13,10 @@ const makeRequest = async (
   next?: Next,
   articles: Articles = new InMemoryArticles(),
 ): Promise<Response> => (
-  runMiddleware(postArticle(articles), createContext({ body }), next)
+  runMiddleware(addArticle(articles), createContext({ body }), next)
 );
 
-describe('post article', (): void => {
+describe('add article', (): void => {
   it('should return a successful response', async (): Promise<void> => {
     const response = await makeRequest(createArticle());
 
