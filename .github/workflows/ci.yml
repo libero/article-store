@@ -68,10 +68,10 @@ jobs:
       - name: Download Docker image artifact
         uses: actions/download-artifact@v1
         with:
-          name: docker-image-${{ matrix.env }}
+          name: docker-image-${{ matrix.env || 'dev' }}
 
       - name: Load Docker image
-        run: docker load -i docker-image-${{ matrix.env }}/article-store.tar
+        run: docker load -i docker-image-${{ matrix.env || 'dev' }}/article-store.tar
 
       - name: Run test
         env:
