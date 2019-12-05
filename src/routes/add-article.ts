@@ -9,7 +9,7 @@ export default (articles: Articles): Middleware => (
   async ({ request, response }: Context, next: Next): Promise<void> => {
     const article = request.body as JsonLdObj;
     if ('@id' in article) {
-      throw new createHttpError.Forbidden('Article ID is not permitted');
+      throw new createHttpError.Forbidden(`Article IDs must not be set ('${article['@id']}' was given)`);
     }
 
     article['@id'] = `_:${uniqueString()}`;
