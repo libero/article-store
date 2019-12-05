@@ -30,7 +30,9 @@ jobs:
         run: |
           mkdir -p docker-image-prod docker-image-dev
           docker save -o docker-image-prod/article-store.tar libero/article-store:${IMAGE_TAG}
+          bzip2 docker-image-prod/article-store.tar
           docker save -o docker-image-dev/article-store.tar libero/article-store:${IMAGE_TAG}-dev
+          bzip2 docker-image-dev/article-store.tar
 
       - name: Upload prod Docker image
         uses: actions/upload-artifact@v1
@@ -72,7 +74,9 @@ jobs:
           name: docker-image-${{ matrix.target || 'dev' }}
 
       - name: Load Docker image
-        run: docker load -i docker-image-${{ matrix.target || 'dev' }}/article-store.tar
+        run: |
+          bunzip2 docker-image-${{ matrix.target || 'dev' }}/article-store.tar.bz2
+          docker load -i docker-image-${{ matrix.target || 'dev' }}/article-store.tar
 
       - name: Run test
         run: ${{ matrix.test }}
