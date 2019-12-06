@@ -1,13 +1,14 @@
 import createHttpError from 'http-errors';
 import { constants } from 'http2';
-import { JsonLdObj } from 'jsonld/jsonld-spec';
+import jsonld from 'jsonld';
+import { JsonLdArray } from 'jsonld/jsonld-spec';
 import { Context, Middleware, Next } from 'koa';
 import uniqueString from 'unique-string';
 import Articles from '../articles';
 
 export default (articles: Articles): Middleware => (
   async ({ request, response }: Context, next: Next): Promise<void> => {
-    const article = request.body as JsonLdObj;
+    const [article] = await jsonld.expand(request.body) as JsonLdArray;
     if ('@id' in article) {
       throw new createHttpError.Forbidden(`Article IDs must not be set ('${article['@id']}' was given)`);
     }
