@@ -4,11 +4,9 @@ import apiDocumentation from '../../src/middleware/api-documentation-link';
 import createContext from '../context';
 import runMiddleware from '../middleware';
 
-const makeRequest = async (): Promise<Response> => {
-  const context = createContext();
-
-  return runMiddleware(apiDocumentation(context.router), context);
-};
+const makeRequest = async (): Promise<Response> => (
+  runMiddleware(apiDocumentation('/path-to/api-documentation'), createContext())
+);
 
 describe('API documentation link middleware', (): void => {
   it('adds the API documentation link', async (): Promise<void> => {
