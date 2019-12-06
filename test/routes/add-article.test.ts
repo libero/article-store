@@ -30,10 +30,16 @@ describe('add article', (): void => {
   });
 
   it('should throw an error if it is not a schema:Article', async (): Promise<void> => {
-    await expect(makeRequest(createArticle(undefined, undefined, 'http://schema.org/NewsArticle'))).rejects.toThrow(new createHttpError.Forbidden('Article type must be http://schema.org/Article (\'http://schema.org/NewsArticle\' was given)'));
+    await expect(makeRequest({
+      '@id': '_:1',
+      '@type': 'http://schema.org/NewsArticle',
+      'http://schema.org/name': 'Article _:1',
+    })).rejects.toThrow(new createHttpError.Forbidden('Article type must be http://schema.org/Article (\'http://schema.org/NewsArticle\' was given)'));
   });
 
-  it.skip('should throw an error if no scheam:name set', async (): Promise<void> => {
-    // check appropriate error is thrown
+  it('should throw an error if no scheam:name set', async (): Promise<void> => {
+    await expect(makeRequest({
+      '@type': 'http://schema.org/Article',
+    })).rejects.toThrow(new createHttpError.Forbidden('Article must have at least one http://schema.org/name'));
   });
 });
