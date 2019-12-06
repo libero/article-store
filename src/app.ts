@@ -4,7 +4,7 @@ import Koa, { DefaultState, Middleware } from 'koa';
 import bodyParser from 'koa-bodyparser';
 import logger from 'koa-logger';
 import Articles from './articles';
-import apiDocumentation from './middleware/api-documentation';
+import apiDocumentationLink from './middleware/api-documentation-link';
 import errorHandler from './middleware/error-handler';
 import routing from './middleware/routing';
 
@@ -35,7 +35,7 @@ export default (
   app.use(cors({
     exposeHeaders: ['Link'],
   }));
-  app.use(apiDocumentation(apiDocumentationPath));
+  app.use(apiDocumentationLink(apiDocumentationPath));
   app.use(errorHandler());
   app.use(routing(router));
 
