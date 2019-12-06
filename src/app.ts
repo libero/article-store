@@ -1,17 +1,30 @@
 import cors from '@koa/cors';
-import Koa from 'koa';
+import Router, { RouterContext } from '@koa/router';
+import Koa, { DefaultState, Middleware } from 'koa';
 import bodyParser from 'koa-bodyparser';
 import logger from 'koa-logger';
 import Articles from './articles';
 import apiDocumentationLink from './middleware/api-documentation-link';
 import errorHandler from './middleware/error-handler';
 import routing from './middleware/routing';
-import createRouter from './router';
-import Routes from './routes';
 
-export default (articles: Articles): Koa => {
-  const app = new Koa();
-  const router = createRouter(articles);
+export type AppState = DefaultState;
+
+export type AppContext = RouterContext<AppState, {
+  articles: Articles;
+}>;
+
+export type AppMiddleware = Middleware<AppState, AppContext>;
+
+export default (
+  articles: Articles,
+  router: Router<AppState, AppContext>,
+  apiDocumentationPath: string,
+): Koa<AppState, AppContext> => {
+  const app = new Koa<AppState, AppContext>();
+
+  app.context.articles = articles;
+  app.context.router = router;
 
   app.use(logger());
   app.use(bodyParser({
@@ -22,7 +35,7 @@ export default (articles: Articles): Koa => {
   app.use(cors({
     exposeHeaders: ['Link'],
   }));
-  app.use(apiDocumentationLink(router.url(Routes.ApiDocumentation)));
+  app.use(apiDocumentationLink(apiDocumentationPath));
   app.use(errorHandler());
   app.use(routing(router));
 
