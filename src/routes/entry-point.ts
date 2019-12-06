@@ -12,7 +12,10 @@ export default (router: Router): Middleware => (
       '@id': router.url(Routes.EntryPoint),
       '@type': schema.EntryPoint,
       [schema.name]: { '@value': 'Article Store', '@language': 'en' },
-      [hydra.collection]: { '@id': router.url(Routes.ArticleList) },
+      [hydra.collection]: {
+        '@id': router.url(Routes.ArticleList),
+        '@type': hydra.Collection,
+      },
     };
     response.type = 'jsonld';
 
