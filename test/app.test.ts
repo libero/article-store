@@ -1,9 +1,17 @@
+import Koa from 'koa';
 import parseLinkHeader from 'parse-link-header';
 import request from 'supertest';
-import app from '../src/app';
+import InMemoryArticles from '../src/adaptors/in-memory-articles';
+import createApp from '../src/app';
 
 const trim = (value: string): string => value.trim();
 const parseHeader = (header: string): Array<string> => header.split(',').map(trim);
+
+let app: Koa;
+
+beforeEach((): void => {
+  app = createApp(new InMemoryArticles());
+});
 
 describe('the application', (): void => {
   it('should respond with 200 OK on the root', async (): Promise<void> => {
