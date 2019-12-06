@@ -3,7 +3,7 @@ import Koa from 'koa';
 import bodyParser from 'koa-bodyparser';
 import logger from 'koa-logger';
 import Articles from './articles';
-import apiDocumentation from './middleware/api-documentation';
+import apiDocumentationLink from './middleware/api-documentation-link';
 import errorHandler from './middleware/error-handler';
 import routing from './middleware/routing';
 import createRouter from './router';
@@ -22,7 +22,7 @@ export default (articles: Articles): Koa => {
   app.use(cors({
     exposeHeaders: ['Link'],
   }));
-  app.use(apiDocumentation(router.url(Routes.ApiDocumentation)));
+  app.use(apiDocumentationLink(router.url(Routes.ApiDocumentation)));
   app.use(errorHandler());
   app.use(routing(router));
 
