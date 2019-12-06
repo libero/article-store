@@ -3,7 +3,7 @@ import { Iri, JsonLdObj } from 'jsonld/jsonld-spec';
 
 const isNotUndefined = (arg: unknown): boolean => arg !== undefined;
 
-export default (id?: Iri, name = `Article ${id}`): JsonLdObj => (
+export default (id?: Iri, name = id ? `Article ${id}` : 'Article'): JsonLdObj => (
   deepFilter({
     '@id': id,
     '@type': 'http://schema.org/Article',
