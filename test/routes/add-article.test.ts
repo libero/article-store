@@ -23,7 +23,7 @@ describe('add article', (): void => {
 
     expect(response.status).toBe(204);
     expect(await articles.count()).toBe(1);
-    expect([...articles][0]['http://schema.org/name']).toEqual([{'@value': 'Article'}]);
+    expect([...articles][0]['http://schema.org/name']).toEqual([{ '@value': 'Article' }]);
   });
 
   it('should throw an error if id is already set', async (): Promise<void> => {
