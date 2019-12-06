@@ -1,10 +1,10 @@
 import Router from '@koa/router';
+import { AppContext, AppState } from './app';
 import Routes from './routes';
 import addArticle from './routes/add-article';
 import apiDocumentation from './routes/api-documentation';
 import articleList from './routes/article-list';
 import entryPoint from './routes/entry-point';
-import { AppContext, AppState } from './types';
 
 export default (): Router<AppState, AppContext> => {
   const router = new Router<AppState, AppContext>();

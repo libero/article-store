@@ -1,6 +1,6 @@
 import { Next } from 'koa';
 import { hydra, schema } from 'rdf-namespaces';
-import { AppContext, AppMiddleware } from '../types';
+import { AppContext, AppMiddleware } from '../app';
 import Routes from './index';
 
 export default (): AppMiddleware => (

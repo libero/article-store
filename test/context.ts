@@ -6,7 +6,7 @@ import Request from 'koa/lib/request';
 import Response from 'koa/lib/response';
 import { Request as IncomingMessage, Response as ServerResponse } from 'mock-http';
 import InMemoryArticles from '../src/adaptors/in-memory-articles';
-import { AppContext } from '../src/types';
+import { AppContext } from '../src/app';
 import Articles from '../src/articles';
 
 export type ErrorListener = (error: UnknownError, context: Context) => void;

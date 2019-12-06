@@ -3,7 +3,7 @@ import { constants } from 'http2';
 import { JsonLdObj } from 'jsonld/jsonld-spec';
 import { Next } from 'koa';
 import uniqueString from 'unique-string';
-import { AppContext, AppMiddleware } from '../types';
+import { AppContext, AppMiddleware } from '../app';
 
 export default (): AppMiddleware => (
   async ({ articles, request, response }: AppContext, next: Next): Promise<void> => {

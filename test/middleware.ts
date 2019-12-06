@@ -1,5 +1,5 @@
 import { Middleware, ParameterizedContext, Response } from 'koa';
-import { AppContext, AppState } from '../src/types';
+import { AppContext, AppState } from '../src/app';
 
 export type Next<StateT = AppState, CustomT = AppContext> = (
   context: ParameterizedContext<StateT, CustomT>
