@@ -37,7 +37,7 @@ describe('add article', (): void => {
     })).rejects.toThrow(new createHttpError.Forbidden('Article type must be http://schema.org/Article (\'http://schema.org/NewsArticle\' was given)'));
   });
 
-  it('should throw an error if no scheam:name set', async (): Promise<void> => {
+  it('should throw an error if no schema:name set', async (): Promise<void> => {
     await expect(makeRequest({
       '@type': 'http://schema.org/Article',
     })).rejects.toThrow(new createHttpError.Forbidden('Article must have at least one http://schema.org/name'));
