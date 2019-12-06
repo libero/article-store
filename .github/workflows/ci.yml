@@ -56,12 +56,12 @@ jobs:
         test:
           - make lint
           - make test
-          - TARGET=dev .travis/smoke-test.sh
-          - TARGET=prod .travis/smoke-test.sh
-          - .travis/analyse.sh
+          - TARGET=dev .github/smoke-test.sh
+          - TARGET=prod .github/smoke-test.sh
+          - .github/analyse.sh
         include:
           - target: prod
-            test: TARGET=prod .travis/smoke-test.sh
+            test: TARGET=prod .github/smoke-test.sh
 
     steps:
       - uses: actions/checkout@v1
