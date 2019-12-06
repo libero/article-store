@@ -41,5 +41,19 @@ describe('add article', (): void => {
     await expect(makeRequest({
       '@type': 'http://schema.org/Article',
     })).rejects.toThrow(new createHttpError.Forbidden('Article must have at least one http://schema.org/name'));
+
+    await expect(makeRequest({
+      '@type': 'http://schema.org/Article',
+      'http://schema.org/name': [],
+    })).rejects.toThrow(new createHttpError.Forbidden('Article must have at least one http://schema.org/name'));
+
+    await expect(makeRequest({
+      '@type': 'http://schema.org/Article',
+      'http://schema.org/name': [
+        {
+          '@value': null,
+        },
+      ],
+    })).rejects.toThrow(new createHttpError.Forbidden('Article must have at least one http://schema.org/name'));
   });
 });
