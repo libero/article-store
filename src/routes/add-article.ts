@@ -16,7 +16,7 @@ export default (articles: Articles): Middleware => (
     if ('@id' in article) {
       throw new createHttpError.Forbidden(`Article IDs must not be set ('${article['@id']}' was given)`);
     }
-    if (!(schema.name in article) && article[schema.name].length) {
+    if (!(schema.name in article) || article[schema.name].length === 0) {
       throw new createHttpError.Forbidden(`Article must have at least one ${schema.name}`);
     }
 
