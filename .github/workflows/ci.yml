@@ -1,0 +1,82 @@
+name: CI
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+  push:
+    branches:
+      - master
+
+env:
+  IMAGE_TAG: ${{ github.sha }}
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v1
+        with:
+          submodules: true
+
+      - name: Build Docker images
+        run: |
+          TARGET=prod make build
+          TARGET=dev make build
+
+      - name: Save Docker images
+        run: |
+          mkdir -p docker-image-prod docker-image-dev
+          docker save -o docker-image-prod/article-store.tar libero/article-store:${IMAGE_TAG}
+          gzip docker-image-prod/article-store.tar
+          docker save -o docker-image-dev/article-store.tar libero/article-store:${IMAGE_TAG}-dev
+          gzip docker-image-dev/article-store.tar
+
+      - name: Upload prod Docker image
+        uses: actions/upload-artifact@v1
+        with:
+          name: docker-image-prod
+          path: docker-image-prod
+
+      - name: Upload dev Docker image
+        uses: actions/upload-artifact@v1
+        with:
+          name: docker-image-dev
+          path: docker-image-dev
+
+  test:
+
+    needs: build
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        test:
+          - make lint
+          - make test
+          - TARGET=dev .travis/smoke-test.sh
+          - TARGET=prod .travis/smoke-test.sh
+          - .travis/analyse.sh
+        include:
+          - target: prod
+            test: TARGET=prod .travis/smoke-test.sh
+
+    steps:
+      - uses: actions/checkout@v1
+        with:
+          submodules: true
+
+      - name: Download Docker image artifact
+        uses: actions/download-artifact@v1
+        with:
+          name: docker-image-${{ matrix.target || 'dev' }}
+
+      - name: Load Docker image
+        run: |
+          gunzip docker-image-${{ matrix.target || 'dev' }}/article-store.tar.gz
+          docker load -i docker-image-${{ matrix.target || 'dev' }}/article-store.tar
+
+      - name: Run test
+        run: ${{ matrix.test }}
