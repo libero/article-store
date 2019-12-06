@@ -7,6 +7,7 @@ import apiDocumentation from './middleware/api-documentation';
 import errorHandler from './middleware/error-handler';
 import routing from './middleware/routing';
 import createRouter from './router';
+import Routes from './routes';
 import { App, AppContext, AppState } from './types';
 
 export default (articles: Articles): App => {
@@ -25,7 +26,7 @@ export default (articles: Articles): App => {
   app.use(cors({
     exposeHeaders: ['Link'],
   }));
-  app.use(apiDocumentation());
+  app.use(apiDocumentation(router.url(Routes.ApiDocumentation)));
   app.use(errorHandler());
   app.use(routing(router));
 

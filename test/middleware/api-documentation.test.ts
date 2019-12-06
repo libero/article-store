@@ -5,7 +5,7 @@ import createContext from '../context';
 import runMiddleware from '../middleware';
 
 const makeRequest = async (): Promise<Response> => (
-  runMiddleware(apiDocumentation(), createContext())
+  runMiddleware(apiDocumentation('/path-to/api-documentation'), createContext())
 );
 
 describe('API documentation middleware', (): void => {
