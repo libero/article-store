@@ -1,17 +1,31 @@
 import cors from '@koa/cors';
-import Koa from 'koa';
+import Router, { RouterContext } from '@koa/router';
+import Koa, { DefaultState, Middleware } from 'koa';
 import bodyParser from 'koa-bodyparser';
 import logger from 'koa-logger';
 import Articles from './articles';
-import apiDocumentation from './middleware/api-documentation';
+import apiDocumentationLink from './middleware/api-documentation-link';
 import errorHandler from './middleware/error-handler';
 import jsonld from './middleware/jsonld';
 import routing from './middleware/routing';
-import createRouter from './router';
 
-export default (articles: Articles): Koa => {
-  const app = new Koa();
-  const router = createRouter(articles);
+export type AppState = DefaultState;
+
+export type AppContext = RouterContext<AppState, {
+  articles: Articles;
+}>;
+
+export type AppMiddleware = Middleware<AppState, AppContext>;
+
+export default (
+  articles: Articles,
+  router: Router<AppState, AppContext>,
+  apiDocumentationPath: string,
+): Koa<AppState, AppContext> => {
+  const app = new Koa<AppState, AppContext>();
+
+  app.context.articles = articles;
+  app.context.router = router;
 
   app.use(logger());
   app.use(bodyParser({
@@ -30,7 +44,7 @@ export default (articles: Articles): Koa => {
     rdfs: 'http://www.w3.org/2000/01/rdf-schema#',
     schema: 'http://schema.org/',
   }));
-  app.use(apiDocumentation(router));
+  app.use(apiDocumentationLink(apiDocumentationPath));
   app.use(errorHandler());
   app.use(routing(router));
 
