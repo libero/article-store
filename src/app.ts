@@ -7,6 +7,7 @@ import apiDocumentation from './middleware/api-documentation';
 import errorHandler from './middleware/error-handler';
 import routing from './middleware/routing';
 import createRouter from './router';
+import Routes from './routes';
 
 export default (articles: Articles): Koa => {
   const app = new Koa();
@@ -21,7 +22,7 @@ export default (articles: Articles): Koa => {
   app.use(cors({
     exposeHeaders: ['Link'],
   }));
-  app.use(apiDocumentation(router));
+  app.use(apiDocumentation(router.url(Routes.ApiDocumentation)));
   app.use(errorHandler());
   app.use(routing(router));
 
