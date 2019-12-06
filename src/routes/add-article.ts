@@ -2,13 +2,13 @@ import createHttpError from 'http-errors';
 import { constants } from 'http2';
 import jsonld from 'jsonld';
 import { JsonLdArray } from 'jsonld/jsonld-spec';
-import { Context, Middleware, Next } from 'koa';
+import { Next } from 'koa';
 import uniqueString from 'unique-string';
 import { schema } from 'rdf-namespaces';
-import Articles from '../articles';
+import { AppContext, AppMiddleware } from '../app';
 
-export default (articles: Articles): Middleware => (
-  async ({ request, response }: Context, next: Next): Promise<void> => {
+export default (): AppMiddleware => (
+  async ({ articles, request, response }: AppContext, next: Next): Promise<void> => {
     const [article] = await jsonld.expand(request.body) as JsonLdArray;
     if (!(article['@type'].includes(schema.Article))) {
       throw new createHttpError.Forbidden(`Article type must be ${schema.Article} ('${article['@type'].join(', ')}' was given)`);

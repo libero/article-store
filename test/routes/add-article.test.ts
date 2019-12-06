@@ -13,7 +13,7 @@ const makeRequest = async (
   next?: Next,
   articles: Articles = new InMemoryArticles(),
 ): Promise<Response> => (
-  runMiddleware(addArticle(articles), createContext({ body }), next)
+  runMiddleware(addArticle(), createContext({ articles, body }), next)
 );
 
 describe('add article', (): void => {
@@ -23,6 +23,7 @@ describe('add article', (): void => {
 
     expect(response.status).toBe(204);
     expect(await articles.count()).toBe(1);
+    expect([...articles][0]['http://schema.org/name']).toEqual([{'@value': 'Article'}]);
   });
 
   it('should throw an error if id is already set', async (): Promise<void> => {
