@@ -5,11 +5,9 @@ import jsonld from '../../src/middleware/jsonld';
 import createContext from '../context';
 import runMiddleware, { Next } from '../middleware';
 
-const makeRequest = async (next?: Next, jsonLdContext: JsonLdContext = {}): Promise<Response> => {
-  const context = createContext();
-
-  return runMiddleware(jsonld(jsonLdContext), context, next);
-};
+const makeRequest = async (next?: Next, jsonLdContext: JsonLdContext = {}): Promise<Response> => (
+  runMiddleware(jsonld(jsonLdContext), createContext(), next)
+);
 
 const next = (body: unknown, type: string) => async ({ response }: Context): Promise<void> => {
   response.body = body;
