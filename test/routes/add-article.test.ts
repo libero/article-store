@@ -13,7 +13,7 @@ const makeRequest = async (
   next?: Next,
   articles: Articles = new InMemoryArticles(),
 ): Promise<Response> => (
-  runMiddleware(addArticle(articles), createContext({ body }), next)
+  runMiddleware(addArticle(), createContext({ articles, body }), next)
 );
 
 describe('add article', (): void => {
