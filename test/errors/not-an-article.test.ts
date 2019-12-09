@@ -13,9 +13,9 @@ describe('not an article error', (): void => {
     expect(error.message).toBe('Article type must be http://schema.org/Article (none was given)');
   });
 
-  it('may have a type', async (): Promise<void> => {
-    const error = new NotAnArticle('http://schema.org/NewsArticle');
+  it('may have types', async (): Promise<void> => {
+    const error = new NotAnArticle(['http://schema.org/NewsArticle', 'http://schema.org/Book']);
 
-    expect(error.message).toBe('Article type must be http://schema.org/Article (\'http://schema.org/NewsArticle\' was given)');
+    expect(error.message).toBe('Article type must be http://schema.org/Article (\'http://schema.org/NewsArticle, http://schema.org/Book\' was given)');
   });
 });

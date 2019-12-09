@@ -25,11 +25,26 @@ describe('in-memory articles', (): void => {
     expect((await articles.get('_:1'))['http://schema.org/name']).toBe('Updated');
   });
 
+  it('can have multiple types', async (): Promise<void> => {
+    const articles = new InMemoryArticles();
+
+    await articles.add({
+      '@id': '_:1',
+      '@type': [
+        'http://schema.org/Article',
+        'http://schema.org/NewsArticle',
+      ],
+      'http://schema.org/name': 'Article _:1',
+    });
+
+    expect(await articles.contains('_:1')).toBe(true);
+  });
+
   it('throws an error if the article does not have correct type', async (): Promise<void> => {
     const articles = new InMemoryArticles();
 
     await expect(articles.add({})).rejects.toThrow(new NotAnArticle());
-    await expect(articles.add({ '@type': 'http://schema.org/NewsArticle' })).rejects.toThrow(new NotAnArticle('http://schema.org/NewsArticle'));
+    await expect(articles.add({ '@type': 'http://schema.org/NewsArticle' })).rejects.toThrow(new NotAnArticle(['http://schema.org/NewsArticle']));
   });
 
   it('throws an error if the article does not have an ID', async (): Promise<void> => {

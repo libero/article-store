@@ -10,7 +10,7 @@ export default class InMemoryArticles implements Articles {
 
   async add(article: JsonLdObj): Promise<void> {
     if (!('@type' in article) || !(article['@type'].includes(schema.Article))) {
-      throw new NotAnArticle(article['@type']);
+      throw new NotAnArticle(typeof article['@type'] === 'string' ? [article['@type']] : article['@type']);
     }
     if (!('@id' in article)) {
       throw new ArticleHasNoId();
