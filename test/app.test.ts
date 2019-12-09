@@ -1,9 +1,20 @@
+import Koa from 'koa';
 import parseLinkHeader from 'parse-link-header';
 import request from 'supertest';
-import app from '../src/app';
+import InMemoryArticles from '../src/adaptors/in-memory-articles';
+import createApp from '../src/app';
+import createRouter from '../src/router';
+import Routes from '../src/routes';
 
 const trim = (value: string): string => value.trim();
 const parseHeader = (header: string): Array<string> => header.split(',').map(trim);
+
+const router = createRouter();
+let app: Koa;
+
+beforeEach((): void => {
+  app = createApp(new InMemoryArticles(), router, router.url(Routes.ApiDocumentation));
+});
 
 describe('the application', (): void => {
   it('should respond with 200 OK on the root', async (): Promise<void> => {

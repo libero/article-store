@@ -1,10 +1,10 @@
-import Router from '@koa/router';
-import { Context, Middleware, Next } from 'koa';
+import { Next } from 'koa';
 import { hydra, schema } from 'rdf-namespaces';
+import { AppContext, AppMiddleware } from '../app';
 import Routes from './index';
 
-export default (router: Router): Middleware => (
-  async ({ request, response }: Context, next: Next): Promise<void> => {
+export default (): AppMiddleware => (
+  async ({ request, response, router }: AppContext, next: Next): Promise<void> => {
     response.body = {
       '@context': {
         '@base': request.origin,
@@ -12,7 +12,10 @@ export default (router: Router): Middleware => (
       '@id': router.url(Routes.EntryPoint),
       '@type': schema.EntryPoint,
       [schema.name]: { '@value': 'Article Store', '@language': 'en' },
-      [hydra.collection]: { '@id': router.url(Routes.ArticleList) },
+      [hydra.collection]: {
+        '@id': router.url(Routes.ArticleList),
+        '@type': hydra.Collection,
+      },
     };
     response.type = 'jsonld';
 

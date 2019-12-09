@@ -15,8 +15,7 @@ export TARGET
 help: ## Display this help text
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
 
-install: ## Install dependencies locally
-	make --jobs=2 $(MAKEFLAGS) node_modules gitmodules
+install: node_modules gitmodules ## Install dependencies locally
 
 node_modules: package.json package-lock.json
 	npm install
@@ -45,14 +44,15 @@ wait-healthy: ## Wait for the containers to be healthy
 	done
 
 sh: ## Open a shell on the app container
-	make exec command="sh"
+	$(MAKE) exec command="sh"
 
+tty = 1
 exec: ## Run a command on the app container
 	if [ -z "$(command)" ]; then \
 		echo "No command provided"; \
 		exit 1; \
-	fi; \
-	${DOCKER_COMPOSE} exec app $(command)
+	fi;
+	${DOCKER_COMPOSE} exec $(if $(tty),,-T) app $(command)
 
 logs: ## Show the containers' logs
 	${DOCKER_COMPOSE} logs
@@ -77,10 +77,10 @@ run:
 
 dev: export TARGET = dev
 dev: ## Build and runs the container for development
-	make --jobs=4 install build stop
-	make run
+	$(MAKE) --jobs=4 install build stop
+	$(MAKE) run
 
 prod: export TARGET = prod
 prod: ## Builds and runs the container for production
-	make --jobs=2 build stop
-	make run
+	$(MAKE) --jobs=2 build stop
+	$(MAKE) run
