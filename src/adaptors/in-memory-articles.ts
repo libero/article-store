@@ -3,21 +3,17 @@ import { schema } from 'rdf-namespaces';
 import Articles from '../articles';
 import ArticleHasNoId from '../errors/article-has-no-id';
 import ArticleNotFound from '../errors/article-not-found';
-import ArticleHasNoTitle from '../errors/article-has-no-title';
-import ArticleHasIncorrectType from '../errors/article-has-incorrect-type';
+import NotAnArticle from '../errors/not-an-article';
 
 export default class InMemoryArticles implements Articles {
   private articles: { [key: string]: JsonLdObj } = {};
 
   async add(article: JsonLdObj): Promise<void> {
     if (!('@type' in article) || !(article['@type'].includes(schema.Article))) {
-      throw new ArticleHasIncorrectType(('@type' in article) ? article['@type'] : undefined);
+      throw new NotAnArticle(article['@type']);
     }
     if (!('@id' in article)) {
       throw new ArticleHasNoId();
-    }
-    if (!(schema.name in article) || article[schema.name].length === 0) {
-      throw new ArticleHasNoTitle();
     }
 
     this.articles[article['@id']] = article;

@@ -4,6 +4,7 @@ import jsonld from 'jsonld';
 import { JsonLdArray } from 'jsonld/jsonld-spec';
 import { Next } from 'koa';
 import uniqueString from 'unique-string';
+import { schema } from 'rdf-namespaces';
 import { AppContext, AppMiddleware } from '../app';
 
 export default (): AppMiddleware => (
@@ -11,6 +12,9 @@ export default (): AppMiddleware => (
     const [article] = await jsonld.expand(request.body) as JsonLdArray;
     if ('@id' in article) {
       throw new createHttpError.Forbidden(`Article IDs must not be set ('${article['@id']}' was given)`);
+    }
+    if (!(schema.name in article) || article[schema.name].length === 0) {
+      throw new createHttpError.BadRequest(`Article must have at least one ${schema.name}`);
     }
 
     article['@id'] = `_:${uniqueString()}`;
