@@ -52,6 +52,7 @@ COPY .eslintignore \
 COPY --from=npm-dev /app/ .
 COPY test/ test/
 COPY src/ src/
+COPY config/ config/
 
 CMD ["npm", "run", "start:dev"]
 

@@ -3,14 +3,17 @@
   "dependencies": {
     "@koa/cors": "^3.0.0",
     "@koa/router": "^8.0.2",
+    "@libero/migrator": "^0.1.0",
     "content-type": "^1.0.4",
     "format-link-header": "^2.1.0",
     "http-errors": "^1.7.3",
     "jsonld": "^1.8.1",
+    "knex": "^0.19.5",
     "koa": "^2.11.0",
     "koa-bodyparser": "^4.2.1",
     "koa-compose": "^4.1.0",
     "koa-logger": "^3.2.1",
+    "pg": "^7.14.0",
     "rdf-namespaces": "^1.6.0",
     "unique-string": "^2.0.0"
   },
@@ -54,6 +57,7 @@
     "lint:fix": "eslint . --fix --ext .js,.ts",
     "start": "node ./build/index.js",
     "start:dev": "nodemon --exec 'node --require ts-node/register ./src/index.ts' --ext .js,.json,.ts",
-    "test": "jest --silent"
+    "test": "jest --silent",
+    "migrate": "CONFIG_PATH=config/config.json ts-node src/migrate.ts"
   }
 }

@@ -4,8 +4,6 @@ services:
   app:
     build:
       context: ../
-    environment:
-      DB_CONNECTION: postgres://user:secure1@db/test_db
     ports:
       - '8080:8080'
     depends_on:
@@ -22,8 +20,8 @@ services:
   db:
     image: postgres:12.1-alpine
     environment:
-      POSTGRES_USER: user
-      POSTGRES_PASSWORD: secure1
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
       POSTGRES_DB: aritcle_store
     ports:
       - '5432:5432'

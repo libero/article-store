@@ -1,0 +1,11 @@
+{
+  "database": {
+    "type": "pg",
+    "name": "article_store",
+    "host": "db",
+    "username": "postgres",
+    "password": "postgres",
+    "database": "aritcle_store",
+    "port": 5432
+  }
+}
