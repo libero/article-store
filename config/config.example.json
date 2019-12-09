@@ -2,7 +2,7 @@
   "database": {
     "type": "pg",
     "name": "article_store",
-    "host": "localhost",
+    "host": "db",
     "username": "postgres",
     "password": "postgres",
     "database": "article-store",
