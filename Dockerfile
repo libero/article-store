@@ -53,6 +53,7 @@ COPY --from=npm-dev /app/ .
 COPY test/ test/
 COPY src/ src/
 COPY config/ config/
+RUN test -f config/config.json || cp config/config.example.json config/config.json
 
 CMD ["npm", "run", "start:dev"]
 

@@ -33,6 +33,9 @@ start: ## Start the containers
 stop: ## Stop the containers
 	${DOCKER_COMPOSE} down
 
+migrate: ## Run db migrations
+	${DOCKER_COMPOSE} run app npm run migrate run
+
 wait-healthy: ## Wait for the containers to be healthy
 	services=($$(${DOCKER_COMPOSE} ps --quiet)); \
 	if [ $${#services[@]} -eq 0 ]; then \
@@ -77,10 +80,10 @@ run:
 
 dev: export TARGET = dev
 dev: ## Build and runs the container for development
-	$(MAKE) --jobs=4 install build stop
+	$(MAKE) --jobs=4 install build migrate stop
 	$(MAKE) run
 
 prod: export TARGET = prod
 prod: ## Builds and runs the container for production
-	$(MAKE) --jobs=2 build stop
+	$(MAKE) --jobs=2 build nigrate stop
 	$(MAKE) run

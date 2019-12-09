@@ -22,6 +22,6 @@ services:
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: aritcle-store
+      POSTGRES_DB: aritcle_store
     ports:
       - '5432:5432'

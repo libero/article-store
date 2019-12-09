@@ -5,7 +5,6 @@
     "host": "db",
     "username": "postgres",
     "password": "postgres",
-    "database": "article-store",
     "port": 5432
   }
 }
