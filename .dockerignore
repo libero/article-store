@@ -1,7 +1,6 @@
 /.dependabot/
 /.github/
 /.scripts/
-/.travis/
 /build/
 /Makefile
 /node_modules/
