@@ -6,6 +6,7 @@ import { Next } from 'koa';
 import { schema } from 'rdf-namespaces';
 import uniqueString from 'unique-string';
 import { AppContext, AppMiddleware } from '../app';
+import NotAnArticle from '../errors/not-an-article';
 
 export default (): AppMiddleware => (
   async ({ articles, request, response }: AppContext, next: Next): Promise<void> => {
@@ -18,7 +19,16 @@ export default (): AppMiddleware => (
     }
 
     article['@id'] = `_:${uniqueString()}`;
-    await articles.add(article);
+
+    try {
+      await articles.add(article);
+    } catch (error) {
+      if (error instanceof NotAnArticle) {
+        throw new createHttpError.BadRequest(error.message);
+      }
+
+      throw error;
+    }
 
     response.status = constants.HTTP_STATUS_NO_CONTENT;
 
