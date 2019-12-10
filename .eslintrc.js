@@ -9,6 +9,16 @@ module.exports = {
     'plugin:import/typescript',
     'plugin:jest/recommended',
   ],
+  overrides: [
+    {
+      files: [
+        '*.test.ts',
+      ],
+      rules: {
+        '@typescript-eslint/no-explicit-any': 'off',
+      },
+    },
+  ],
   parser: '@typescript-eslint/parser',
   parserOptions: {
     ecmaVersion: 2019,
