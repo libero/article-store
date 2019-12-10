@@ -2,7 +2,7 @@
   "private": true,
   "dependencies": {
     "@koa/cors": "^3.0.0",
-    "@koa/router": "^8.0.2",
+    "@koa/router": "^8.0.3",
     "content-type": "^1.0.4",
     "format-link-header": "^2.1.0",
     "http-errors": "^1.7.3",
