@@ -27,6 +27,6 @@ describe('add article', (): void => {
   });
 
   it('should throw an error if id is already set', async (): Promise<void> => {
-    await expect(makeRequest(createArticle('_:1'))).rejects.toThrow(new createHttpError.Forbidden('Article IDs must not be set (\'_:1\' was given)'));
+    await expect(makeRequest(createArticle('_:1'))).rejects.toThrowWithMessage(createHttpError.Forbidden, 'Article IDs must not be set (\'_:1\' was given)');
   });
 });
