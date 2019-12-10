@@ -9,9 +9,12 @@ export default class InMemoryArticles implements Articles {
   private articles: { [key: string]: JsonLdObj } = {};
 
   async add(article: JsonLdObj): Promise<void> {
-    if (!('@type' in article) || !(article['@type'].includes(schema.Article))) {
-      throw new NotAnArticle([].concat(article['@type'] || []));
+    const types = [].concat(article['@type'] || []);
+
+    if (!(types.includes(schema.Article))) {
+      throw new NotAnArticle(types);
     }
+
     if (!('@id' in article)) {
       throw new ArticleHasNoId();
     }

@@ -16,6 +16,17 @@ describe('in-memory articles', (): void => {
     expect(await articles.contains('_:1')).toBe(true);
   });
 
+  it('can add an article with multiple types', async (): Promise<void> => {
+    const articles = new InMemoryArticles();
+
+    await articles.add({
+      ...createArticle('_:1'),
+      '@type': ['http://schema.org/Article', 'http://schema.org/NewsArticle'],
+    });
+
+    expect(await articles.contains('_:1')).toBe(true);
+  });
+
   it('can update an article', async (): Promise<void> => {
     const articles = new InMemoryArticles();
 
@@ -25,35 +36,28 @@ describe('in-memory articles', (): void => {
     expect((await articles.get('_:1'))['http://schema.org/name']).toBe('Updated');
   });
 
-  it('can have multiple types', async (): Promise<void> => {
+  it('throws an error if it is not an article', async (): Promise<void> => {
     const articles = new InMemoryArticles();
 
-    await articles.add({
-      '@id': '_:1',
-      '@type': [
-        'http://schema.org/Article',
-        'http://schema.org/NewsArticle',
-      ],
-      'http://schema.org/name': 'Article _:1',
-    });
-
-    expect(await articles.contains('_:1')).toBe(true);
+    await expect(articles.add({
+      ...createArticle('_:1'),
+      '@type': 'http://schema.org/NewsArticle',
+    })).rejects.toThrow(new NotAnArticle(['http://schema.org/NewsArticle']));
   });
 
-  it('throws an error if the article does not have correct type', async (): Promise<void> => {
+  it('throws an error if it has no type', async (): Promise<void> => {
     const articles = new InMemoryArticles();
 
-    await expect(articles.add({})).rejects.toThrow(new NotAnArticle());
-    await expect(articles.add({ '@type': 'http://schema.org/NewsArticle' })).rejects.toThrow(new NotAnArticle(['http://schema.org/NewsArticle']));
+    await expect(articles.add({
+      ...createArticle('_:1'),
+      '@type': undefined,
+    })).rejects.toThrow(new NotAnArticle());
   });
 
   it('throws an error if the article does not have an ID', async (): Promise<void> => {
     const articles = new InMemoryArticles();
 
-    await expect(articles.add({
-      '@type': 'http://schema.org/Article',
-      'http://schema.org/name': 'Article _:1',
-    })).rejects.toThrow(new ArticleHasNoId());
+    await expect(articles.add(createArticle())).rejects.toThrow(new ArticleHasNoId());
   });
 
   it('can retrieve an article', async (): Promise<void> => {
