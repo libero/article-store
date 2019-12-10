@@ -1,4 +1,5 @@
 import createHttpError from 'http-errors';
+import 'jest-extended';
 import { JsonLdObj } from 'jsonld/jsonld-spec';
 import { Next, Response } from 'koa';
 import InMemoryArticles from '../../src/adaptors/in-memory-articles';
