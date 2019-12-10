@@ -32,15 +32,13 @@ describe('add article', (): void => {
   });
 
   it('should throw an error if it is not a schema:Article', async (): Promise<void> => {
-    await expect(makeRequest({
+    const article = {
       ...createArticle(),
       '@type': 'http://schema.org/NewsArticle',
-    })).rejects.toBeInstanceOf(createHttpError.BadRequest);
+    };
 
-    await expect(makeRequest({
-      ...createArticle(),
-      '@type': 'http://schema.org/NewsArticle',
-    })).rejects.toHaveProperty('message', 'Article type must be http://schema.org/Article (\'http://schema.org/NewsArticle\' was given)');
+    await expect(makeRequest(article)).rejects.toBeInstanceOf(createHttpError.BadRequest);
+    await expect(makeRequest(article)).rejects.toHaveProperty('message', 'Article type must be http://schema.org/Article (\'http://schema.org/NewsArticle\' was given)');
   });
 
   it.each([
@@ -49,14 +47,12 @@ describe('add article', (): void => {
     [{ '@value': null }],
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   ])('should throw an error if the schema:name is %s', async (name: any): Promise<void> => {
-    await expect(makeRequest({
+    const article = {
       ...createArticle(),
       'http://schema.org/name': name,
-    })).rejects.toBeInstanceOf(createHttpError.BadRequest);
+    };
 
-    await expect(makeRequest({
-      ...createArticle(),
-      'http://schema.org/name': name,
-    })).rejects.toHaveProperty('message', 'Article must have at least one http://schema.org/name');
+    await expect(makeRequest(article)).rejects.toBeInstanceOf(createHttpError.BadRequest);
+    await expect(makeRequest(article)).rejects.toHaveProperty('message', 'Article must have at least one http://schema.org/name');
   });
 });
