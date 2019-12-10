@@ -28,7 +28,6 @@ describe('in-memory articles', (): void => {
     const articles = new InMemoryArticles();
 
     await expect(articles.add({})).rejects.toBeInstanceOf(ArticleHasNoId);
-    await expect(articles.add({})).rejects.toHaveProperty('message', 'Article must have an ID');
   });
 
   it('can retrieve an article', async (): Promise<void> => {
@@ -43,7 +42,7 @@ describe('in-memory articles', (): void => {
     const articles = new InMemoryArticles();
 
     await expect(articles.get('_:1')).rejects.toBeInstanceOf(ArticleNotFound);
-    await expect(articles.get('_:1')).rejects.toHaveProperty('message', 'Article _:1 could not be found');
+    await expect(articles.get('_:1')).rejects.toHaveProperty('id', '_:1');
   });
 
   it('can remove an article', async (): Promise<void> => {
