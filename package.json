@@ -40,6 +40,7 @@
     "hydra-validator": "^1.1.2",
     "hydra-validator-analyse": "^0.1.6",
     "jest": "^24.9.0",
+    "jest-extended": "^0.11.2",
     "mock-http": "^1.0.2",
     "nodemon": "^2.0.1",
     "parse-link-header": "^1.0.1",
