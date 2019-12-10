@@ -42,11 +42,10 @@ describe('add article', (): void => {
   });
 
   it.each([
-    [undefined],
-    [[]],
-    [{ '@value': null }],
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  ])('should throw an error if the schema:name is %s', async (name: any): Promise<void> => {
+    undefined,
+    [],
+    { '@value': null },
+  ])('should throw an error if the schema:name is %s', async (name: unknown): Promise<void> => {
     const article = {
       ...createArticle(),
       'http://schema.org/name': name,
