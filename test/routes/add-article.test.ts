@@ -34,7 +34,12 @@ describe('add article', (): void => {
     await expect(makeRequest({
       ...createArticle(),
       '@type': 'http://schema.org/NewsArticle',
-    })).rejects.toThrow(new createHttpError.BadRequest('Article type must be http://schema.org/Article (\'http://schema.org/NewsArticle\' was given)'));
+    })).rejects.toBeInstanceOf(createHttpError.BadRequest);
+
+    await expect(makeRequest({
+      ...createArticle(),
+      '@type': 'http://schema.org/NewsArticle',
+    })).rejects.toHaveProperty('message', 'Article type must be http://schema.org/Article (\'http://schema.org/NewsArticle\' was given)');
   });
 
   it.each([
@@ -46,6 +51,11 @@ describe('add article', (): void => {
     await expect(makeRequest({
       ...createArticle(),
       'http://schema.org/name': name,
-    })).rejects.toThrow(new createHttpError.BadRequest('Article must have at least one http://schema.org/name'));
+    })).rejects.toBeInstanceOf(createHttpError.BadRequest);
+
+    await expect(makeRequest({
+      ...createArticle(),
+      'http://schema.org/name': name,
+    })).rejects.toHaveProperty('message', 'Article must have at least one http://schema.org/name');
   });
 });
