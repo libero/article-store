@@ -27,7 +27,8 @@ describe('in-memory articles', (): void => {
   it('throws an error if the article does not have an ID', async (): Promise<void> => {
     const articles = new InMemoryArticles();
 
-    await expect(articles.add({})).rejects.toThrow(new ArticleHasNoId());
+    await expect(articles.add({})).rejects.toBeInstanceOf(ArticleHasNoId);
+    await expect(articles.add({})).rejects.toHaveProperty('message', 'Article must have an ID');
   });
 
   it('can retrieve an article', async (): Promise<void> => {
@@ -41,7 +42,8 @@ describe('in-memory articles', (): void => {
   it('throws an error if the article is not found', async (): Promise<void> => {
     const articles = new InMemoryArticles();
 
-    await expect(articles.get('_:1')).rejects.toThrow(new ArticleNotFound('_:1'));
+    await expect(articles.get('_:1')).rejects.toBeInstanceOf(ArticleNotFound);
+    await expect(articles.get('_:1')).rejects.toHaveProperty('message', 'Article _:1 could not be found');
   });
 
   it('can remove an article', async (): Promise<void> => {
