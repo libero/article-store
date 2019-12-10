@@ -2,8 +2,8 @@ import { Iri, JsonLdObj } from 'jsonld/jsonld-spec';
 import InMemoryArticles from '../../src/adaptors/in-memory-articles';
 import ArticleNotFound from '../../src/errors/article-not-found';
 import ArticleHasNoId from '../../src/errors/article-has-no-id';
-import createArticle from '../create-article';
 import NotAnArticle from '../../src/errors/not-an-article';
+import createArticle from '../create-article';
 
 describe('in-memory articles', (): void => {
   it('can add an article', async (): Promise<void> => {

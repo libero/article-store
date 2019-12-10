@@ -3,8 +3,8 @@ import { constants } from 'http2';
 import jsonld from 'jsonld';
 import { JsonLdArray } from 'jsonld/jsonld-spec';
 import { Next } from 'koa';
-import uniqueString from 'unique-string';
 import { schema } from 'rdf-namespaces';
+import uniqueString from 'unique-string';
 import { AppContext, AppMiddleware } from '../app';
 
 export default (): AppMiddleware => (
