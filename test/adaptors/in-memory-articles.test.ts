@@ -71,7 +71,8 @@ describe('in-memory articles', (): void => {
   it('throws an error if the article is not found', async (): Promise<void> => {
     const articles = new InMemoryArticles();
 
-    await expect(articles.get('_:1')).rejects.toThrow(new ArticleNotFound('_:1'));
+    await expect(articles.get('_:1')).rejects.toBeInstanceOf(ArticleNotFound);
+    await expect(articles.get('_:1')).rejects.toHaveProperty('id', '_:1');
   });
 
   it('can remove an article', async (): Promise<void> => {
