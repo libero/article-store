@@ -34,7 +34,7 @@ stop: ## Stop the containers
 	${DOCKER_COMPOSE} down
 
 wait-healthy: ## Wait for the containers to be healthy
-	services=($$(${DOCKER_COMPOSE} ps --quiet)); \
+	@services=($$(${DOCKER_COMPOSE} ps --quiet)); \
 	if [ $${#services[@]} -eq 0 ]; then \
 		echo "No containers running"; \
 		exit 1; \
@@ -48,7 +48,7 @@ sh: ## Open a shell on the app container
 
 tty = 1
 exec: ## Run a command on the app container
-	if [ -z "$(command)" ]; then \
+	@if [ -z "$(command)" ]; then \
 		echo "No command provided"; \
 		exit 1; \
 	fi;
