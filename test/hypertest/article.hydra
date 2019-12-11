@@ -1,0 +1,37 @@
+PREFIX hydra: <http://www.w3.org/ns/hydra/core#>
+PREFIX schema: <http://schema.org/>
+
+With Class schema:EntryPoint {
+  Expect Property schema:name
+  Expect Link hydra:collection
+}
+
+With Class hydra:Collection {
+  Expect Property hydra:title
+  Expect Property hydra:manages {
+    Expect Property hydra:property
+    Expect Property hydra:object
+  }
+  Expect Property hydra:totalItems
+  With Property hydra:member {
+    Expect Type schema:Article
+    Expect Property schema:name
+  }
+
+  Expect Operation schema:AddAction {
+    Invoke {
+      Content-Type "application/ld+json"
+      ```
+      {
+        "@context": {
+          "schema": "http://schema.org/"
+        },
+        "@type": "schema:Article",
+        "schema:name": "My new article"
+      }
+      ```
+    } => {
+      Expect Status 204
+    }
+  }
+}
