@@ -31,7 +31,10 @@ With Class hydra:Collection {
       }
       ```
     } => {
-      Expect Status 204
+      Expect Status 201
+      Expect Header Location [article]
+
+      Follow [article]
     }
   }
 }
