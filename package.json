@@ -30,7 +30,7 @@
     "@types/parse-link-header": "^1.0.0",
     "@types/supertest": "^2.0.8",
     "@typescript-eslint/eslint-plugin": "^2.11.0",
-    "@typescript-eslint/parser": "^2.10.0",
+    "@typescript-eslint/parser": "^2.11.0",
     "deep-filter": "^1.0.2",
     "eslint": "^6.7.2",
     "eslint-config-airbnb-base": "^14.0.0",
