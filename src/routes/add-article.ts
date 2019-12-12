@@ -35,6 +35,8 @@ export default (): AppMiddleware => (
     }
 
     response.status = constants.HTTP_STATUS_CREATED;
+    response.body = '';
+    response.remove('Content-Type');
     response.set('Location', url.resolve(request.origin, router.url(Routes.ArticleList)));
 
     await next();
