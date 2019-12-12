@@ -39,7 +39,7 @@
     "eslint-plugin-jest": "^23.1.1",
     "jest": "^24.9.0",
     "mock-http": "^1.0.2",
-    "nodemon": "^2.0.1",
+    "nodemon": "^2.0.2",
     "parse-link-header": "^1.0.1",
     "supertest": "^4.0.2",
     "ts-jest": "^24.2.0",
