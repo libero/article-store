@@ -1,8 +1,8 @@
 {
   "database": {
     "type": "pg",
-    "name": "article_store",
     "host": "db",
+    "database": "article_store",
     "username": "postgres",
     "password": "postgres",
     "port": 5432
