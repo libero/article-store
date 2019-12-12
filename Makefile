@@ -80,10 +80,12 @@ run:
 
 dev: export TARGET = dev
 dev: ## Build and runs the container for development
-	$(MAKE) --jobs=4 install build migrate stop
+	$(MAKE) --jobs=4 install build stop
+	$(MAKE) migrate
 	$(MAKE) run
 
 prod: export TARGET = prod
 prod: ## Builds and runs the container for production
-	$(MAKE) --jobs=2 build nigrate stop
+	$(MAKE) --jobs=2 build stop
+	$(MAKE) migrate
 	$(MAKE) run
