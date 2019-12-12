@@ -30,6 +30,7 @@ export default (
 
   app.use(emptyResponse());
   app.use(logger());
+  app.use(emptyResponse());
   app.use(bodyParser({
     extendTypes: {
       json: ['application/ld+json'],
