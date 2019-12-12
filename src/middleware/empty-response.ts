@@ -1,16 +1,20 @@
-import { Context, Middleware, Next } from 'koa';
+import {
+  Context, Middleware, Next, Response,
+} from 'koa';
+
+const makeResponseEmpty = (response: Response): void => {
+  response.body = '';
+  response.remove('Content-Length');
+  response.remove('Content-Type');
+  response.remove('Transfer-Encoding');
+};
 
 export default (): Middleware => (
   async ({ response }: Context, next: Next): Promise<void> => {
     await next();
 
-    if (response.body !== undefined) {
-      return;
+    if (response.body === undefined) {
+      makeResponseEmpty(response);
     }
-
-    response.body = '';
-    response.remove('Content-Length');
-    response.remove('Content-Type');
-    response.remove('Transfer-Encoding');
   }
 );
