@@ -9,8 +9,6 @@ import NotAnArticle from '../errors/not-an-article';
 export default class PersistArticles implements Articles {
   private readonly knex: Knex<{}, unknown[]>;
 
-  private articles: { [key: string]: JsonLdObj } = {};
-
   public constructor(knex: Knex<{}, unknown[]>) {
     this.knex = knex;
   }
@@ -33,27 +31,29 @@ export default class PersistArticles implements Articles {
   }
 
   async get(id: Iri): Promise<JsonLdObj> {
-    if (!(id in this.articles)) {
+    const article = await this.knex('article-store').select('article').where({ uuid: id.substring(2) }).first().then(row => row ? row.article : row);
+    if (article === undefined) {
       throw new ArticleNotFound(id);
     }
 
-    return this.articles[id];
+    return article;
   }
 
   async remove(id: Iri): Promise<void> {
-    delete this.articles[id];
+    await this.knex('article-store').where({ uuid: id.substring(2) }).del();
   }
 
   async contains(id: Iri): Promise<boolean> {
-    return id in this.articles;
+    return await this.knex('article-store').where({ uuid: id.substring(2) }).first().then(row => row ? true : false);
   }
 
   async count(): Promise<number> {
-    const [count] = await this.knex('article-store').count();
-    return count.count;
+    return await this.knex('article-store').count().first().then(total => parseInt(total.count.toString()));
   }
 
-  * [Symbol.iterator](): Iterator<JsonLdObj> {
-    yield* Object.values(this.articles);
+  async* [Symbol.asyncIterator](): AsyncIterator<JsonLdObj> {
+    yield* (await this.knex('article-store').select('article')).map(item => {
+      return item.article;
+    });
   }
 }
