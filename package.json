@@ -13,6 +13,7 @@
     "koa-bodyparser": "^4.2.1",
     "koa-compose": "^4.1.0",
     "koa-logger": "^3.2.1",
+    "pg": "^7.14.0",
     "rdf-namespaces": "^1.6.0",
     "unique-string": "^2.0.0"
   },
