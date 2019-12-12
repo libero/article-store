@@ -1,9 +1,11 @@
-import InMemoryArticles from './adaptors/in-memory-articles';
 import createApp from './app';
 import createRouter from './router';
 import Routes from './routes';
+import PersistArticles from './adaptors/persist-articles';
+import Knex from 'knex';
+import Config from './config';
 
-const articles = new InMemoryArticles();
+const articles = new PersistArticles(Knex(Config.knex));
 const router = createRouter();
 const apiDocumentationPath = router.url(Routes.ApiDocumentation);
 
