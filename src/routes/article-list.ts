@@ -7,6 +7,10 @@ export default (): AppMiddleware => (
   async ({
     articles, request, response, router,
   }: AppContext, next: Next): Promise<void> => {
+    const list = [];
+    for await (const a of articles) {
+      list.push(a);
+    }
     response.body = {
       '@context': {
         '@base': request.origin,
@@ -20,7 +24,7 @@ export default (): AppMiddleware => (
       },
       [hydra.totalItems]: await articles.count(),
       [hydra.member]: {
-        '@list': [...articles],
+        '@list': list,
       },
     };
     response.type = 'jsonld';
