@@ -42,7 +42,7 @@ export default class InMemoryArticles implements Articles {
     return Object.values(this.articles).length;
   }
 
-  * [Symbol.iterator](): Iterator<JsonLdObj> {
+  async* [Symbol.asyncIterator](): AsyncIterator<JsonLdObj> {
     yield* Object.values(this.articles);
   }
 }

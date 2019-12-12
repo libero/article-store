@@ -1,5 +1,5 @@
 import createHttpError from 'http-errors';
-import { JsonLdObj } from 'jsonld/jsonld-spec';
+import { JsonLdObj, JsonLdArray } from 'jsonld/jsonld-spec';
 import { Next, Response } from 'koa';
 import InMemoryArticles from '../../src/adaptors/in-memory-articles';
 import Articles from '../../src/articles';
@@ -21,9 +21,14 @@ describe('add article', (): void => {
     const articles = new InMemoryArticles();
     const response = await makeRequest(createArticle(), undefined, articles);
 
+    const list = [];
+    for await (const a of articles) {
+      list.push(a);
+    }
+
     expect(response.status).toBe(204);
     expect(await articles.count()).toBe(1);
-    expect([...articles][0]['http://schema.org/name']).toEqual([{ '@value': 'Article' }]);
+    expect(list[0]['http://schema.org/name']).toEqual([{ '@value': 'Article' }]);
   });
 
   it('should throw an error if id is already set', async (): Promise<void> => {
