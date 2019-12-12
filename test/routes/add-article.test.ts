@@ -23,8 +23,6 @@ describe('add article', (): void => {
 
     expect(response.status).toBe(201);
     expect(response.get('Location')).toBe('http://example.com/path-to/article-list');
-    expect(response.get('Content-Type')).toHaveLength(0);
-    expect(response.body).toHaveLength(0);
     expect(await articles.count()).toBe(1);
     expect([...articles][0]['http://schema.org/name']).toEqual([{ '@value': 'Article' }]);
   });

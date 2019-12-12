@@ -5,6 +5,7 @@ import bodyParser from 'koa-bodyparser';
 import logger from 'koa-logger';
 import Articles from './articles';
 import apiDocumentationLink from './middleware/api-documentation-link';
+import emptyResponse from './middleware/empty-response';
 import errorHandler from './middleware/error-handler';
 import jsonld from './middleware/jsonld';
 import routing from './middleware/routing';
@@ -27,6 +28,7 @@ export default (
   app.context.articles = articles;
   app.context.router = router;
 
+  app.use(emptyResponse());
   app.use(logger());
   app.use(bodyParser({
     extendTypes: {
