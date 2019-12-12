@@ -1,5 +1,5 @@
 import createHttpError from 'http-errors';
-import { JsonLdObj, JsonLdArray } from 'jsonld/jsonld-spec';
+import { JsonLdObj } from 'jsonld/jsonld-spec';
 import { Next, Response } from 'koa';
 import InMemoryArticles from '../../src/adaptors/in-memory-articles';
 import Articles from '../../src/articles';
