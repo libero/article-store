@@ -11,7 +11,7 @@ interface Config {
     };
 }
 
-const configPath = process.env.CONFIG_PATH ? process.env.CONFIG_PATH : '/app/config.json';
+const configPath = process.env.CONFIG_PATH ? process.env.CONFIG_PATH : '/app/config/config.json';
 const config: Config = JSON.parse(readFileSync(configPath, 'utf8'));
 
 const knexConfig: KnexConfig = {
