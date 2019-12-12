@@ -18,20 +18,17 @@ describe('Empty response middleware', (): void => {
     const next = async ({ response }: Context): Promise<void> => {
       response.set('Content-Length', '100');
       response.set('Content-Type', 'content/type');
-      response.set('Transfer-Encoding', 'identity');
     };
 
     const response = await makeRequest(next);
 
     expect(response.headers).not.toHaveProperty('content-length');
     expect(response.headers).not.toHaveProperty('content-type');
-    expect(response.headers).not.toHaveProperty('transfer-encoding');
   });
 
   it('does nothing if there is a body', async (): Promise<void> => {
     const next = async ({ response }: Context): Promise<void> => {
       response.body = 'body content';
-      response.set('Transfer-Encoding', 'identity');
     };
 
     const response = await makeRequest(next);
@@ -39,6 +36,5 @@ describe('Empty response middleware', (): void => {
     expect(response.body).toBe('body content');
     expect(response.headers).toHaveProperty('content-length');
     expect(response.headers).toHaveProperty('content-type');
-    expect(response.headers).toHaveProperty('transfer-encoding');
   });
 });

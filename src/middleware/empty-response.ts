@@ -6,7 +6,6 @@ const makeResponseEmpty = (response: Response): void => {
   response.body = '';
   response.remove('Content-Length');
   response.remove('Content-Type');
-  response.remove('Transfer-Encoding');
 };
 
 export default (): Middleware => (
