@@ -21,7 +21,8 @@ describe('add article', (): void => {
     const articles = new InMemoryArticles();
     const response = await makeRequest(createArticle(), undefined, articles);
 
-    expect(response.status).toBe(204);
+    expect(response.status).toBe(201);
+    expect(response.get('Location')).toBe('http://example.com/path-to/article-list');
     expect(await articles.count()).toBe(1);
     expect([...articles][0]['http://schema.org/name']).toEqual([{ '@value': 'Article' }]);
   });
