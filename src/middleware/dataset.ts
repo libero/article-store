@@ -3,9 +3,7 @@ import { Next } from 'koa';
 import { AppContext, AppMiddleware } from '../app';
 
 export default (): AppMiddleware => (
-  async ({
-    datasetFactory, req, request, response,
-  }: AppContext, next: Next): Promise<void> => {
+  async ({ datasetFactory, request, response }: AppContext, next: Next): Promise<void> => {
     request.dataset = datasetFactory.dataset();
     response.dataset = datasetFactory.dataset();
 
