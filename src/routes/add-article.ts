@@ -19,6 +19,10 @@ export default (): AppMiddleware => (
 
     const id = [...foundArticles][0].subject;
 
+    if (id.termType !== 'BlankNode') {
+      throw new createHttpError.BadRequest(`Article must have a blank node identifier (${id.value} given)`);
+    }
+
     if (request.dataset.match(id, schema.name).size === 0) {
       throw new createHttpError.BadRequest(`Article must have at least one ${schema.name.value}`);
     }

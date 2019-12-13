@@ -1,4 +1,4 @@
-import { blankNode, quad } from '@rdfjs/data-model';
+import { blankNode, namedNode, quad } from '@rdfjs/data-model';
 import createHttpError from 'http-errors';
 import { Next, Response } from 'koa';
 import { deleteMatch } from 'rdf-dataset-ext';
@@ -37,6 +37,14 @@ describe('add article', (): void => {
 
     await expect(makeRequest(article)).rejects.toBeInstanceOf(createHttpError.BadRequest);
     await expect(makeRequest(article)).rejects.toHaveProperty('message', 'No http://schema.org/Article found');
+  });
+
+  it('should throw an error if the articles does not have a blank node identifier', async (): Promise<void> => {
+    const id = namedNode('http://example.com/my-article');
+    const article = createArticle(id);
+
+    await expect(makeRequest(article)).rejects.toBeInstanceOf(createHttpError.BadRequest);
+    await expect(makeRequest(article)).rejects.toHaveProperty('message', 'Article must have a blank node identifier (http://example.com/my-article given)');
   });
 
   it('should throw an error if it has no schema:name', async (): Promise<void> => {
