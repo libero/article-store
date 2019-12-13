@@ -1,13 +1,13 @@
-import { DatasetCore, Quad_Subject as QuadSubject } from 'rdf-js';
+import { BlankNode, DatasetCore } from 'rdf-js';
 
-interface Articles extends Iterable<[QuadSubject, DatasetCore]> {
-  set(id: QuadSubject, article: DatasetCore): Promise<void>;
+interface Articles extends Iterable<[BlankNode, DatasetCore]> {
+  set(id: BlankNode, article: DatasetCore): Promise<void>;
 
-  get(id: QuadSubject): Promise<DatasetCore>;
+  get(id: BlankNode): Promise<DatasetCore>;
 
-  remove(id: QuadSubject): Promise<void>;
+  remove(id: BlankNode): Promise<void>;
 
-  contains(id: QuadSubject): Promise<boolean>;
+  contains(id: BlankNode): Promise<boolean>;
 
   count(): Promise<number>;
 }
