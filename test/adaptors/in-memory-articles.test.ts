@@ -1,93 +1,96 @@
-import { Iri, JsonLdObj } from 'jsonld/jsonld-spec';
+import { blankNode, literal, quad } from '@rdfjs/data-model';
+import { equals } from 'rdf-dataset-ext';
+import { BlankNode, DatasetCore } from 'rdf-js';
 import InMemoryArticles from '../../src/adaptors/in-memory-articles';
 import ArticleNotFound from '../../src/errors/article-not-found';
-import ArticleHasNoId from '../../src/errors/article-has-no-id';
 import NotAnArticle from '../../src/errors/not-an-article';
+import { rdf, schema } from '../../src/namespaces';
 import createArticle from '../create-article';
 
 describe('in-memory articles', (): void => {
   it('can add an article', async (): Promise<void> => {
     const articles = new InMemoryArticles();
+    const id = blankNode();
 
-    expect(await articles.contains('_:1')).toBe(false);
+    expect(await articles.contains(id)).toBe(false);
 
-    await articles.add(createArticle('_:1'));
+    await articles.set(id, createArticle(id));
 
-    expect(await articles.contains('_:1')).toBe(true);
+    expect(await articles.contains(id)).toBe(true);
   });
 
   it('can add an article with multiple types', async (): Promise<void> => {
     const articles = new InMemoryArticles();
+    const id = blankNode();
 
-    await articles.add({
-      ...createArticle('_:1'),
-      '@type': ['http://schema.org/Article', 'http://schema.org/NewsArticle'],
-    });
+    await articles.set(id, createArticle(id).add(quad(id, rdf.type, schema.NewsArticle)));
 
-    expect(await articles.contains('_:1')).toBe(true);
+    expect(await articles.contains(id)).toBe(true);
   });
 
   it('can update an article', async (): Promise<void> => {
     const articles = new InMemoryArticles();
+    const id = blankNode();
 
-    await articles.add(createArticle('_:1', 'Original'));
-    await articles.add(createArticle('_:1', 'Updated'));
+    await articles.set(id, createArticle(id, literal('Original')));
+    await articles.set(id, createArticle(id, literal('Updated')));
 
-    expect((await articles.get('_:1'))['http://schema.org/name']).toBe('Updated');
+    expect((await articles.get(id)).has(quad(id, schema.name, literal('Updated')))).toBe(true);
   });
 
   it('throws an error if it is not an article', async (): Promise<void> => {
     const articles = new InMemoryArticles();
+    const id = blankNode();
 
-    await expect(articles.add({
-      ...createArticle('_:1'),
-      '@type': 'http://schema.org/NewsArticle',
-    })).rejects.toThrow(new NotAnArticle(['http://schema.org/NewsArticle']));
+    const article = createArticle(id)
+      .delete(quad(id, rdf.type, schema.Article))
+      .add(quad(id, rdf.type, schema.NewsArticle));
+
+    await expect(articles.set(id, article)).rejects.toThrow(new NotAnArticle([schema.NewsArticle]));
   });
 
   it('throws an error if it has no type', async (): Promise<void> => {
     const articles = new InMemoryArticles();
+    const id = blankNode();
 
-    await expect(articles.add({
-      ...createArticle('_:1'),
-      '@type': undefined,
-    })).rejects.toThrow(new NotAnArticle());
-  });
+    const article = createArticle(id).delete(quad(id, rdf.type, schema.Article));
 
-  it('throws an error if the article does not have an ID', async (): Promise<void> => {
-    const articles = new InMemoryArticles();
-
-    await expect(articles.add(createArticle())).rejects.toThrow(new ArticleHasNoId());
+    await expect(articles.set(id, article)).rejects.toThrow(new NotAnArticle());
   });
 
   it('can retrieve an article', async (): Promise<void> => {
     const articles = new InMemoryArticles();
+    const id = blankNode();
+    const article = createArticle(id);
 
-    await articles.add(createArticle('_:1'));
+    await articles.set(id, article);
 
-    expect((await articles.get('_:1'))['@id']).toBe('_:1');
+    expect(equals(await articles.get(id), article)).toBe(true);
   });
 
   it('throws an error if the article is not found', async (): Promise<void> => {
     const articles = new InMemoryArticles();
+    const id = blankNode();
 
-    await expect(articles.get('_:1')).rejects.toBeInstanceOf(ArticleNotFound);
-    await expect(articles.get('_:1')).rejects.toHaveProperty('id', '_:1');
+    await expect(articles.get(id)).rejects.toBeInstanceOf(ArticleNotFound);
+    await expect(articles.get(id)).rejects.toHaveProperty('id', id);
   });
 
   it('can remove an article', async (): Promise<void> => {
     const articles = new InMemoryArticles();
+    const id = blankNode();
 
-    await articles.add(createArticle('_:1'));
-    await articles.remove('_:1');
+    await articles.set(id, createArticle(id));
+    await articles.remove(id);
 
-    expect(await articles.contains('_:1')).toBe(false);
+    expect(await articles.contains(id)).toBe(false);
   });
 
   it('does nothing when trying to remove an article that is not there', async (): Promise<void> => {
     const articles = new InMemoryArticles();
+    const id = blankNode();
 
-    await expect(articles.remove('_:1')).resolves.not.toThrow();
+    await expect(articles.remove(id)).resolves.not.toThrow();
   });
 
   it('can count the number of articles', async (): Promise<void> => {
@@ -95,9 +98,12 @@ describe('in-memory articles', (): void => {
 
     expect(await articles.count()).toBe(0);
 
-    await articles.add(createArticle('_:1'));
-    await articles.add(createArticle('_:2'));
-    await articles.add(createArticle('_:2'));
+    const id1 = blankNode();
+    const id2 = blankNode();
+
+    await articles.set(id1, createArticle(id1));
+    await articles.set(id2, createArticle(id2));
+    await articles.set(id2, createArticle(id2));
 
     expect(await articles.count()).toBe(2);
   });
@@ -105,12 +111,16 @@ describe('in-memory articles', (): void => {
   it('can iterate through the articles', async (): Promise<void> => {
     const articles = new InMemoryArticles();
 
-    await articles.add(createArticle('_:1'));
-    await articles.add(createArticle('_:3'));
-    await articles.add(createArticle('_:2'));
+    const id1 = blankNode();
+    const id2 = blankNode();
+    const id3 = blankNode();
 
-    const ids = [...articles].map((article: JsonLdObj): Iri => article['@id']);
+    await articles.set(id1, createArticle(id1));
+    await articles.set(id3, createArticle(id3));
+    await articles.set(id2, createArticle(id2));
 
-    expect(ids).toStrictEqual(['_:1', '_:3', '_:2']);
+    const ids = [...articles].map(([id]: [BlankNode, DatasetCore]): BlankNode => id);
+
+    expect(ids).toStrictEqual([id1, id3, id2]);
   });
 });

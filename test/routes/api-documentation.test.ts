@@ -1,10 +1,11 @@
-import jsonld from 'jsonld';
-import { Next, Response } from 'koa';
+import { namedNode, quad } from '@rdfjs/data-model';
+import { Next } from 'koa';
+import { hydra, rdf } from '../../src/namespaces';
 import apiDocumentation from '../../src/routes/api-documentation';
-import runMiddleware from '../middleware';
 import createContext from '../context';
+import runMiddleware, { DatasetResponse } from '../middleware';
 
-const makeRequest = async (next?: Next): Promise<Response> => (
+const makeRequest = async (next?: Next): Promise<DatasetResponse> => (
   runMiddleware(apiDocumentation(), createContext(), next)
 );
 
@@ -13,20 +14,14 @@ describe('API documentation', (): void => {
     const response = await makeRequest();
 
     expect(response.status).toBe(200);
-    expect(response.type).toBe('application/ld+json');
   });
 
   it('should return the API documentation', async (): Promise<void> => {
-    const response = await makeRequest();
-    const graph = await jsonld.expand(response.body);
+    const { dataset } = await makeRequest();
+    const id = namedNode('http://example.com/path-to/api-documentation');
 
-    expect(graph).toHaveLength(1);
-
-    const object = graph[0];
-
-    expect(object['@id']).toBe('http://example.com/path-to/api-documentation');
-    expect(object['@type']).toContain('http://www.w3.org/ns/hydra/core#ApiDocumentation');
-    expect(object).toHaveProperty(['http://www.w3.org/ns/hydra/core#entrypoint']);
+    expect(dataset.has(quad(id, rdf.type, hydra.ApiDocumentation))).toBe(true);
+    expect(dataset.match(id, hydra.entrypoint).size).toBe(1);
   });
 
   it('should call the next middleware', async (): Promise<void> => {

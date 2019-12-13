@@ -1,27 +1,36 @@
 import createError, { HttpError, UnknownError } from 'http-errors';
-import { Context, Middleware, Next } from 'koa';
-import { hydra } from 'rdf-namespaces';
+import { Next } from 'koa';
+import { AppContext, AppMiddleware } from '../app';
+import { hydra, rdf } from '../namespaces';
 
-const handleHttpError = (error: HttpError, { response }: Context): void => {
+const handleHttpError = (
+  error: HttpError,
+  { dataFactory: { blankNode, literal, quad }, datasetFactory: { dataset }, response }: AppContext,
+): void => {
   response.status = error.status;
-  response.body = {
-    '@type': hydra.Status,
-    [hydra.title]: { '@value': response.message, '@language': 'en' },
-  };
+
+  const id = blankNode();
+
+  const quads = [
+    quad(id, rdf('type'), hydra('Status')),
+    quad(id, hydra('title'), literal(response.message, 'en')),
+  ];
 
   if (error.message !== response.message) {
-    response.body[hydra.description] = { '@value': error.message, '@language': 'en' };
+    quads.push(
+      quad(id, hydra('description'), literal(error.message, 'en')),
+    );
   }
 
-  response.type = 'jsonld';
+  response.dataset = dataset(quads);
 };
 
 const toHttpError = (error: UnknownError): HttpError => (
   error instanceof HttpError ? error : createError(error)
 );
 
-export default (): Middleware => (
-  async (context: Context, next: Next): Promise<void> => {
+export default (): AppMiddleware => (
+  async (context: AppContext, next: Next): Promise<void> => {
     try {
       await next();
     } catch (error) {

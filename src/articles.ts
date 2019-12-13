@@ -1,13 +1,13 @@
-import { Iri, JsonLdObj } from 'jsonld/jsonld-spec';
+import { DatasetCore, Quad_Subject as QuadSubject } from 'rdf-js';
 
-interface Articles extends Iterable<JsonLdObj> {
-  add(article: JsonLdObj): Promise<void>;
+interface Articles extends Iterable<[QuadSubject, DatasetCore]> {
+  set(id: QuadSubject, article: DatasetCore): Promise<void>;
 
-  get(id: Iri): Promise<JsonLdObj>;
+  get(id: QuadSubject): Promise<DatasetCore>;
 
-  remove(id: Iri): Promise<void>;
+  remove(id: QuadSubject): Promise<void>;
 
-  contains(id: Iri): Promise<boolean>;
+  contains(id: QuadSubject): Promise<boolean>;
 
   count(): Promise<number>;
 }

@@ -1,14 +1,14 @@
 import formatLinkHeader from 'format-link-header';
 import { Context, Middleware, Next } from 'koa';
-import { hydra } from 'rdf-namespaces';
 import url from 'url';
+import { hydra } from '../namespaces';
 
 export default (path: string): Middleware => (
   async ({ request, response }: Context, next: Next): Promise<void> => {
     await next();
 
     const link = {
-      rel: hydra.apiDocumentation,
+      rel: hydra.apiDocumentation.value,
       url: url.resolve(request.origin, path),
     };
 

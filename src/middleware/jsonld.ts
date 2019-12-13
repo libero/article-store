@@ -1,17 +1,31 @@
+import ParserJsonld from '@rdfjs/parser-jsonld';
+import SerializerJsonld from '@rdfjs/serializer-jsonld-ext';
 import { format as formatContentType } from 'content-type';
-import jsonld from 'jsonld';
-import { Context as JsonLdContext } from 'jsonld/jsonld-spec';
-import {
-  Context, Middleware, Next, Response,
-} from 'koa';
+import { constants } from 'http2';
+import { Next } from 'koa';
+import pEvent from 'p-event';
+import { fromStream, toStream } from 'rdf-dataset-ext';
+import { Sink } from 'rdf-js';
+// eslint-disable-next-line import/no-cycle
+import { AppContext, AppMiddleware } from '../app';
 
-const isJsonLd = (response: Response): boolean => response.is('jsonld') && typeof response.body === 'object';
+const createParser = (): Sink => (
+  new ParserJsonld()
+);
 
-export default (context: JsonLdContext): Middleware => (
-  async ({ response }: Context, next: Next): Promise<void> => {
+const createSerializer = (context: object): Sink => (
+  new SerializerJsonld({ compact: true, context })
+);
+
+export default (context: object = {}): AppMiddleware => (
+  async ({ request, response }: AppContext, next: Next): Promise<void> => {
+    if (request.is('jsonld')) {
+      request.dataset = await fromStream(request.dataset, createParser().import(request.req));
+    }
+
     await next();
 
-    if (!isJsonLd(response)) {
+    if (response.body || response.status === constants.HTTP_STATUS_NO_CONTENT || response.dataset.size === 0) {
       return;
     }
 
@@ -20,7 +34,7 @@ export default (context: JsonLdContext): Middleware => (
       parameters: { profile: 'http://www.w3.org/ns/json-ld#compacted' },
     };
 
-    response.body = await jsonld.compact(response.body, context);
+    response.body = await pEvent(createSerializer(context).import(toStream(response.dataset)), 'data');
     response.set('Content-Type', formatContentType(contentType));
   }
 );

@@ -1,10 +1,11 @@
 import cors from '@koa/cors';
 import Router, { RouterContext } from '@koa/router';
 import Koa, { DefaultState, Middleware } from 'koa';
-import bodyParser from 'koa-bodyparser';
 import logger from 'koa-logger';
+import { DataFactory, DatasetCore, DatasetCoreFactory } from 'rdf-js';
 import Articles from './articles';
 import apiDocumentationLink from './middleware/api-documentation-link';
+import dataset from './middleware/dataset';
 import emptyResponse from './middleware/empty-response';
 import errorHandler from './middleware/error-handler';
 import jsonld from './middleware/jsonld';
@@ -14,6 +15,14 @@ export type AppState = DefaultState;
 
 export type AppContext = RouterContext<AppState, {
   articles: Articles;
+  dataFactory: DataFactory;
+  datasetFactory: DatasetCoreFactory;
+  request: {
+    dataset: DatasetCore;
+  };
+  response: {
+    dataset: DatasetCore;
+  };
 }>;
 
 export type AppMiddleware = Middleware<AppState, AppContext>;
@@ -22,22 +31,22 @@ export default (
   articles: Articles,
   router: Router<AppState, AppContext>,
   apiDocumentationPath: string,
+  dataFactory: DataFactory,
+  datasetFactory: DatasetCoreFactory,
 ): Koa<AppState, AppContext> => {
   const app = new Koa<AppState, AppContext>();
 
   app.context.articles = articles;
+  app.context.dataFactory = dataFactory;
+  app.context.datasetFactory = datasetFactory;
   app.context.router = router;
 
   app.use(logger());
   app.use(emptyResponse());
-  app.use(bodyParser({
-    extendTypes: {
-      json: ['application/ld+json'],
-    },
-  }));
   app.use(cors({
     exposeHeaders: ['Link'],
   }));
+  app.use(dataset());
   app.use(jsonld({
     '@language': 'en',
     hydra: 'http://www.w3.org/ns/hydra/core#',

@@ -1,105 +1,125 @@
+import { literal, namedNode, quad } from '@rdfjs/data-model';
 import { parse as parseContentType } from 'content-type';
-import { Context as JsonLdContext } from 'jsonld/jsonld-spec';
-import { Context, Response } from 'koa';
+import 'jest-rdf';
+import { addAll } from 'rdf-dataset-ext';
+import { Quad } from 'rdf-js';
+import { AppContext } from '../../src/app';
 import jsonld from '../../src/middleware/jsonld';
+import { rdf, schema } from '../../src/namespaces';
 import createContext from '../context';
-import runMiddleware, { Next } from '../middleware';
+import { Next } from '../middleware';
 
-const makeRequest = async (next?: Next, jsonLdContext: JsonLdContext = {}): Promise<Response> => (
-  runMiddleware(jsonld(jsonLdContext), createContext(), next)
-);
+const makeRequest = async (body?: string, headers?: Record<string, string>, next: Next = jest.fn(), jsonLdContext = {}): Promise<AppContext> => {
+  const context = createContext({ body, headers, method: body ? 'POST' : 'GET' });
 
-const next = (body: unknown, type: string) => async ({ response }: Context): Promise<void> => {
-  response.body = body;
-  response.type = type;
+  await jsonld(jsonLdContext)(context, (): Promise<void> => next(context));
+
+  return context;
 };
 
-const content = {
+const next = (body = null, quads: Array<Quad> = [], type = null, status = null) => (
+  async ({ response }: AppContext): Promise<void> => {
+    if (body) {
+      response.body = body;
+    }
+    if (quads) {
+      addAll(response.dataset, quads);
+    }
+    if (type) {
+      response.type = type;
+    }
+    if (status) {
+      response.status = status;
+    }
+  }
+);
+
+const id = namedNode('http://example.com/object');
+const quads = [
+  quad(id, rdf.type, schema.Article),
+  quad(id, schema.name, literal('English Name', 'en')),
+  quad(id, schema.name, literal('French Name', 'fr')),
+];
+
+const jsonLd = {
   '@id': 'http://example.com/object',
-  '@type': ['http://schema.org/Article'],
-  'http://schema.org/name': [{ '@value': 'English Name', '@language': 'en' }],
-  'http://purl.org/dc/elements/1.1/title': [
-    { '@value': 'English Title', '@language': 'en' },
-    { '@value': 'French Title', '@language': 'fr' },
-  ],
+  '@type': 'http://schema.org/Article',
+  'http://schema.org/name': [{ '@language': 'en', '@value': 'English Name' }, {
+    '@language': 'fr',
+    '@value': 'French Name',
+  }],
 };
 
 describe('JSON-LD middleware', (): void => {
-  it('should compact JSON-LD', async (): Promise<void> => {
-    const response = await makeRequest(next(content, 'jsonld'));
+  it('adds a dataset to the request with JSON-LD body', async (): Promise<void> => {
+    const { request } = await makeRequest(JSON.stringify(jsonLd), { 'Content-Type': 'application/ld+json' });
+
+    expect([...request.dataset]).toEqualRdfQuadArray(quads);
+  });
+
+  it('does nothing if there is a request body that isn\'t JSON-LD', async (): Promise<void> => {
+    const { request } = await makeRequest(JSON.stringify(jsonLd), { 'Content-Type': 'application/json' });
+
+    expect(request.dataset.size).toBe(0);
+  });
+
+  it('sets the response JSON-LD body with the dataset', async (): Promise<void> => {
+    const { response } = await makeRequest(null, null, next(null, quads));
 
     const contentType = parseContentType(response);
-    const expected = {
-      '@id': 'http://example.com/object',
-      '@type': 'http://schema.org/Article',
-      'http://purl.org/dc/elements/1.1/title': [
-        { '@value': 'English Title' },
-        { '@value': 'French Title', '@language': 'fr' },
-      ],
-      'http://schema.org/name': { '@value': 'English Name', '@language': 'en' },
-    };
 
     expect(response.type).toBe('application/ld+json');
     expect(contentType.type).toBe('application/ld+json');
     expect(contentType.parameters).toMatchObject({ profile: 'http://www.w3.org/ns/json-ld#compacted' });
-    expect(response.body).toMatchObject(expected);
+    expect(response.body).toStrictEqual(jsonLd);
+    expect(response.status).toBe(200);
   });
 
-  it('should compact JSON-LD with a new context', async (): Promise<void> => {
+  it('does not override the response status code', async (): Promise<void> => {
+    const { response } = await makeRequest(null, null, next(null, quads, null, 201));
+
+    expect(response.status).toBe(201);
+  });
+
+  it('sets the response JSON-LD body with the dataset using a context', async (): Promise<void> => {
     const context = {
       '@base': 'http://example.com',
       '@language': 'en',
-      '@vocab': 'http://schema.org/',
-      dc: 'http://purl.org/dc/elements/1.1/',
+      schema: 'http://schema.org/',
     };
 
-    const response = await makeRequest(next(content, 'jsonld'), context);
+    const { response } = await makeRequest(null, null, next(null, quads), context);
 
-    const contentType = parseContentType(response);
     const expected = {
       '@context': context,
       '@id': 'object',
-      '@type': 'Article',
-      name: 'English Name',
-      'dc:title': ['English Title', { '@value': 'French Title', '@language': 'fr' }],
+      '@type': 'schema:Article',
+      'schema:name': ['English Name', { '@value': 'French Name', '@language': 'fr' }],
     };
 
-    expect(response.type).toBe('application/ld+json');
-    expect(contentType.type).toBe('application/ld+json');
-    expect(contentType.parameters).toMatchObject({ profile: 'http://www.w3.org/ns/json-ld#compacted' });
-    expect(response.body).toMatchObject(expected);
+    expect(response.body).toStrictEqual(expected);
   });
 
-  it('should do nothing if the response JSON-LD but the body is not an object', async (): Promise<void> => {
-    const response = await makeRequest(next('text', 'jsonld'));
+  it('does nothing to the response if the dataset is empty', async (): Promise<void> => {
+    const { response } = await makeRequest();
 
-    const contentType = parseContentType(response);
-
-    expect(response.type).toBe('application/ld+json');
-    expect(contentType.type).toBe('application/ld+json');
-    expect(contentType.parameters).toMatchObject({});
-    expect(response.body).toBe('text');
-  });
-
-  it('should do nothing if the response JSON-LD but there is no body', async (): Promise<void> => {
-    const response = await makeRequest(next(undefined, 'jsonld'));
-
-    const contentType = parseContentType(response);
-
-    expect(response.type).toBe('application/ld+json');
-    expect(contentType.type).toBe('application/ld+json');
-    expect(contentType.parameters).toMatchObject({});
+    expect(response.headers).not.toHaveProperty('content-type');
     expect(response.body).toBe(undefined);
+    expect(response.status).toBe(undefined);
   });
 
-  it('should do nothing if the response is not JSON-LD', async (): Promise<void> => {
-    const response = await makeRequest(next(content, 'json'));
+  it('does nothing to the response if the body is already set', async (): Promise<void> => {
+    const { response } = await makeRequest(null, null, next('some text', quads));
 
-    const contentType = parseContentType(response);
+    expect(response.type).toBe('text/plain');
+    expect(response.body).toBe('some text');
+  });
 
-    expect(response.type).toBe('application/json');
-    expect(contentType.type).toBe('application/json');
-    expect(contentType.parameters).not.toHaveProperty('profile');
-    expect(response.body).toMatchObject(content);
+  it('does nothing to the response if the status code is 204 No Content', async (): Promise<void> => {
+    const { response } = await makeRequest(null, null, next(null, quads, null, 204));
+
+    expect(response.headers).not.toHaveProperty('content-type');
+    expect(response.body).toBe(undefined);
+    expect(response.status).toBe(204);
   });
 });

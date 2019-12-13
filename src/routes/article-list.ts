@@ -1,29 +1,37 @@
+import { constants } from 'http2';
 import { Next } from 'koa';
-import { hydra, rdf, schema } from 'rdf-namespaces';
+import { addAll } from 'rdf-dataset-ext';
+import { toRdf } from 'rdf-literal';
+import url from 'url';
 import { AppContext, AppMiddleware } from '../app';
+import { hydra, rdf, schema } from '../namespaces';
 import Routes from './index';
 
 export default (): AppMiddleware => (
   async ({
-    articles, request, response, router,
+    dataFactory: {
+      blankNode, quad, literal, namedNode,
+    }, articles, request, response, router,
   }: AppContext, next: Next): Promise<void> => {
-    response.body = {
-      '@context': {
-        '@base': request.origin,
-      },
-      '@id': router.url(Routes.ArticleList),
-      '@type': hydra.Collection,
-      [hydra.title]: { '@value': 'List of articles', '@language': 'en' },
-      'http://www.w3.org/ns/hydra/core#manages': {
-        'http://www.w3.org/ns/hydra/core#property': { '@id': rdf.type },
-        'http://www.w3.org/ns/hydra/core#object': { '@id': schema.Article },
-      },
-      [hydra.totalItems]: await articles.count(),
-      [hydra.member]: {
-        '@list': [...articles],
-      },
-    };
-    response.type = 'jsonld';
+    const articleList = namedNode(url.resolve(request.origin, router.url(Routes.ArticleList)));
+    const manages = blankNode('manages');
+
+    const quads = [
+      quad(articleList, rdf.type, hydra('Collection')),
+      quad(articleList, hydra.title, literal('List of articles', 'en')),
+      quad(articleList, hydra.manages, manages),
+      quad(manages, hydra.property, rdf.type),
+      quad(manages, hydra.object, schema.Article),
+      quad(articleList, hydra.totalItems, toRdf(await articles.count())),
+    ];
+
+    for (const [id, article] of articles) {
+      quads.push(quad(articleList, hydra.member, id), ...article);
+    }
+
+    addAll(response.dataset, quads);
+
+    response.status = constants.HTTP_STATUS_OK;
 
     await next();
   }
