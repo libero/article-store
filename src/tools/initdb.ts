@@ -1,7 +1,7 @@
 import fs from 'fs-extra';
 import { Client } from 'pg';
 
-const init = async () => {
+const init = async (): Promise<void> => {
   // create an instance of the PostgreSQL client
   const client = new Client(process.env.DATABASE_CONNECTION_STRING);
   try {
