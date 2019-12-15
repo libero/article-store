@@ -1,11 +1,10 @@
-import PersistArticles from './adaptors/persist-articles';
 import createApp from './app';
 import createRouter from './router';
+import PersistArticles from './adaptors/persist-articles';
+import pgPromise from 'pg-promise';
 import Routes from './routes';
-import pgPromise = require('pg-promise');
 
-const pgp = pgPromise();
-const articles = new PersistArticles(pgp(process.env.DATABASE_CONNECTION_STRING));
+const articles = new PersistArticles(pgPromise()(process.env.DATABASE_CONNECTION_STRING));
 const router = createRouter();
 const apiDocumentationPath = router.url(Routes.ApiDocumentation);
 

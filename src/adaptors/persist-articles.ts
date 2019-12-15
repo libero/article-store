@@ -1,4 +1,3 @@
-import uuidv4 from 'uuid/v4';
 import { Iri, JsonLdObj, JsonLdArray } from 'jsonld/jsonld-spec';
 import { schema } from 'rdf-namespaces';
 import { IDatabase } from 'pg-promise';
@@ -6,6 +5,7 @@ import Articles from '../articles';
 import ArticleHasNoId from '../errors/article-has-no-id';
 import ArticleNotFound from '../errors/article-not-found';
 import NotAnArticle from '../errors/not-an-article';
+import uuidv4 from 'uuid/v4';
 
 export default class PersistArticles implements Articles {
   private db: IDatabase<{}>;
@@ -45,15 +45,14 @@ export default class PersistArticles implements Articles {
   }
 
   async contains(id: Iri): Promise<boolean> {
-    return this.db.one('SELECT COUNT(*) FROM articles WHERE uuid = $[id]', { id }, (data: { count: number }) => { return (+data.count > 0); });
+    return this.db.one('SELECT COUNT(*) FROM articles WHERE uuid = $[id]', { id }, (data: { count: number }) => +data.count > 0);
   }
 
   async count(): Promise<number> {
-    return this.db.one('SELECT COUNT(*) FROM articles', [], (data: { count: number }) => (+data.count));
+    return this.db.one('SELECT COUNT(*) FROM articles', [], (data: { count: number }) => +data.count);
   }
 
   async* [Symbol.asyncIterator](): AsyncIterator<JsonLdObj> {
-    throw new Error(JSON.stringify(await this.remove('fb6169cf-b39f-4111-8637-bf5112b8ef72')));
     yield* await this.db.any('SELECT article FROM articles').then((rows) => rows.map((row) => row.article)) as JsonLdArray;
   }
 }
