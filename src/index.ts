@@ -1,9 +1,11 @@
-import InMemoryArticles from './adaptors/in-memory-articles';
+import PersistArticles from './adaptors/persist-articles';
 import createApp from './app';
 import createRouter from './router';
 import Routes from './routes';
+import pgPromise = require('pg-promise');
 
-const articles = new InMemoryArticles();
+const pgp = pgPromise();
+const articles = new PersistArticles(pgp(process.env.DATABASE_CONNECTION_STRING));
 const router = createRouter();
 const apiDocumentationPath = router.url(Routes.ApiDocumentation);
 
