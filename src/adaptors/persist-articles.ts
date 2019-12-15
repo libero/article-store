@@ -1,15 +1,14 @@
 import uuidv4 from 'uuid/v4';
-import { Iri, JsonLdObj } from 'jsonld/jsonld-spec';
+import { Iri, JsonLdObj, JsonLdArray } from 'jsonld/jsonld-spec';
 import { schema } from 'rdf-namespaces';
+import { IDatabase } from 'pg-promise';
 import Articles from '../articles';
 import ArticleHasNoId from '../errors/article-has-no-id';
 import ArticleNotFound from '../errors/article-not-found';
 import NotAnArticle from '../errors/not-an-article';
-import { IDatabase } from 'pg-promise';
 
 export default class PersistArticles implements Articles {
   private db: IDatabase<{}>;
-  private articles: { [key: string]: JsonLdObj } = {};
 
   public constructor(db: IDatabase<{}>) {
     this.db = db;
@@ -26,14 +25,14 @@ export default class PersistArticles implements Articles {
       throw new ArticleHasNoId();
     }
 
-    this.db.query(`INSERT INTO articles(uuid, article) VALUES ($[uuid], $[article])`, {
-        uuid: uuidv4(),
-        article,
+    this.db.query('INSERT INTO articles(uuid, article) VALUES ($[uuid], $[article])', {
+      uuid: uuidv4(),
+      article,
     });
   }
 
   async get(id: Iri): Promise<JsonLdObj> {
-    const article = this.db.one(`SELECT article FROM articles WHERE uuid = $[id]`, +id, (data: { article: JsonLdObj }) => data.article);
+    const article = this.db.one('SELECT article FROM articles WHERE uuid = $[id]', { id }, (data: { article: JsonLdObj }) => data.article);
     if (!article) {
       throw new ArticleNotFound(id);
     }
@@ -42,18 +41,19 @@ export default class PersistArticles implements Articles {
   }
 
   async remove(id: Iri): Promise<void> {
-    this.db.result('DELETE FROM articles WHERE uuid = $[id]', +id);
+    this.db.result('DELETE FROM articles WHERE uuid = $[id]', { id });
   }
 
   async contains(id: Iri): Promise<boolean> {
-    return this.db.one(`SELECT COUNT(*) FROM articles WHERE uuid = $[id]`, +id, (data: { count: number }) => (+data.count > 0));
+    return this.db.one('SELECT COUNT(*) FROM articles WHERE uuid = $[id]', { id }, (data: { count: number }) => { return (+data.count > 0); });
   }
 
   async count(): Promise<number> {
-    return this.db.one('SELECT COUNT(*) FROM articles', [], (data: { count: number }) => +data.count);
+    return this.db.one('SELECT COUNT(*) FROM articles', [], (data: { count: number }) => (+data.count));
   }
 
-  * [Symbol.iterator](): Iterator<JsonLdObj> {
-    yield* Object.values(this.articles);
+  async* [Symbol.asyncIterator](): AsyncIterator<JsonLdObj> {
+    throw new Error(JSON.stringify(await this.remove('fb6169cf-b39f-4111-8637-bf5112b8ef72')));
+    yield* await this.db.any('SELECT article FROM articles').then((rows) => rows.map((row) => row.article)) as JsonLdArray;
   }
 }
