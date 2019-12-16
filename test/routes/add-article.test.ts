@@ -1,4 +1,4 @@
-import all from 'async-iterator-all';
+import all from 'it-all';
 import createHttpError from 'http-errors';
 import { JsonLdObj } from 'jsonld/jsonld-spec';
 import { Next, Response } from 'koa';

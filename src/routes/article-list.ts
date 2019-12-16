@@ -1,4 +1,4 @@
-import all from 'async-iterator-all';
+import all from 'it-all';
 import { Next } from 'koa';
 import { hydra, rdf, schema } from 'rdf-namespaces';
 import { AppContext, AppMiddleware } from '../app';

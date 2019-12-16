@@ -3,10 +3,10 @@
   "dependencies": {
     "@koa/cors": "^3.0.0",
     "@koa/router": "^8.0.5",
-    "async-iterator-all": "^1.0.0",
     "content-type": "^1.0.4",
     "format-link-header": "^2.1.0",
     "http-errors": "^1.7.3",
+    "it-all": "^1.0.1",
     "jsonld": "^2.0.1",
     "koa": "^2.11.0",
     "koa-bodyparser": "^4.2.1",
