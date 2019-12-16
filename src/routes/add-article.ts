@@ -1,6 +1,5 @@
 import createHttpError from 'http-errors';
 import { constants } from 'http2';
-import url from 'url';
 import jsonld from 'jsonld';
 import { JsonLdArray } from 'jsonld/jsonld-spec';
 import { Next } from 'koa';
