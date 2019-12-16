@@ -1,3 +1,4 @@
+import all from 'async-iterator-all';
 import { Next } from 'koa';
 import { hydra, rdf, schema } from 'rdf-namespaces';
 import { AppContext, AppMiddleware } from '../app';
@@ -7,10 +8,6 @@ export default (): AppMiddleware => (
   async ({
     articles, request, response, router,
   }: AppContext, next: Next): Promise<void> => {
-    const list = [];
-    for await (const a of articles) {
-      list.push(a);
-    }
     response.body = {
       '@context': {
         '@base': request.origin,
@@ -24,7 +21,7 @@ export default (): AppMiddleware => (
       },
       [hydra.totalItems]: await articles.count(),
       [hydra.member]: {
-        '@list': list,
+        '@list': [...await all(articles)],
       },
     };
     response.type = 'jsonld';

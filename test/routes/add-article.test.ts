@@ -1,3 +1,4 @@
+import all from 'async-iterator-all';
 import createHttpError from 'http-errors';
 import { JsonLdObj } from 'jsonld/jsonld-spec';
 import { Next, Response } from 'koa';
@@ -28,7 +29,7 @@ describe('add article', (): void => {
 
     expect(response.status).toBe(204);
     expect(await articles.count()).toBe(1);
-    expect(list[0]['http://schema.org/name']).toEqual([{ '@value': 'Article' }]);
+    expect([...await all(articles)][0]['http://schema.org/name']).toEqual([{ '@value': 'Article' }]);
   });
 
   it('should throw an error if id is already set', async (): Promise<void> => {

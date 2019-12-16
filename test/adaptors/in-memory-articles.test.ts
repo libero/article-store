@@ -1,3 +1,4 @@
+import all from 'async-iterator-all';
 import { Iri, JsonLdObj } from 'jsonld/jsonld-spec';
 import InMemoryArticles from '../../src/adaptors/in-memory-articles';
 import ArticleNotFound from '../../src/errors/article-not-found';
@@ -109,12 +110,7 @@ describe('in-memory articles', (): void => {
     await articles.add(createArticle('_:3'));
     await articles.add(createArticle('_:2'));
 
-    const list = [];
-    for await (const a of articles) {
-      list.push(a);
-    }
-
-    const ids = list.map((article: JsonLdObj): Iri => article['@id']);
+    const ids = [...await all(articles)].map((article: JsonLdObj): Iri => article['@id']);
 
     expect(ids).toStrictEqual(['_:1', '_:3', '_:2']);
   });
