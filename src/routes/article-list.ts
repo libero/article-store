@@ -9,6 +9,7 @@ export default (): AppMiddleware => (
     articles, request, response, router,
   }: AppContext, next: Next): Promise<void> => {
     const [list, count] = await Promise.all([all(articles), articles.count()]);
+
     response.body = {
       '@context': {
         '@base': request.origin,
