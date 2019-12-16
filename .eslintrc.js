@@ -19,6 +19,7 @@ module.exports = {
   ],
   root: true,
   rules: {
+    'no-param-reassign': ['error', { props: false }],
     'no-undef': 'off',
   },
   settings: {

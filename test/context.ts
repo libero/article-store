@@ -13,12 +13,14 @@ import Articles from '../src/articles';
 
 export type ErrorListener = (error: UnknownError, context: Context) => void;
 
+export type Headers = Record<string, string>;
+
 type Options = {
   articles?: Articles;
   body?: string;
   dataset?: DatasetCore;
   errorListener?: ErrorListener;
-  headers?: Record<string, string>;
+  headers?: Headers;
   method?: string;
   path?: string;
   router?: Router;
@@ -31,7 +33,14 @@ const dummyRouter = {
 } as unknown as Router;
 
 export default ({
-  articles = new InMemoryArticles(), body, dataset = datasetFactory.dataset(), errorListener, headers = {}, method, path, router = dummyRouter,
+  articles = new InMemoryArticles(),
+  body,
+  dataset = datasetFactory.dataset(),
+  errorListener,
+  headers = {},
+  method,
+  path,
+  router = dummyRouter,
 }: Options = {}): AppContext => {
   const app = new Koa();
   app.on('error', errorListener || jest.fn());

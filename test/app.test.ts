@@ -5,6 +5,7 @@ import parseLinkHeader from 'parse-link-header';
 import request from 'supertest';
 import InMemoryArticles from '../src/adaptors/in-memory-articles';
 import createApp from '../src/app';
+import Articles from '../src/articles';
 import createRouter from '../src/router';
 import Routes from '../src/routes';
 
@@ -12,10 +13,13 @@ const trim = (value: string): string => value.trim();
 const parseHeader = (header: string): Array<string> => header.split(',').map(trim);
 
 const router = createRouter();
+const apiDocumentationPath = router.url(Routes.ApiDocumentation);
 let app: Koa;
+let articles: Articles;
 
 beforeEach((): void => {
-  app = createApp(new InMemoryArticles(), router, router.url(Routes.ApiDocumentation), dataFactory, datasetFactory);
+  articles = new InMemoryArticles();
+  app = createApp(articles, router, apiDocumentationPath, dataFactory, datasetFactory);
 });
 
 describe('the application', (): void => {

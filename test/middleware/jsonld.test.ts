@@ -6,10 +6,12 @@ import { Quad } from 'rdf-js';
 import { AppContext } from '../../src/app';
 import jsonld from '../../src/middleware/jsonld';
 import { rdf, schema } from '../../src/namespaces';
-import createContext from '../context';
+import createContext, { Headers } from '../context';
 import { Next } from '../middleware';
 
-const makeRequest = async (body?: string, headers?: Record<string, string>, next: Next = jest.fn(), jsonLdContext = {}): Promise<AppContext> => {
+const makeRequest = async (
+  body?: string, headers?: Headers, next: Next = jest.fn(), jsonLdContext = {},
+): Promise<AppContext> => {
   const context = createContext({ body, headers, method: body ? 'POST' : 'GET' });
 
   await jsonld(jsonLdContext)(context, (): Promise<void> => next(context));
