@@ -1,7 +1,7 @@
+import pgPromise from 'pg-promise';
 import createApp from './app';
 import createRouter from './router';
 import PersistArticles from './adaptors/persist-articles';
-import pgPromise from 'pg-promise';
 import Routes from './routes';
 
 const articles = new PersistArticles(pgPromise()(process.env.DATABASE_CONNECTION_STRING));

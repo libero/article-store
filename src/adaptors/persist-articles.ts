@@ -1,11 +1,11 @@
 import { Iri, JsonLdObj, JsonLdArray } from 'jsonld/jsonld-spec';
 import { schema } from 'rdf-namespaces';
 import { IDatabase } from 'pg-promise';
+import uuidv4 from 'uuid/v4';
 import Articles from '../articles';
 import ArticleHasNoId from '../errors/article-has-no-id';
 import ArticleNotFound from '../errors/article-not-found';
 import NotAnArticle from '../errors/not-an-article';
-import uuidv4 from 'uuid/v4';
 
 export default class PersistArticles implements Articles {
   private db: IDatabase<{}>;
