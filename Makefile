@@ -33,6 +33,9 @@ start: ## Start the containers
 stop: ## Stop the containers
 	${DOCKER_COMPOSE} down
 
+initdb: ## Setup database tables
+	${DOCKER_COMPOSE} run app npm run initdb
+
 wait-healthy: ## Wait for the containers to be healthy
 	@services=($$(${DOCKER_COMPOSE} ps --quiet)); \
 	if [ $${#services[@]} -eq 0 ]; then \
