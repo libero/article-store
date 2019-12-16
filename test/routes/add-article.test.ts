@@ -23,7 +23,8 @@ describe('add article', (): void => {
     const response = await makeRequest(createArticle(), undefined, articles);
     const [list, count] = await Promise.all([all(articles), articles.count()]);
 
-    expect(response.status).toBe(204);
+    expect(response.status).toBe(201);
+    expect(response.get('Location')).toBe('http://example.com/path-to/article-list');
     expect(count).toBe(1);
     expect(list[0]['http://schema.org/name']).toEqual([{ '@value': 'Article' }]);
   });
