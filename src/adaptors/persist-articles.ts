@@ -25,7 +25,7 @@ export default class PersistArticles implements Articles {
       throw new ArticleHasNoId();
     }
 
-    this.db.query('INSERT INTO articles(uuid, article) VALUES ($[uuid], $[article])', {
+    this.db.none('INSERT INTO articles(uuid, article) VALUES ($[uuid], $[article])', {
       uuid: uuidv4(),
       article,
     });
@@ -41,7 +41,7 @@ export default class PersistArticles implements Articles {
   }
 
   async remove(id: Iri): Promise<void> {
-    this.db.result('DELETE FROM articles WHERE uuid = $[id]', { id });
+    this.db.none('DELETE FROM articles WHERE uuid = $[id]', { id });
   }
 
   async contains(id: Iri): Promise<boolean> {
