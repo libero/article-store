@@ -28,7 +28,6 @@ export default (
   app.context.articles = articles;
   app.context.router = router;
 
-  app.use(emptyResponse());
   app.use(logger());
   app.use(emptyResponse());
   app.use(bodyParser({
