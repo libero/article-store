@@ -22,11 +22,6 @@ describe('add article', (): void => {
     const articles = new InMemoryArticles();
     const response = await makeRequest(createArticle(), undefined, articles);
 
-    const list = [];
-    for await (const a of articles) {
-      list.push(a);
-    }
-
     expect(response.status).toBe(204);
     expect(await articles.count()).toBe(1);
     expect([...await all(articles)][0]['http://schema.org/name']).toEqual([{ '@value': 'Article' }]);
