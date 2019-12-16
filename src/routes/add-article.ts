@@ -6,6 +6,7 @@ import { JsonLdArray } from 'jsonld/jsonld-spec';
 import { Next } from 'koa';
 import { schema } from 'rdf-namespaces';
 import uniqueString from 'unique-string';
+import url from 'url';
 import { AppContext, AppMiddleware } from '../app';
 import NotAnArticle from '../errors/not-an-article';
 import Routes from './index';
