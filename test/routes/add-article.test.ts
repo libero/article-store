@@ -21,10 +21,11 @@ describe('add article', (): void => {
   it('should return a successful response', async (): Promise<void> => {
     const articles = new InMemoryArticles();
     const response = await makeRequest(createArticle(), undefined, articles);
+    const [list, count] = await Promise.all([all(articles), articles.count()]);
 
     expect(response.status).toBe(204);
-    expect(await articles.count()).toBe(1);
-    expect([...await all(articles)][0]['http://schema.org/name']).toEqual([{ '@value': 'Article' }]);
+    expect(count).toBe(1);
+    expect(list[0]['http://schema.org/name']).toEqual([{ '@value': 'Article' }]);
   });
 
   it('should throw an error if id is already set', async (): Promise<void> => {
