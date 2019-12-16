@@ -110,7 +110,7 @@ describe('in-memory articles', (): void => {
     await articles.add(createArticle('_:3'));
     await articles.add(createArticle('_:2'));
 
-    const ids = [...await all(articles)].map((article: JsonLdObj): Iri => article['@id']);
+    const ids = (await all(articles)).map((article: JsonLdObj): Iri => article['@id']);
 
     expect(ids).toStrictEqual(['_:1', '_:3', '_:2']);
   });
