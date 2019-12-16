@@ -5,11 +5,15 @@ import { JsonLdArray } from 'jsonld/jsonld-spec';
 import { Next } from 'koa';
 import { schema } from 'rdf-namespaces';
 import uniqueString from 'unique-string';
+import url from 'url';
 import { AppContext, AppMiddleware } from '../app';
 import NotAnArticle from '../errors/not-an-article';
+import Routes from './index';
 
 export default (): AppMiddleware => (
-  async ({ articles, request, response }: AppContext, next: Next): Promise<void> => {
+  async ({
+    articles, request, response, router,
+  }: AppContext, next: Next): Promise<void> => {
     const [article] = await jsonld.expand(request.body) as JsonLdArray;
     if ('@id' in article) {
       throw new createHttpError.Forbidden(`Article IDs must not be set ('${article['@id']}' was given)`);
@@ -30,7 +34,8 @@ export default (): AppMiddleware => (
       throw error;
     }
 
-    response.status = constants.HTTP_STATUS_NO_CONTENT;
+    response.status = constants.HTTP_STATUS_CREATED;
+    response.set('Location', url.resolve(request.origin, router.url(Routes.ArticleList)));
 
     await next();
   }
