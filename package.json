@@ -5,7 +5,6 @@
     "@koa/router": "^8.0.5",
     "content-type": "^1.0.4",
     "format-link-header": "^2.1.0",
-    "fs-extra": "^8.1.0",
     "http-errors": "^1.7.3",
     "jsonld": "^2.0.1",
     "koa": "^2.11.0",

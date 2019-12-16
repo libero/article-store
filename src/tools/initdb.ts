@@ -1,14 +1,13 @@
-import fs from 'fs-extra';
-import { Client } from 'pg';
+import pgPromise, { IDatabase } from 'pg-promise';
 
-const init = async (): Promise<void> => {
-  const client = new Client(process.env.DATABASE_CONNECTION_STRING);
-  try {
-    await client.connect();
-    await client.query(await fs.readFile(`${__dirname}/initdb.pgsql`, { encoding: 'UTF-8' }));
-  } finally {
-    await client.end();
-  }
+const init = async (db: IDatabase<{}>): Promise<void> => {
+  await db.none('DROP TABLE IF EXISTS articles').then(() => {
+      db.none(`CREATE TABLE IF NOT EXISTS articles (
+        uuid uuid NOT NULL,
+        article jsonb NOT NULL,
+        created time without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL
+      )`);
+  });
 };
 
-init();
+init(pgPromise()(process.env.DATABASE_CONNECTION_STRING));
