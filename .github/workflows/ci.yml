@@ -80,3 +80,26 @@ jobs:
 
       - name: Run test
         run: ${{ matrix.test }}
+
+  push:
+
+    needs: test
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v1
+        with:
+          submodules: true
+
+      - name: Download Docker image artifact
+        uses: actions/download-artifact@v1
+        with:
+          name: docker-image-prod
+
+      - name: Load Docker image
+        run: |
+          gunzip docker-image-prod/article-store.tar.gz
+          docker load -i docker-image-prod/article-store.tar
+
+      - name: Push Docker image
+        run: .github/push-image.sh article-store
