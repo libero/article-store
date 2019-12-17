@@ -1,1 +1,3 @@
 * @libero/node-js-reviewers
+.github/* @libero/infrastructure-reviewers
+.docker/* @libero/infrastructure-reviewers
