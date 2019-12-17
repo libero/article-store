@@ -71,12 +71,16 @@ RUN npm run build
 # Stage: Production environment
 #
 FROM base AS prod
+ARG image_tag
 ENV NODE_ENV=production
 
 COPY --from=npm-prod /app/ .
 COPY --from=build-prod /app/build/ build/
 
 USER node
+
+LABEL org.opencontainers.image.revision=${image_tag} \
+      org.opencontainers.image.source=https://github.com/libero/article-store
 
 # npm acts as PID 1, handling signals to stop the application immediately
 CMD ["npm", "run", "start"]
