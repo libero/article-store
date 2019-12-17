@@ -80,7 +80,8 @@ COPY --from=build-prod /app/build/ build/
 USER node
 
 LABEL org.opencontainers.image.revision=${image_tag} \
-    org.opencontainers.image.source=https://github.com/libero/article-store
+    org.opencontainers.image.source=https://github.com/libero/article-store \
+    org.opencontainers.image.licenses=MIT
 
 # npm acts as PID 1, handling signals to stop the application immediately
 CMD ["npm", "run", "start"]
