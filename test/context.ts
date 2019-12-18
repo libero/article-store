@@ -1,6 +1,5 @@
 import Router from '@koa/router';
 import dataFactory from '@rdfjs/data-model';
-import datasetFactory from '@rdfjs/dataset';
 import { UnknownError } from 'http-errors';
 import Koa, { Context } from 'koa';
 import Request from 'koa/lib/request';
@@ -10,6 +9,7 @@ import { DatasetCore } from 'rdf-js';
 import InMemoryArticles from '../src/adaptors/in-memory-articles';
 import { AppContext } from '../src/app';
 import Articles from '../src/articles';
+import datasetFactory from '../src/dataset-factory';
 
 export type ErrorListener = (error: UnknownError, context: Context) => void;
 

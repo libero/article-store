@@ -1,11 +1,11 @@
 import dataFactory from '@rdfjs/data-model';
-import datasetFactory from '@rdfjs/dataset';
 import Koa from 'koa';
 import parseLinkHeader from 'parse-link-header';
 import request from 'supertest';
 import InMemoryArticles from '../src/adaptors/in-memory-articles';
 import createApp from '../src/app';
 import Articles from '../src/articles';
+import datasetFactory from '../src/dataset-factory';
 import createRouter from '../src/router';
 import Routes from '../src/routes';
 
