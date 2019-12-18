@@ -50,7 +50,7 @@ describe('add article', (): void => {
   it('should throw an error if it has no schema:name', async (): Promise<void> => {
     const id = blankNode();
 
-    const article = deleteMatch(createArticle(id), id, schema.name);
+    const article = deleteMatch(createArticle(id), id, schema('name'));
 
     await expect(makeRequest(article)).rejects.toBeInstanceOf(createHttpError.BadRequest);
     await expect(makeRequest(article)).rejects.toHaveProperty('message', 'Article must have at least one http://schema.org/name');

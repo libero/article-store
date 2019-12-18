@@ -21,7 +21,7 @@ describe('entry-point', (): void => {
     const id = namedNode('http://example.com/path-to/entry-point');
 
     expect(dataset.has(quad(id, rdf.type, schema.EntryPoint))).toBe(true);
-    expect(dataset.match(id, schema.name).size).toBe(1);
+    expect(dataset.match(id, schema('name')).size).toBe(1);
     expect(dataset.match(id, hydra.collection).size).toBe(1);
   });
 

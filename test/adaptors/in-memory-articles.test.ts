@@ -35,7 +35,7 @@ describe('in-memory articles', (): void => {
     await articles.set(id, createArticle(id, literal('Original')));
     await articles.set(id, createArticle(id, literal('Updated')));
 
-    expect((await articles.get(id)).has(quad(id, schema.name, literal('Updated')))).toBe(true);
+    expect((await articles.get(id)).has(quad(id, schema('name'), literal('Updated')))).toBe(true);
   });
 
   it('throws an error if it is not an article', async (): Promise<void> => {

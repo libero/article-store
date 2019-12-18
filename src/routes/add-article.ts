@@ -23,8 +23,8 @@ export default (): AppMiddleware => (
       throw new createHttpError.BadRequest(`Article must have a blank node identifier (${id.value} given)`);
     }
 
-    if (request.dataset.match(id, schema.name).size === 0) {
-      throw new createHttpError.BadRequest(`Article must have at least one ${schema.name.value}`);
+    if (request.dataset.match(id, schema('name')).size === 0) {
+      throw new createHttpError.BadRequest(`Article must have at least one ${schema('name').value}`);
     }
 
     try {

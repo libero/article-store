@@ -6,6 +6,6 @@ import { rdf, schema } from '../src/namespaces';
 export default (id: QuadSubject = blankNode(), name = literal(`Article ${id.value}`)): DatasetCore => (
   datasetFactory.dataset([
     quad(id, rdf.type, schema.Article),
-    quad(id, schema.name, name),
+    quad(id, schema('name'), name),
   ])
 );

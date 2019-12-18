@@ -39,8 +39,8 @@ const next = (body = null, quads: Array<Quad> = [], type = null, status = null) 
 const id = namedNode('http://example.com/object');
 const quads = [
   quad(id, rdf.type, schema.Article),
-  quad(id, schema.name, literal('English Name', 'en')),
-  quad(id, schema.name, literal('French Name', 'fr')),
+  quad(id, schema('name'), literal('English Name', 'en')),
+  quad(id, schema('name'), literal('French Name', 'fr')),
 ];
 
 const jsonLd = {
