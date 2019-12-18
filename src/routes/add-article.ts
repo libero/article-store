@@ -7,7 +7,7 @@ import { rdf, schema } from '../namespaces';
 
 export default (): AppMiddleware => (
   async ({ articles, request, response }: AppContext, next: Next): Promise<void> => {
-    const foundArticles = request.dataset.match(null, rdf.type, schema.Article);
+    const foundArticles = request.dataset.match(undefined, rdf.type, schema.Article);
 
     if (foundArticles.size > 1) {
       throw new createHttpError.BadRequest('Multiple articles found');
