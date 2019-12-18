@@ -1,5 +1,5 @@
 * @libero/node-js-reviewers
-.docker/* @libero/infrastructure-reviewers
-.github/* @libero/infrastructure-reviewers
-Dockerfile @libero/infrastructure-reviewers
-Makefile @libero/infrastructure-reviewers
+/.docker/* @libero/infrastructure-reviewers
+/.github/* @libero/infrastructure-reviewers
+/Dockerfile @libero/infrastructure-reviewers
+/Makefile @libero/infrastructure-reviewers
