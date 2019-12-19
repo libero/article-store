@@ -75,7 +75,7 @@ export default (): AppMiddleware => (
     // hydra:Collection
     const collectionGet = blankNode();
     const collectionAdd = blankNode();
-    const collectionAdd200 = blankNode();
+    const collectionAdd201 = blankNode();
     const collectionName = blankNode();
     const collectionManages = blankNode();
     const collectionTotalItems = blankNode();
@@ -96,9 +96,9 @@ export default (): AppMiddleware => (
       quad(collectionAdd, hydra.method, literal('POST')),
       quad(collectionAdd, hydra.expects, schema.Article),
       quad(collectionAdd, hydra.returns, owl.Nothing),
-      quad(collectionAdd, hydra.possibleStatus, collectionAdd200),
-      quad(collectionAdd200, hydra.statusCode, toRdf(constants.HTTP_STATUS_NO_CONTENT)),
-      quad(collectionAdd200, hydra.description, literal('If the article was added successfully', 'en')),
+      quad(collectionAdd, hydra.possibleStatus, collectionAdd201),
+      quad(collectionAdd201, hydra.statusCode, toRdf(constants.HTTP_STATUS_CREATED)),
+      quad(collectionAdd201, hydra.description, literal('If the article was added successfully', 'en')),
       quad(hydra.Collection, hydra.supportedProperty, collectionName),
       quad(collectionName, rdf.type, hydra.SupportedProperty),
       quad(collectionName, hydra.title, literal('Title', 'en')),
