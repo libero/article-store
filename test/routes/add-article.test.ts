@@ -1,4 +1,6 @@
-import { blankNode, literal, namedNode, quad } from '@rdfjs/data-model';
+import {
+  blankNode, literal, namedNode, quad,
+} from '@rdfjs/data-model';
 import createHttpError from 'http-errors';
 import all from 'it-all';
 import { Next, Response } from 'koa';
