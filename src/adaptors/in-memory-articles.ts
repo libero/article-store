@@ -1,12 +1,20 @@
 import { Iri, JsonLdObj } from 'jsonld/jsonld-spec';
+import { schema } from 'rdf-namespaces';
 import Articles from '../articles';
 import ArticleHasNoId from '../errors/article-has-no-id';
 import ArticleNotFound from '../errors/article-not-found';
+import NotAnArticle from '../errors/not-an-article';
 
 export default class InMemoryArticles implements Articles {
   private articles: { [key: string]: JsonLdObj } = {};
 
   async add(article: JsonLdObj): Promise<void> {
+    const types = [].concat(article['@type'] || []);
+
+    if (!(types.includes(schema.Article))) {
+      throw new NotAnArticle(types);
+    }
+
     if (!('@id' in article)) {
       throw new ArticleHasNoId();
     }
@@ -34,7 +42,7 @@ export default class InMemoryArticles implements Articles {
     return Object.values(this.articles).length;
   }
 
-  * [Symbol.iterator](): Iterator<JsonLdObj> {
+  async* [Symbol.asyncIterator](): AsyncIterator<JsonLdObj> {
     yield* Object.values(this.articles);
   }
 }

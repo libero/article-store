@@ -5,6 +5,7 @@ import bodyParser from 'koa-bodyparser';
 import logger from 'koa-logger';
 import Articles from './articles';
 import apiDocumentationLink from './middleware/api-documentation-link';
+import emptyResponse from './middleware/empty-response';
 import errorHandler from './middleware/error-handler';
 import jsonld from './middleware/jsonld';
 import routing from './middleware/routing';
@@ -28,6 +29,7 @@ export default (
   app.context.router = router;
 
   app.use(logger());
+  app.use(emptyResponse());
   app.use(bodyParser({
     extendTypes: {
       json: ['application/ld+json'],
@@ -41,7 +43,6 @@ export default (
     hydra: 'http://www.w3.org/ns/hydra/core#',
     owl: 'http://www.w3.org/2002/07/owl#',
     rdf: 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
-    rdfs: 'http://www.w3.org/2000/01/rdf-schema#',
     schema: 'http://schema.org/',
   }));
   app.use(apiDocumentationLink(apiDocumentationPath));

@@ -1,7 +1,9 @@
+import all from 'it-all';
 import { Iri, JsonLdObj } from 'jsonld/jsonld-spec';
 import InMemoryArticles from '../../src/adaptors/in-memory-articles';
 import ArticleNotFound from '../../src/errors/article-not-found';
 import ArticleHasNoId from '../../src/errors/article-has-no-id';
+import NotAnArticle from '../../src/errors/not-an-article';
 import createArticle from '../create-article';
 
 describe('in-memory articles', (): void => {
@@ -15,6 +17,17 @@ describe('in-memory articles', (): void => {
     expect(await articles.contains('_:1')).toBe(true);
   });
 
+  it('can add an article with multiple types', async (): Promise<void> => {
+    const articles = new InMemoryArticles();
+
+    await articles.add({
+      ...createArticle('_:1'),
+      '@type': ['http://schema.org/Article', 'http://schema.org/NewsArticle'],
+    });
+
+    expect(await articles.contains('_:1')).toBe(true);
+  });
+
   it('can update an article', async (): Promise<void> => {
     const articles = new InMemoryArticles();
 
@@ -24,10 +37,28 @@ describe('in-memory articles', (): void => {
     expect((await articles.get('_:1'))['http://schema.org/name']).toBe('Updated');
   });
 
+  it('throws an error if it is not an article', async (): Promise<void> => {
+    const articles = new InMemoryArticles();
+
+    await expect(articles.add({
+      ...createArticle('_:1'),
+      '@type': 'http://schema.org/NewsArticle',
+    })).rejects.toThrow(new NotAnArticle(['http://schema.org/NewsArticle']));
+  });
+
+  it('throws an error if it has no type', async (): Promise<void> => {
+    const articles = new InMemoryArticles();
+
+    await expect(articles.add({
+      ...createArticle('_:1'),
+      '@type': undefined,
+    })).rejects.toThrow(new NotAnArticle());
+  });
+
   it('throws an error if the article does not have an ID', async (): Promise<void> => {
     const articles = new InMemoryArticles();
 
-    await expect(articles.add({})).rejects.toThrow(new ArticleHasNoId());
+    await expect(articles.add(createArticle())).rejects.toThrow(new ArticleHasNoId());
   });
 
   it('can retrieve an article', async (): Promise<void> => {
@@ -41,7 +72,8 @@ describe('in-memory articles', (): void => {
   it('throws an error if the article is not found', async (): Promise<void> => {
     const articles = new InMemoryArticles();
 
-    await expect(articles.get('_:1')).rejects.toThrow(new ArticleNotFound('_:1'));
+    await expect(articles.get('_:1')).rejects.toBeInstanceOf(ArticleNotFound);
+    await expect(articles.get('_:1')).rejects.toHaveProperty('id', '_:1');
   });
 
   it('can remove an article', async (): Promise<void> => {
@@ -78,7 +110,7 @@ describe('in-memory articles', (): void => {
     await articles.add(createArticle('_:3'));
     await articles.add(createArticle('_:2'));
 
-    const ids = [...articles].map((article: JsonLdObj): Iri => article['@id']);
+    const ids = (await all(articles)).map((article: JsonLdObj): Iri => article['@id']);
 
     expect(ids).toStrictEqual(['_:1', '_:3', '_:2']);
   });

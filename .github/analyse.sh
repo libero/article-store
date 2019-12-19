@@ -9,4 +9,4 @@ trap finish EXIT
 
 make start wait-healthy
 
-make exec tty= command="npx hydra-validator analyse http://localhost:8080/"
+docker run --rm --network host hydrofoil/hydra-analyser:0.2.0 http://localhost:8080/

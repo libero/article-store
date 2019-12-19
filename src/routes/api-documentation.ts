@@ -21,7 +21,7 @@ export default (): AppMiddleware => (
           '@type': hydra.Class,
           [hydra.title]: { '@value': 'API entry point', '@language': 'en' },
           [hydra.supportedOperation]: {
-            '@type': hydra.Operation,
+            '@type': [hydra.Operation, schema.DownloadAction],
             [hydra.title]: { '@value': 'Get the entry point', '@language': 'en' },
             [hydra.method]: { '@value': 'GET' },
             [hydra.expects]: { '@id': owl.Nothing },
@@ -58,21 +58,21 @@ export default (): AppMiddleware => (
           [hydra.title]: { '@value': 'Collection', '@language': 'en' },
           [hydra.supportedOperation]: [
             {
-              '@type': hydra.Operation,
+              '@type': [hydra.Operation, schema.DownloadAction],
               [hydra.title]: { '@value': 'Get the collection', '@language': 'en' },
               [hydra.method]: { '@value': 'GET' },
               [hydra.expects]: { '@id': owl.Nothing },
               [hydra.returns]: { '@id': hydra.Collection },
             },
             {
-              '@type': hydra.Operation,
+              '@type': [hydra.Operation, schema.AddAction],
               [hydra.title]: { '@value': 'Add an article', '@language': 'en' },
               [hydra.method]: { '@value': 'POST' },
               [hydra.expects]: { '@id': schema.Article },
               [hydra.returns]: { '@id': owl.Nothing },
               [hydra.possibleStatus]: [
                 {
-                  [hydra.statusCode]: constants.HTTP_STATUS_NO_CONTENT,
+                  [hydra.statusCode]: constants.HTTP_STATUS_CREATED,
                   [hydra.description]: { '@value': 'If the article was added successfully', '@language': 'en' },
                 },
               ],
