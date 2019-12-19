@@ -14,7 +14,7 @@ export default (): AppMiddleware => (
   async ({
     dataFactory: { literal, namedNode }, request, response, router,
   }: AppContext, next: Next): Promise<void> => {
-    const createNamedNode = (route: string): NamedNode => (
+    const createNamedNode = (route: Routes): NamedNode => (
       namedNode(url.resolve(request.origin, router.url(route)))
     );
 
