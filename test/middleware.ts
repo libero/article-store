@@ -1,21 +1,17 @@
 import { Middleware, ParameterizedContext, Response } from 'koa';
-import { DatasetCore } from 'rdf-js';
 import { AppContext, AppState } from '../src/app';
+import { WithDataset } from '../src/middleware/dataset';
 
 export type Next<StateT = AppState, CustomT = AppContext> = (
   context: ParameterizedContext<StateT, CustomT>
 ) => Promise<void>;
 
-export type DatasetResponse = Response & { dataset: DatasetCore };
-
 export default async <StateT = AppState, CustomT = AppContext>(
   middleware: Middleware<StateT, CustomT>,
   context: ParameterizedContext<StateT, CustomT>,
   next?: Next<StateT, CustomT>,
-): Promise<DatasetResponse> => {
+): Promise<WithDataset<Response>> => {
   await middleware(context, next ? (): Promise<void> => next(context) : jest.fn());
 
-  const { response } = context;
-
-  return response as DatasetResponse;
+  return context.response as WithDataset<Response>;
 };

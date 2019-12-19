@@ -2,12 +2,13 @@ import ParserJsonld from '@rdfjs/parser-jsonld';
 import SerializerJsonld from '@rdfjs/serializer-jsonld-ext';
 import { format as formatContentType } from 'content-type';
 import { constants } from 'http2';
-import { Next, Response } from 'koa';
+import {
+  DefaultState, Middleware, Next, Response,
+} from 'koa';
 import pEvent from 'p-event';
 import { fromStream, toStream } from 'rdf-dataset-ext';
 import { DatasetCore, Sink } from 'rdf-js';
-// eslint-disable-next-line import/no-cycle
-import { AppContext, AppMiddleware } from '../app';
+import { DatasetContext } from './dataset';
 
 const createParser = (): Sink => (
   new ParserJsonld()
@@ -21,9 +22,9 @@ const responseHasContent = (response: Response & { dataset: DatasetCore }): bool
   response.body || response.status === constants.HTTP_STATUS_NO_CONTENT || !response.dataset.size
 );
 
-export default (context: object = {}): AppMiddleware => (
+export default (context: object = {}): Middleware<DefaultState, DatasetContext> => (
   async (
-    { request, response }: AppContext, next: Next,
+    { request, response }: DatasetContext, next: Next,
   ): Promise<void> => {
     if (request.is('jsonld')) {
       request.dataset = await fromStream(request.dataset, createParser().import(request.req));

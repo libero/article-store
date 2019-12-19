@@ -1,17 +1,20 @@
-import { blankNode, literal, quad } from '@rdfjs/data-model';
+import dataFactory, { blankNode, literal, quad } from '@rdfjs/data-model';
 import createHttpError, { UnknownError } from 'http-errors';
 import 'jest-rdf';
+import { Response } from 'koa';
+import datasetFactory from '../../src/dataset-factory';
+import { WithDataset } from '../../src/middleware/dataset';
 import errorHandler from '../../src/middleware/error-handler';
 import { hydra, rdf } from '../../src/namespaces';
 import createContext, { ErrorListener } from '../context';
-import runMiddleware, { DatasetResponse, Next } from '../middleware';
+import runMiddleware, { Next } from '../middleware';
 
 const makeRequest = async (
   next?: Next, errorListener?: ErrorListener,
-): Promise<DatasetResponse> => {
+): Promise<WithDataset<Response>> => {
   const context = createContext({ errorListener });
 
-  return runMiddleware(errorHandler(), context, next);
+  return runMiddleware(errorHandler(dataFactory, datasetFactory), context, next);
 };
 
 const next = (error: UnknownError) => async (): Promise<void> => {

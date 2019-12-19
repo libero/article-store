@@ -10,6 +10,7 @@ import InMemoryArticles from '../src/adaptors/in-memory-articles';
 import { AppContext } from '../src/app';
 import Articles from '../src/articles';
 import datasetFactory from '../src/dataset-factory';
+import { WithDataset } from '../src/middleware/dataset';
 
 export type ErrorListener = (error: UnknownError, context: Context) => void;
 
@@ -49,8 +50,8 @@ export default ({
     headers['content-length'] = String(body.length);
   }
 
-  const request = Object.create(Request);
-  const response = Object.create(Response);
+  const request = Object.create(Request) as WithDataset<Request>;
+  const response = Object.create(Response) as WithDataset<Response>;
   request.app = app;
   request.dataset = dataset;
   request.req = new IncomingMessage({
@@ -63,6 +64,6 @@ export default ({
   response.dataset = datasetFactory.dataset();
 
   return {
-    app, articles, dataFactory, datasetFactory, method, path, request, response, router,
+    app, articles, dataFactory, method, path, request, response, router,
   } as unknown as AppContext;
 };

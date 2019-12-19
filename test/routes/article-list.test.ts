@@ -1,15 +1,16 @@
 import { blankNode, namedNode, quad } from '@rdfjs/data-model';
-import { Next } from 'koa';
+import { Next, Response } from 'koa';
 import { toRdf } from 'rdf-literal';
 import InMemoryArticles from '../../src/adaptors/in-memory-articles';
 import Articles from '../../src/articles';
+import { WithDataset } from '../../src/middleware/dataset';
 import { hydra, rdf } from '../../src/namespaces';
 import articleList from '../../src/routes/article-list';
 import createContext from '../context';
 import createArticle from '../create-article';
-import runMiddleware, { DatasetResponse } from '../middleware';
+import runMiddleware from '../middleware';
 
-const makeRequest = async (next?: Next, articles?: Articles): Promise<DatasetResponse> => (
+const makeRequest = async (next?: Next, articles?: Articles): Promise<WithDataset<Response>> => (
   runMiddleware(articleList(), createContext({ articles }), next)
 );
 

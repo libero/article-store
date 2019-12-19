@@ -2,10 +2,10 @@ import cors from '@koa/cors';
 import Router, { RouterContext } from '@koa/router';
 import Koa, { DefaultState, Middleware } from 'koa';
 import logger from 'koa-logger';
-import { DataFactory, DatasetCore, DatasetCoreFactory } from 'rdf-js';
+import { DataFactory, DatasetCoreFactory } from 'rdf-js';
 import Articles from './articles';
 import apiDocumentationLink from './middleware/api-documentation-link';
-import dataset from './middleware/dataset';
+import dataset, { DatasetContext } from './middleware/dataset';
 import emptyResponse from './middleware/empty-response';
 import errorHandler from './middleware/error-handler';
 import jsonld from './middleware/jsonld';
@@ -13,17 +13,10 @@ import routing from './middleware/routing';
 
 export type AppState = DefaultState;
 
-export type AppContext = RouterContext<AppState, {
+export type AppContext = RouterContext<AppState, DatasetContext<{
   articles: Articles;
   dataFactory: DataFactory;
-  datasetFactory: DatasetCoreFactory;
-  request: {
-    dataset: DatasetCore;
-  };
-  response: {
-    dataset: DatasetCore;
-  };
-}>;
+}>>;
 
 export type AppMiddleware = Middleware<AppState, AppContext>;
 
@@ -38,7 +31,6 @@ export default (
 
   app.context.articles = articles;
   app.context.dataFactory = dataFactory;
-  app.context.datasetFactory = datasetFactory;
   app.context.router = router;
 
   app.use(logger());
@@ -46,7 +38,7 @@ export default (
   app.use(cors({
     exposeHeaders: ['Link'],
   }));
-  app.use(dataset());
+  app.use(dataset(datasetFactory));
   app.use(jsonld({
     '@language': 'en',
     hydra: 'http://www.w3.org/ns/hydra/core#',
@@ -56,7 +48,7 @@ export default (
     schema: 'http://schema.org/',
   }));
   app.use(apiDocumentationLink(apiDocumentationPath));
-  app.use(errorHandler());
+  app.use(errorHandler(dataFactory, datasetFactory));
   app.use(routing(router));
 
   return app;
