@@ -32,6 +32,7 @@ export default (): AppMiddleware => (
 
       entryPoint.addOut(hydra.supportedOperation, (get): void => {
         get.addOut(rdf.type, hydra.Operation);
+        get.addOut(rdf.type, schema.DownloadAction);
         get.addOut(hydra.title, literal('Get the entry point', 'en'));
         get.addOut(hydra.method, literal('GET'));
         get.addOut(hydra.expects, owl.Nothing);
@@ -72,6 +73,7 @@ export default (): AppMiddleware => (
 
       collection.addOut(hydra.supportedOperation, (get): void => {
         get.addOut(rdf.type, hydra.Operation);
+        get.addOut(rdf.type, schema.DownloadAction);
         get.addOut(hydra.title, literal('Get the collection', 'en'));
         get.addOut(hydra.method, literal('GET'));
         get.addOut(hydra.expects, owl.Nothing);
@@ -80,6 +82,7 @@ export default (): AppMiddleware => (
 
       collection.addOut(hydra.supportedOperation, (add): void => {
         add.addOut(rdf.type, hydra.Operation);
+        add.addOut(rdf.type, schema.AddAction);
         add.addOut(hydra.title, literal('Add an article', 'en'));
         add.addOut(hydra.method, literal('POST'));
         add.addOut(hydra.expects, schema.Article);
