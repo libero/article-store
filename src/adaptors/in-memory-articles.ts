@@ -38,7 +38,7 @@ export default class InMemoryArticles implements Articles {
     return Object.values(this.articles).length;
   }
 
-  * [Symbol.iterator](): Iterator<[BlankNode, DatasetCore]> {
+  async* [Symbol.asyncIterator](): AsyncIterator<[BlankNode, DatasetCore]> {
     yield* Object.values(this.articles);
   }
 }

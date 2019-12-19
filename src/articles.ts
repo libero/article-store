@@ -1,6 +1,6 @@
 import { BlankNode, DatasetCore } from 'rdf-js';
 
-interface Articles extends Iterable<[BlankNode, DatasetCore]> {
+interface Articles extends AsyncIterable<[BlankNode, DatasetCore]> {
   set(id: BlankNode, article: DatasetCore): Promise<void>;
 
   get(id: BlankNode): Promise<DatasetCore>;

@@ -1,4 +1,5 @@
 import { constants } from 'http2';
+import all from 'it-all';
 import { Next } from 'koa';
 import { addAll } from 'rdf-dataset-ext';
 import { toRdf } from 'rdf-literal';
@@ -15,6 +16,7 @@ export default (): AppMiddleware => (
   }: AppContext, next: Next): Promise<void> => {
     const articleList = namedNode(url.resolve(request.origin, router.url(Routes.ArticleList)));
     const manages = blankNode('manages');
+    const [list, count] = await Promise.all([all(articles), articles.count()]);
 
     const quads = [
       quad(articleList, rdf.type, hydra('Collection')),
@@ -22,10 +24,10 @@ export default (): AppMiddleware => (
       quad(articleList, hydra.manages, manages),
       quad(manages, hydra.property, rdf.type),
       quad(manages, hydra.object, schema.Article),
-      quad(articleList, hydra.totalItems, toRdf(await articles.count())),
+      quad(articleList, hydra.totalItems, toRdf(count)),
     ];
 
-    for (const [id, article] of articles) {
+    for (const [id, article] of list) {
       quads.push(quad(articleList, hydra.member, id), ...article);
     }
 

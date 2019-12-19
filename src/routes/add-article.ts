@@ -1,12 +1,16 @@
 import createHttpError from 'http-errors';
 import { constants } from 'http2';
 import { Next } from 'koa';
+import url from 'url';
 import { AppContext, AppMiddleware } from '../app';
 import NotAnArticle from '../errors/not-an-article';
+import Routes from './index';
 import { rdf, schema } from '../namespaces';
 
 export default (): AppMiddleware => (
-  async ({ articles, request, response }: AppContext, next: Next): Promise<void> => {
+  async ({
+    articles, request, response, router,
+  }: AppContext, next: Next): Promise<void> => {
     const foundArticles = request.dataset.match(undefined, rdf.type, schema.Article);
 
     if (foundArticles.size > 1) {
@@ -37,7 +41,8 @@ export default (): AppMiddleware => (
       throw error;
     }
 
-    response.status = constants.HTTP_STATUS_NO_CONTENT;
+    response.status = constants.HTTP_STATUS_CREATED;
+    response.set('Location', url.resolve(request.origin, router.url(Routes.ArticleList)));
 
     await next();
   }

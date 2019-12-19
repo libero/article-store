@@ -1,5 +1,6 @@
-import { blankNode, namedNode, quad } from '@rdfjs/data-model';
+import { blankNode, literal, namedNode, quad } from '@rdfjs/data-model';
 import createHttpError from 'http-errors';
+import all from 'it-all';
 import { Next, Response } from 'koa';
 import { deleteMatch } from 'rdf-dataset-ext';
 import { DatasetCore } from 'rdf-js';
@@ -23,10 +24,13 @@ describe('add article', (): void => {
   it('should return a successful response', async (): Promise<void> => {
     const articles = new InMemoryArticles();
     const id = blankNode();
-    const response = await makeRequest(createArticle(id), undefined, articles);
+    const name = literal('Article');
+    const response = await makeRequest(createArticle(id, name), undefined, articles);
 
-    expect(response.status).toBe(204);
-    expect(await articles.contains(id)).toBe(true);
+    expect(response.status).toBe(201);
+    expect(response.get('Location')).toBe('http://example.com/path-to/article-list');
+    expect(await articles.count()).toBe(1);
+    expect((await all(articles))[0][1].has(quad(id, schema.name, name))).toBe(true);
   });
 
   it('should throw an error if it is not a schema:Article', async (): Promise<void> => {
