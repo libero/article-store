@@ -46,17 +46,17 @@ export default ({
   const app = new Koa();
   app.on('error', errorListener || jest.fn());
 
-  if (body) {
-    headers['content-length'] = String(body.length);
-  }
-
   const request = Object.create(Request) as WithDataset<Request>;
   const response = Object.create(Response) as WithDataset<Response>;
   request.app = app;
   request.dataset = dataset;
   request.req = new IncomingMessage({
     buffer: body ? Buffer.from(body) : null,
-    headers: { ...headers, host: 'example.com' },
+    headers: {
+      ...headers,
+      'content-length': typeof body === 'string' ? String(body.length) : undefined,
+      host: 'example.com',
+    },
     method,
   });
   response.req = request.req;
