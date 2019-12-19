@@ -24,7 +24,7 @@ export default (): AppMiddleware => (
     });
 
     graph.addOut(rdf.type, hydra.ApiDocumentation);
-    graph.addOut(hydra.entrypoint, createNamedNode(router.url(Routes.EntryPoint)));
+    graph.addOut(hydra.entrypoint, createNamedNode(Routes.EntryPoint));
 
     graph.addOut(hydra.supportedClass, schema.EntryPoint, (entryPoint): void => {
       entryPoint.addOut(rdf.type, hydra.Class);
