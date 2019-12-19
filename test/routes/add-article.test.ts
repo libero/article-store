@@ -1,5 +1,5 @@
-import all from 'async-iterator-all';
 import createHttpError from 'http-errors';
+import all from 'it-all';
 import { JsonLdObj } from 'jsonld/jsonld-spec';
 import { Next, Response } from 'koa';
 import InMemoryArticles from '../../src/adaptors/in-memory-articles';
@@ -23,9 +23,10 @@ describe('add article', (): void => {
     const response = await makeRequest(createArticle(), undefined, articles);
     const [list, count] = await Promise.all([all(articles), articles.count()]);
 
-    expect(response.status).toBe(204);
-    expect(count).toBe(1);
-    expect(list[0]['http://schema.org/name']).toEqual([{ '@value': 'Article' }]);
+    expect(response.status).toBe(201);
+    expect(response.get('Location')).toBe('http://example.com/path-to/article-list');
+    expect(await articles.count()).toBe(1);
+    expect((await all(articles))[0]['http://schema.org/name']).toEqual([{ '@value': 'Article' }]);
   });
 
   it('should throw an error if id is already set', async (): Promise<void> => {

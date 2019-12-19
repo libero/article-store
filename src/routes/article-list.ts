@@ -1,4 +1,4 @@
-import all from 'async-iterator-all';
+import all from 'it-all';
 import { Next } from 'koa';
 import { hydra, rdf, schema } from 'rdf-namespaces';
 import { AppContext, AppMiddleware } from '../app';
@@ -9,6 +9,7 @@ export default (): AppMiddleware => (
     articles, request, response, router,
   }: AppContext, next: Next): Promise<void> => {
     const [list, count] = await Promise.all([all(articles), articles.count()]);
+
     response.body = {
       '@context': {
         '@base': request.origin,

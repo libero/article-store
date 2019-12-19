@@ -1,4 +1,4 @@
-import all from 'async-iterator-all';
+import all from 'it-all';
 import { Iri, JsonLdObj } from 'jsonld/jsonld-spec';
 import InMemoryArticles from '../../src/adaptors/in-memory-articles';
 import ArticleNotFound from '../../src/errors/article-not-found';
