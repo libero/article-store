@@ -21,7 +21,7 @@ export default (): AppMiddleware => (
           '@type': hydra.Class,
           [hydra.title]: { '@value': 'API entry point', '@language': 'en' },
           [hydra.supportedOperation]: {
-            '@type': [hydra.Operation, schema.ViewAction],
+            '@type': [hydra.Operation, schema.DownloadAction],
             [hydra.title]: { '@value': 'Get the entry point', '@language': 'en' },
             [hydra.method]: { '@value': 'GET' },
             [hydra.expects]: { '@id': owl.Nothing },
@@ -47,7 +47,7 @@ export default (): AppMiddleware => (
           [hydra.title]: { '@value': 'Collection', '@language': 'en' },
           [hydra.supportedOperation]: [
             {
-              '@type': [hydra.Operation, schema.ViewAction],
+              '@type': [hydra.Operation, schema.DownloadAction],
               [hydra.title]: { '@value': 'Get the collection', '@language': 'en' },
               [hydra.method]: { '@value': 'GET' },
               [hydra.expects]: { '@id': owl.Nothing },
