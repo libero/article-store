@@ -1,15 +1,18 @@
+import { blankNode } from '@rdfjs/data-model';
 import createHttpError from 'http-errors';
 import { constants } from 'http2';
 import { Next } from 'koa';
+import { Quad } from 'rdf-js';
+import uniqueString from 'unique-string';
 import url from 'url';
 import { AppContext, AppMiddleware } from '../app';
 import NotAnArticle from '../errors/not-an-article';
-import Routes from './index';
 import { rdf, schema } from '../namespaces';
+import Routes from './index';
 
 export default (): AppMiddleware => (
   async ({
-    articles, request, response, router,
+    articles, dataFactory: { quad }, request, response, router,
   }: AppContext, next: Next): Promise<void> => {
     const foundArticles = request.dataset.match(undefined, rdf.type, schema.Article);
 
@@ -31,8 +34,23 @@ export default (): AppMiddleware => (
       throw new createHttpError.BadRequest(`Article must have at least one ${schema('name').value}`);
     }
 
+    const newId = blankNode(uniqueString());
+
+    [...request.dataset].forEach((originalQuad: Quad): void => {
+      let newQuad: Quad;
+      if (originalQuad.subject.equals(id)) {
+        newQuad = quad(newId, originalQuad.predicate, originalQuad.object, originalQuad.graph);
+      } else if (originalQuad.object.equals(id)) {
+        newQuad = quad(originalQuad.subject, originalQuad.predicate, newId, originalQuad.graph);
+      } else {
+        return;
+      }
+
+      request.dataset.delete(originalQuad).add(newQuad);
+    });
+
     try {
-      await articles.set(id, request.dataset);
+      await articles.set(newId, request.dataset);
     } catch (error) {
       if (error instanceof NotAnArticle) {
         throw new createHttpError.BadRequest(error.message);

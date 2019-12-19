@@ -18,7 +18,8 @@
     "p-event": "^4.1.0",
     "rdf-dataset-ext": "^1.0.0",
     "rdf-dataset-indexed": "^0.4.0",
-    "rdf-literal": "^1.0.0"
+    "rdf-literal": "^1.0.0",
+    "unique-string": "^2.0.0"
   },
   "devDependencies": {
     "@types/content-type": "^1.1.3",

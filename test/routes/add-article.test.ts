@@ -32,7 +32,10 @@ describe('add article', (): void => {
     expect(response.status).toBe(201);
     expect(response.get('Location')).toBe('http://example.com/path-to/article-list');
     expect(await articles.count()).toBe(1);
-    expect((await all(articles))[0][1].has(quad(id, schema.name, name))).toBe(true);
+
+    const [newId, dataset] = (await all(articles))[0];
+
+    expect(dataset.has(quad(newId, schema.name, name))).toBe(true);
   });
 
   it('should throw an error if it is not a schema:Article', async (): Promise<void> => {
