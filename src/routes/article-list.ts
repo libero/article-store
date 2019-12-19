@@ -2,6 +2,7 @@ import { constants } from 'http2';
 import all from 'it-all';
 import { Next } from 'koa';
 import { addAll } from 'rdf-dataset-ext';
+import { BlankNode, DatasetCore } from 'rdf-js';
 import { toRdf } from 'rdf-literal';
 import url from 'url';
 import { AppContext, AppMiddleware } from '../app';
@@ -27,9 +28,9 @@ export default (): AppMiddleware => (
       quad(articleList, hydra.totalItems, toRdf(count)),
     ];
 
-    for (const [id, article] of list) {
+    list.forEach(([id, article]: [BlankNode, DatasetCore]): void => {
       quads.push(quad(articleList, hydra.member, id), ...article);
-    }
+    });
 
     addAll(response.dataset, quads);
 
