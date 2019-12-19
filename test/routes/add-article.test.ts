@@ -21,7 +21,6 @@ describe('add article', (): void => {
   it('should return a successful response', async (): Promise<void> => {
     const articles = new InMemoryArticles();
     const response = await makeRequest(createArticle(), undefined, articles);
-    const [list, count] = await Promise.all([all(articles), articles.count()]);
 
     expect(response.status).toBe(201);
     expect(response.get('Location')).toBe('http://example.com/path-to/article-list');
