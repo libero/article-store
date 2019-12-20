@@ -7,7 +7,7 @@ import ArticleHasNoId from '../errors/article-has-no-id';
 import ArticleNotFound from '../errors/article-not-found';
 import NotAnArticle from '../errors/not-an-article';
 
-export default class PersistArticles implements Articles {
+export default class PostgresArticles implements Articles {
   private db: IDatabase<{}>;
 
   public constructor(db: IDatabase<{}>) {
