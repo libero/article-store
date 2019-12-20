@@ -20,7 +20,7 @@ export default (): AppMiddleware => (
     const [list, count] = await Promise.all([all(articles), articles.count()]);
 
     const quads = [
-      quad(articleList, rdf.type, hydra('Collection')),
+      quad(articleList, rdf.type, hydra.Collection),
       quad(articleList, hydra.title, literal('List of articles', 'en')),
       quad(articleList, hydra.manages, manages),
       quad(manages, hydra.property, rdf.type),

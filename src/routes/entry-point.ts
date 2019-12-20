@@ -15,7 +15,7 @@ export default (): AppMiddleware => (
 
     const quads = [
       quad(entryPoint, rdf.type, schema.EntryPoint),
-      quad(entryPoint, schema('name'), literal('Article Store', 'en')),
+      quad(entryPoint, schema.name, literal('Article Store', 'en')),
       quad(entryPoint, hydra.collection, articleList),
       quad(articleList, rdf.type, hydra.Collection),
     ];

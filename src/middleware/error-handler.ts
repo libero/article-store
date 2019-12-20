@@ -15,13 +15,13 @@ const handleHttpError = (
   const id = blankNode();
 
   const quads = [
-    quad(id, rdf('type'), hydra('Status')),
-    quad(id, hydra('title'), literal(response.message, 'en')),
+    quad(id, rdf.type, hydra.Status),
+    quad(id, hydra.title, literal(response.message, 'en')),
   ];
 
   if (error.message !== response.message) {
     quads.push(
-      quad(id, hydra('description'), literal(error.message, 'en')),
+      quad(id, hydra.description, literal(error.message, 'en')),
     );
   }
 

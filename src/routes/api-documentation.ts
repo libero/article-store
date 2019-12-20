@@ -42,7 +42,7 @@ export default (): AppMiddleware => (
       entryPoint.addOut(hydra.supportedProperty, (name): void => {
         name.addOut(rdf.type, hydra.SupportedProperty);
         name.addOut(hydra.title, literal('Name', 'en'));
-        name.addOut(hydra.property, schema('name'), (property): void => {
+        name.addOut(hydra.property, schema.name, (property): void => {
           property.addOut(rdf.type, rdf.Property);
         });
         name.addOut(hydra.required, true);
@@ -58,7 +58,7 @@ export default (): AppMiddleware => (
       article.addOut(hydra.supportedProperty, (name): void => {
         name.addOut(rdf.type, hydra.SupportedProperty);
         name.addOut(hydra.title, literal('Name', 'en'));
-        name.addOut(hydra.property, schema('name'), (property): void => {
+        name.addOut(hydra.property, schema.name, (property): void => {
           property.addOut(rdf.type, rdf.Property);
         });
         name.addOut(hydra.required, true);
