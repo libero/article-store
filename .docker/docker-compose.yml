@@ -5,7 +5,7 @@ services:
     build:
       context: ../
     environment:
-      DATABASE_CONNECTION_STRING: postgres://postgres:postgres@db:5432/articles
+      DATABASE_CONNECTION_STRING: postgres://postgres:postgres@db:5432/article-store
     ports:
       - '8080:8080'
   console:
@@ -18,10 +18,10 @@ services:
     depends_on:
       - app
   db:
-    image: postgres:12.1-alpine
+    image: postgres:11.5-alpine
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: articles
+      POSTGRES_DB: article-store
     ports:
       - '5432:5432'
