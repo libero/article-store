@@ -1,6 +1,6 @@
 import { Iri, JsonLdObj, JsonLdArray } from 'jsonld/jsonld-spec';
 import { schema } from 'rdf-namespaces';
-import { IDatabase } from 'pg-promise';
+import { IBaseProtocol, IMain } from 'pg-promise';
 import uuidv4 from 'uuid/v4';
 import Articles from '../articles';
 import ArticleHasNoId from '../errors/article-has-no-id';
@@ -8,9 +8,9 @@ import ArticleNotFound from '../errors/article-not-found';
 import NotAnArticle from '../errors/not-an-article';
 
 export default class PostgresArticles implements Articles {
-  private db: IDatabase<{}>;
+  private db: IBaseProtocol<IMain>;
 
-  public constructor(db: IDatabase<{}>) {
+  public constructor(db: IBaseProtocol<IMain>) {
     this.db = db;
   }
 
@@ -25,7 +25,7 @@ export default class PostgresArticles implements Articles {
       throw new ArticleHasNoId();
     }
 
-    this.db.none('INSERT INTO articles(uuid, article) VALUES ($[uuid], $[article])', {
+    await this.db.none('INSERT INTO articles(uuid, article) VALUES ($[uuid], $[article])', {
       uuid: uuidv4(),
       article,
     });
@@ -41,7 +41,7 @@ export default class PostgresArticles implements Articles {
   }
 
   async remove(id: Iri): Promise<void> {
-    this.db.none('DELETE FROM articles WHERE uuid = $[id]', { id });
+    await this.db.none('DELETE FROM articles WHERE uuid = $[id]', { id });
   }
 
   async contains(id: Iri): Promise<boolean> {
