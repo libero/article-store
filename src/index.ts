@@ -3,13 +3,9 @@ import createApp from './app';
 import createRouter from './router';
 import PostgresArticles from './adaptors/postgres-articles';
 import Routes from './routes';
+import db from './db';
 
-const articles = new PostgresArticles(pgPromise()({
-  user: process.env.DATABASE_USER,
-  password: process.env.DATABASE_PASSWORD,
-  database: process.env.DATABASE_NAME,
-  host: process.env.DATABASE_HOST,
-}));
+const articles = new PostgresArticles(pgPromise()(db));
 const router = createRouter();
 const apiDocumentationPath = router.url(Routes.ApiDocumentation);
 

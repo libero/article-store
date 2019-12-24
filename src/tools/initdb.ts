@@ -1,8 +1,9 @@
 import pgPromise, { IBaseProtocol, IMain } from 'pg-promise';
+import db from '../db';
 
-const init = async (db: IBaseProtocol<IMain>): Promise<void> => {
-  await db.none('DROP TABLE IF EXISTS articles').then(() => {
-    db.none(`CREATE TABLE IF NOT EXISTS articles (
+const init = async (database: IBaseProtocol<IMain>): Promise<void> => {
+  await database.none('DROP TABLE IF EXISTS articles').then(() => {
+    database.none(`CREATE TABLE IF NOT EXISTS articles (
       uuid uuid NOT NULL,
       article jsonb NOT NULL,
       created time without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL
@@ -10,9 +11,4 @@ const init = async (db: IBaseProtocol<IMain>): Promise<void> => {
   });
 };
 
-init(pgPromise()({
-  user: process.env.DATABASE_USER,
-  password: process.env.DATABASE_PASSWORD,
-  database: process.env.DATABASE_NAME,
-  host: process.env.DATABASE_HOST,
-}));
+init(pgPromise()(db));

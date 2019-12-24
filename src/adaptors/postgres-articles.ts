@@ -8,10 +8,10 @@ import ArticleNotFound from '../errors/article-not-found';
 import NotAnArticle from '../errors/not-an-article';
 
 export default class PostgresArticles implements Articles {
-  private db: IBaseProtocol<IMain>;
+  private database: IBaseProtocol<IMain>;
 
-  public constructor(db: IBaseProtocol<IMain>) {
-    this.db = db;
+  public constructor(database: IBaseProtocol<IMain>) {
+    this.database = database;
   }
 
   async add(article: JsonLdObj): Promise<void> {
@@ -25,14 +25,14 @@ export default class PostgresArticles implements Articles {
       throw new ArticleHasNoId();
     }
 
-    await this.db.none('INSERT INTO articles(uuid, article) VALUES ($[uuid], $[article])', {
+    await this.database.none('INSERT INTO articles(uuid, article) VALUES ($[uuid], $[article])', {
       uuid: uuidv4(),
       article,
     });
   }
 
   async get(id: Iri): Promise<JsonLdObj> {
-    const article = this.db.one('SELECT article FROM articles WHERE uuid = $[id]', { id }, (data: { article: JsonLdObj }) => data.article);
+    const article = this.database.one('SELECT article FROM articles WHERE uuid = $[id]', { id }, (data: { article: JsonLdObj }) => data.article);
     if (!article) {
       throw new ArticleNotFound(id);
     }
@@ -41,18 +41,18 @@ export default class PostgresArticles implements Articles {
   }
 
   async remove(id: Iri): Promise<void> {
-    await this.db.none('DELETE FROM articles WHERE uuid = $[id]', { id });
+    await this.database.none('DELETE FROM articles WHERE uuid = $[id]', { id });
   }
 
   async contains(id: Iri): Promise<boolean> {
-    return this.db.one('SELECT COUNT(*) FROM articles WHERE uuid = $[id]', { id }, (data: { count: number }) => +data.count > 0);
+    return this.database.one('SELECT COUNT(*) FROM articles WHERE uuid = $[id]', { id }, (data: { count: number }) => +data.count > 0);
   }
 
   async count(): Promise<number> {
-    return this.db.one('SELECT COUNT(*) FROM articles', [], (data: { count: number }) => +data.count);
+    return this.database.one('SELECT COUNT(*) FROM articles', [], (data: { count: number }) => +data.count);
   }
 
   async* [Symbol.asyncIterator](): AsyncIterator<JsonLdObj> {
-    yield* await this.db.any('SELECT article FROM articles').then((rows) => rows.map((row) => row.article)) as JsonLdArray;
+    yield* await this.database.any('SELECT article FROM articles').then((rows) => rows.map((row) => row.article)) as JsonLdArray;
   }
 }
