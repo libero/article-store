@@ -34,7 +34,7 @@ stop: ## Stop the containers
 	${DOCKER_COMPOSE} down
 
 initdb: ## Setup database tables
-	${DOCKER_COMPOSE} run app npm run initdb
+	${DOCKER_COMPOSE} run --rm app npm run initdb
 
 wait-healthy: ## Wait for the containers to be healthy
 	@services=($$(${DOCKER_COMPOSE} ps --quiet)); \
@@ -81,9 +81,11 @@ run:
 dev: export TARGET = dev
 dev: ## Build and runs the container for development
 	$(MAKE) --jobs=4 install build stop
+	$(MAKE) initdb
 	$(MAKE) run
 
 prod: export TARGET = prod
 prod: ## Builds and runs the container for production
 	$(MAKE) --jobs=2 build stop
+	$(MAKE) initdb
 	$(MAKE) run

@@ -12,6 +12,8 @@ services:
       DATABASE_PORT: 5432
     ports:
       - '8080:8080'
+    depends_on:
+      - db
   console:
     image: tpluscode/hypermedia-app:version-0.12.2
     environment:
