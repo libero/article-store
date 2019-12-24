@@ -1,6 +1,6 @@
-import pgPromise, { IDatabase } from 'pg-promise';
+import pgPromise, { IBaseProtocol, IMain } from 'pg-promise';
 
-const init = async (db: IDatabase<{}>): Promise<void> => {
+const init = async (db: IBaseProtocol<IMain>): Promise<void> => {
   await db.none('DROP TABLE IF EXISTS articles').then(() => {
     db.none(`CREATE TABLE IF NOT EXISTS articles (
       uuid uuid NOT NULL,
@@ -10,4 +10,9 @@ const init = async (db: IDatabase<{}>): Promise<void> => {
   });
 };
 
-init(pgPromise()(process.env.DATABASE_CONNECTION_STRING));
+init(pgPromise()({
+  user: process.env.DATABASE_USER,
+  password: process.env.DATABASE_PASSWORD,
+  database: process.env.DATABASE_NAME,
+  host: process.env.DATABASE_HOST,
+}));

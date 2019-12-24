@@ -5,7 +5,11 @@ services:
     build:
       context: ../
     environment:
-      DATABASE_CONNECTION_STRING: postgres://postgres:postgres@db:5432/article-store
+      DATABASE_NAME: article-store
+      DATABASE_USER: user
+      DATABASE_PASSWORD: secret
+      DATABASE_HOST: db
+      DATABASE_PORT: 5432
     ports:
       - '8080:8080'
   console:
@@ -20,8 +24,8 @@ services:
   db:
     image: postgres:11.5-alpine
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: secret
       POSTGRES_DB: article-store
     ports:
       - '5432:5432'
