@@ -2,6 +2,7 @@ import ParserJsonld from '@rdfjs/parser-jsonld';
 import SerializerJsonld from '@rdfjs/serializer-jsonld-ext';
 import { format as formatContentType } from 'content-type';
 import { constants } from 'http2';
+import { Context } from 'jsonld/jsonld-spec';
 import {
   DefaultState, Middleware, Next, Response,
 } from 'koa';
@@ -14,7 +15,7 @@ const createParser = (): Sink => (
   new ParserJsonld()
 );
 
-const createSerializer = (context: object): Sink => (
+const createSerializer = (context: Context): Sink => (
   new SerializerJsonld({ compact: true, context })
 );
 
@@ -22,7 +23,7 @@ const responseHasContent = (response: Response & { dataset: DatasetCore }): bool
   response.body || response.status === constants.HTTP_STATUS_NO_CONTENT || !response.dataset.size
 );
 
-export default (context: object = {}): Middleware<DefaultState, DatasetContext> => (
+export default (context: Context = {}): Middleware<DefaultState, DatasetContext> => (
   async (
     { request, response }: DatasetContext, next: Next,
   ): Promise<void> => {
