@@ -1,4 +1,4 @@
-import clownface from 'clownface';
+import clownface, { Clownface } from 'clownface';
 import { constants } from 'http2';
 import { Next } from 'koa';
 import { NamedNode } from 'rdf-js';
@@ -26,11 +26,11 @@ export default (): AppMiddleware => (
     graph.addOut(rdf.type, hydra.ApiDocumentation);
     graph.addOut(hydra.entrypoint, createNamedNode(Routes.EntryPoint));
 
-    graph.addOut(hydra.supportedClass, schema.EntryPoint, (entryPoint): void => {
+    graph.addOut(hydra.supportedClass, schema.EntryPoint, (entryPoint: Clownface): void => {
       entryPoint.addOut(rdf.type, hydra.Class);
       entryPoint.addOut(hydra.title, literal('API entry point', 'en'));
 
-      entryPoint.addOut(hydra.supportedOperation, (get): void => {
+      entryPoint.addOut(hydra.supportedOperation, (get: Clownface): void => {
         get.addOut(rdf.type, hydra.Operation);
         get.addOut(rdf.type, schema.DownloadAction);
         get.addOut(hydra.title, literal('Get the entry point', 'en'));
@@ -39,10 +39,10 @@ export default (): AppMiddleware => (
         get.addOut(hydra.returns, schema.EntryPoint);
       });
 
-      entryPoint.addOut(hydra.supportedProperty, (name): void => {
+      entryPoint.addOut(hydra.supportedProperty, (name: Clownface): void => {
         name.addOut(rdf.type, hydra.SupportedProperty);
         name.addOut(hydra.title, literal('Name', 'en'));
-        name.addOut(hydra.property, schema('name'), (property): void => {
+        name.addOut(hydra.property, schema('name'), (property: Clownface): void => {
           property.addOut(rdf.type, rdf.Property);
         });
         name.addOut(hydra.required, true);
@@ -51,14 +51,14 @@ export default (): AppMiddleware => (
       });
     });
 
-    graph.addOut(hydra.supportedClass, schema.Article, (article): void => {
+    graph.addOut(hydra.supportedClass, schema.Article, (article: Clownface): void => {
       article.addOut(rdf.type, hydra.Class);
       article.addOut(hydra.title, literal('Article', 'en'));
 
-      article.addOut(hydra.supportedProperty, (name): void => {
+      article.addOut(hydra.supportedProperty, (name: Clownface): void => {
         name.addOut(rdf.type, hydra.SupportedProperty);
         name.addOut(hydra.title, literal('Name', 'en'));
-        name.addOut(hydra.property, schema('name'), (property): void => {
+        name.addOut(hydra.property, schema('name'), (property: Clownface): void => {
           property.addOut(rdf.type, rdf.Property);
         });
         name.addOut(hydra.required, true);
@@ -67,11 +67,11 @@ export default (): AppMiddleware => (
       });
     });
 
-    graph.addOut(hydra.supportedClass, hydra.Collection, (collection): void => {
+    graph.addOut(hydra.supportedClass, hydra.Collection, (collection: Clownface): void => {
       collection.addOut(rdf.type, hydra.Class);
       collection.addOut(hydra.title, literal('Collection', 'en'));
 
-      collection.addOut(hydra.supportedOperation, (get): void => {
+      collection.addOut(hydra.supportedOperation, (get: Clownface): void => {
         get.addOut(rdf.type, hydra.Operation);
         get.addOut(rdf.type, schema.DownloadAction);
         get.addOut(hydra.title, literal('Get the collection', 'en'));
@@ -80,23 +80,23 @@ export default (): AppMiddleware => (
         get.addOut(hydra.returns, hydra.Collection);
       });
 
-      collection.addOut(hydra.supportedOperation, (add): void => {
+      collection.addOut(hydra.supportedOperation, (add: Clownface): void => {
         add.addOut(rdf.type, hydra.Operation);
         add.addOut(rdf.type, schema.AddAction);
         add.addOut(hydra.title, literal('Add an article', 'en'));
         add.addOut(hydra.method, literal('POST'));
         add.addOut(hydra.expects, schema.Article);
         add.addOut(hydra.returns, owl.Nothing);
-        add.addOut(hydra.possibleStatus, (status): void => {
+        add.addOut(hydra.possibleStatus, (status: Clownface): void => {
           status.addOut(hydra.statusCode, constants.HTTP_STATUS_CREATED);
           status.addOut(hydra.description, literal('If the article was added successfully', 'en'));
         });
       });
 
-      collection.addOut(hydra.supportedProperty, (name): void => {
+      collection.addOut(hydra.supportedProperty, (name: Clownface): void => {
         name.addOut(rdf.type, hydra.SupportedProperty);
         name.addOut(hydra.title, literal('Title', 'en'));
-        name.addOut(hydra.property, hydra.title, (property): void => {
+        name.addOut(hydra.property, hydra.title, (property: Clownface): void => {
           property.addOut(rdf.type, rdf.Property);
         });
         name.addOut(hydra.required, true);
@@ -104,10 +104,10 @@ export default (): AppMiddleware => (
         name.addOut(hydra.writeable, toRdf(false));
       });
 
-      collection.addOut(hydra.supportedProperty, (manages): void => {
+      collection.addOut(hydra.supportedProperty, (manages: Clownface): void => {
         manages.addOut(rdf.type, hydra.SupportedProperty);
         manages.addOut(hydra.title, literal('What the collection manages', 'en'));
-        manages.addOut(hydra.property, hydra.manages, (property): void => {
+        manages.addOut(hydra.property, hydra.manages, (property: Clownface): void => {
           property.addOut(rdf.type, rdf.Property);
         });
         manages.addOut(hydra.required, true);
@@ -115,10 +115,10 @@ export default (): AppMiddleware => (
         manages.addOut(hydra.writeable, toRdf(false));
       });
 
-      collection.addOut(hydra.supportedProperty, (totalItems): void => {
+      collection.addOut(hydra.supportedProperty, (totalItems: Clownface): void => {
         totalItems.addOut(rdf.type, hydra.SupportedProperty);
         totalItems.addOut(hydra.title, literal('Total items', 'en'));
-        totalItems.addOut(hydra.property, hydra.totalItems, (property): void => {
+        totalItems.addOut(hydra.property, hydra.totalItems, (property: Clownface): void => {
           property.addOut(rdf.type, rdf.Property);
         });
         totalItems.addOut(hydra.required, true);
@@ -126,10 +126,10 @@ export default (): AppMiddleware => (
         totalItems.addOut(hydra.writeable, toRdf(false));
       });
 
-      collection.addOut(hydra.supportedProperty, (members): void => {
+      collection.addOut(hydra.supportedProperty, (members: Clownface): void => {
         members.addOut(rdf.type, hydra.SupportedProperty);
         members.addOut(hydra.title, literal('Members of this collection', 'en'));
-        members.addOut(hydra.property, hydra.members, (property): void => {
+        members.addOut(hydra.property, hydra.members, (property: Clownface): void => {
           property.addOut(rdf.type, rdf.Property);
           property.addOut(rdf.type, hydra.Link);
         });

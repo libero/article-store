@@ -1,3 +1,4 @@
+import clownface, { Clownface } from 'clownface';
 import { constants } from 'http2';
 import all from 'it-all';
 import { Next } from 'koa';
@@ -11,28 +12,27 @@ import Routes from './index';
 
 export default (): AppMiddleware => (
   async ({
-    dataFactory: {
-      blankNode, quad, literal, namedNode,
-    }, articles, request, response, router,
+    dataFactory: { literal, namedNode }, articles, request, response, router,
   }: AppContext, next: Next): Promise<void> => {
-    const articleList = namedNode(url.resolve(request.origin, router.url(Routes.ArticleList)));
-    const manages = blankNode('manages');
-    const [list, count] = await Promise.all([all(articles), articles.count()]);
-
-    const quads = [
-      quad(articleList, rdf.type, hydra.Collection),
-      quad(articleList, hydra.title, literal('List of articles', 'en')),
-      quad(articleList, hydra.manages, manages),
-      quad(manages, hydra.property, rdf.type),
-      quad(manages, hydra.object, schema.Article),
-      quad(articleList, hydra.totalItems, toRdf(count)),
-    ];
-
-    list.forEach(([id, article]: [BlankNode, DatasetCore]): void => {
-      quads.push(quad(articleList, hydra.member, id), ...article);
+    const graph = clownface({
+      dataset: response.dataset,
+      term: namedNode(url.resolve(request.origin, router.url(Routes.ArticleList))),
     });
 
-    addAll(response.dataset, quads);
+    const [list, count] = await Promise.all([all(articles), articles.count()]);
+
+    graph.addOut(rdf.type, hydra.Collection);
+    graph.addOut(hydra.title, literal('List of articles', 'en'));
+    graph.addOut(hydra.manages, (manages: Clownface): void => {
+      manages.addOut(hydra.property, rdf.type);
+      manages.addOut(hydra.object, schema.Article);
+    });
+    graph.addOut(hydra.totalItems, toRdf(count));
+
+    list.forEach(([id, article]: [BlankNode, DatasetCore]): void => {
+      graph.addOut(hydra.member, id);
+      addAll(graph.dataset, article);
+    });
 
     response.status = constants.HTTP_STATUS_OK;
 
