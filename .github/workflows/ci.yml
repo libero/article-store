@@ -103,4 +103,4 @@ jobs:
           docker load -i docker-image-prod/article-store.tar
 
       - name: Push Docker image
-        run: .github/push-image.sh article-store
+        run: .scripts/github/push-image.sh article-store
