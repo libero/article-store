@@ -8,27 +8,25 @@ import {
 } from 'koa';
 import pEvent from 'p-event';
 import { fromStream, toStream } from 'rdf-dataset-ext';
-import { Sink } from 'rdf-js';
 import { DatasetContext, WithDataset } from './dataset';
-
-const createParser = (): Sink => (
-  new ParserJsonld()
-);
-
-const createSerializer = (context: Context): Sink => (
-  new SerializerJsonld({ compact: true, context })
-);
 
 const responseHasContent = (response: WithDataset<Response>): boolean => (
   response.body || response.status === constants.HTTP_STATUS_NO_CONTENT || !response.dataset.size
 );
 
-export default (context: Context = {}): Middleware<DefaultState, DatasetContext> => (
-  async (
+export default (context: Context = {}): Middleware<DefaultState, DatasetContext> => {
+  const contentType = {
+    type: 'application/ld+json',
+    parameters: { profile: 'http://www.w3.org/ns/json-ld#compacted' },
+  };
+  const parser = new ParserJsonld();
+  const serializer = new SerializerJsonld({ compact: true, context });
+
+  return async (
     { request, response }: DatasetContext, next: Next,
   ): Promise<void> => {
     if (request.is('jsonld')) {
-      request.dataset = await fromStream(request.dataset, createParser().import(request.req));
+      request.dataset = await fromStream(request.dataset, parser.import(request.req));
     }
 
     await next();
@@ -37,12 +35,7 @@ export default (context: Context = {}): Middleware<DefaultState, DatasetContext>
       return;
     }
 
-    const contentType = {
-      type: 'application/ld+json',
-      parameters: { profile: 'http://www.w3.org/ns/json-ld#compacted' },
-    };
-
-    response.body = await pEvent(createSerializer(context).import(toStream(response.dataset)), 'data');
+    response.body = await pEvent(serializer.import(toStream(response.dataset)), 'data');
     response.set('Content-Type', formatContentType(contentType));
-  }
-);
+  };
+};
