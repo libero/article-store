@@ -8,8 +8,8 @@ import {
 } from 'koa';
 import pEvent from 'p-event';
 import { fromStream, toStream } from 'rdf-dataset-ext';
-import { DatasetCore, Sink } from 'rdf-js';
-import { DatasetContext } from './dataset';
+import { Sink } from 'rdf-js';
+import { DatasetContext, WithDataset } from './dataset';
 
 const createParser = (): Sink => (
   new ParserJsonld()
@@ -19,7 +19,7 @@ const createSerializer = (context: Context): Sink => (
   new SerializerJsonld({ compact: true, context })
 );
 
-const responseHasContent = (response: Response & { dataset: DatasetCore }): boolean => (
+const responseHasContent = (response: WithDataset<Response>): boolean => (
   response.body || response.status === constants.HTTP_STATUS_NO_CONTENT || !response.dataset.size
 );
 
