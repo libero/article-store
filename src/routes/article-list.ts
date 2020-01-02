@@ -1,4 +1,5 @@
 import all from 'it-all';
+import { Iri, JsonLdObj } from 'jsonld/jsonld-spec';
 import { Next } from 'koa';
 import { hydra, rdf, schema } from 'rdf-namespaces';
 import { AppContext, AppMiddleware } from '../app';
@@ -23,7 +24,7 @@ export default (): AppMiddleware => (
       },
       [hydra.totalItems]: count,
       [hydra.member]: {
-        '@list': list,
+        '@list': list.map((parts: [Iri, JsonLdObj]): JsonLdObj => parts[1]),
       },
     };
     response.type = 'jsonld';

@@ -1,25 +1,20 @@
 import { Iri, JsonLdObj } from 'jsonld/jsonld-spec';
 import { schema } from 'rdf-namespaces';
 import Articles from '../articles';
-import ArticleHasNoId from '../errors/article-has-no-id';
 import ArticleNotFound from '../errors/article-not-found';
 import NotAnArticle from '../errors/not-an-article';
 
 export default class InMemoryArticles implements Articles {
-  private articles: { [key: string]: JsonLdObj } = {};
+  private articles: { [key: string]: [Iri, JsonLdObj] } = {};
 
-  async add(article: JsonLdObj): Promise<void> {
+  async set(id: Iri, article: JsonLdObj): Promise<void> {
     const types = [].concat(article['@type'] || []);
 
-    if (!(types.includes(schema.Article))) {
+    if (!(types.includes(schema.Article)) || article['@id'] !== id) {
       throw new NotAnArticle(types);
     }
 
-    if (!('@id' in article)) {
-      throw new ArticleHasNoId();
-    }
-
-    this.articles[article['@id']] = article;
+    this.articles[id] = [id, article];
   }
 
   async get(id: Iri): Promise<JsonLdObj> {
@@ -27,7 +22,7 @@ export default class InMemoryArticles implements Articles {
       throw new ArticleNotFound(id);
     }
 
-    return this.articles[id];
+    return this.articles[id][1];
   }
 
   async remove(id: Iri): Promise<void> {
@@ -42,7 +37,7 @@ export default class InMemoryArticles implements Articles {
     return Object.values(this.articles).length;
   }
 
-  async* [Symbol.asyncIterator](): AsyncIterator<JsonLdObj> {
+  async* [Symbol.asyncIterator](): AsyncIterator<[Iri, JsonLdObj]> {
     yield* Object.values(this.articles);
   }
 }
