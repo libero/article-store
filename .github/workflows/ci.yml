@@ -105,3 +105,6 @@ jobs:
 
       - name: Push Docker image
         run: .scripts/github/push-image.sh article-store
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
