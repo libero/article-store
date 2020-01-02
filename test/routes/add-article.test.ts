@@ -35,7 +35,7 @@ describe('add article', (): void => {
 
     const [newId, dataset] = (await all(articles))[0];
 
-    expect(dataset.has(quad(newId, schema.name, name))).toBe(true);
+    expect(dataset.has(quad(newId, schema('name'), name))).toBe(true);
   });
 
   it('should throw an error if it is not a schema:Article', async (): Promise<void> => {
