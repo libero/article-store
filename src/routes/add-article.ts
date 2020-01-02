@@ -25,7 +25,7 @@ export default (): AppMiddleware => (
     article['@id'] = `_:${uniqueString()}`;
 
     try {
-      await articles.add(article);
+      await articles.set(article['@id'], article);
     } catch (error) {
       if (error instanceof NotAnArticle) {
         throw new createHttpError.BadRequest(error.message);

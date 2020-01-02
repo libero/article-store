@@ -1,7 +1,7 @@
 import { Iri, JsonLdObj } from 'jsonld/jsonld-spec';
 
-interface Articles extends AsyncIterable<JsonLdObj> {
-  add(article: JsonLdObj): Promise<void>;
+interface Articles extends AsyncIterable<[Iri, JsonLdObj]> {
+  set(id: Iri, article: JsonLdObj): Promise<void>;
 
   get(id: Iri): Promise<JsonLdObj>;
 
