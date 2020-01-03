@@ -2,10 +2,10 @@ import { Response } from 'koa';
 import parseLinkHeader from 'parse-link-header';
 import apiDocumentation from '../../src/middleware/api-documentation-link';
 import createContext from '../context';
-import runMiddleware from '../middleware';
+import runMiddleware, { Next } from '../middleware';
 
-const makeRequest = async (): Promise<Response> => (
-  runMiddleware(apiDocumentation('/path-to/api-documentation'), createContext())
+const makeRequest = async (next?: Next): Promise<Response> => (
+  runMiddleware(apiDocumentation('/path-to/api-documentation'), createContext(), next)
 );
 
 describe('API documentation link middleware', (): void => {
@@ -20,5 +20,12 @@ describe('API documentation link middleware', (): void => {
     };
 
     expect(parseLinkHeader(response.get('Link'))).toStrictEqual(expected);
+  });
+
+  it('should call the next middleware', async (): Promise<void> => {
+    const next = jest.fn();
+    await makeRequest(next);
+
+    expect(next).toHaveBeenCalledTimes(1);
   });
 });
