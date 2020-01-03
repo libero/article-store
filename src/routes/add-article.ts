@@ -4,6 +4,7 @@ import jsonld from 'jsonld';
 import { JsonLdArray } from 'jsonld/jsonld-spec';
 import { Next } from 'koa';
 import { schema } from 'rdf-namespaces';
+import { termToString } from 'rdf-string';
 import uniqueString from 'unique-string';
 import url from 'url';
 import { AppContext, AppMiddleware } from '../app';
@@ -12,7 +13,7 @@ import Routes from './index';
 
 export default (): AppMiddleware => (
   async ({
-    articles, request, response, router,
+    articles, dataFactory: { blankNode }, request, response, router,
   }: AppContext, next: Next): Promise<void> => {
     const [article] = await jsonld.expand(request.body) as JsonLdArray;
     if ('@id' in article) {
@@ -22,10 +23,11 @@ export default (): AppMiddleware => (
       throw new createHttpError.BadRequest(`Article must have at least one ${schema.name}`);
     }
 
-    article['@id'] = `_:${uniqueString()}`;
+    const newId = blankNode(uniqueString());
+    article['@id'] = termToString(newId);
 
     try {
-      await articles.set(article['@id'], article);
+      await articles.set(newId, article);
     } catch (error) {
       if (error instanceof NotAnArticle) {
         throw new createHttpError.BadRequest(error.message);
