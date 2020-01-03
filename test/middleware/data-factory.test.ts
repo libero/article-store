@@ -1,5 +1,5 @@
-import dataFactory from '@rdfjs/data-model';
 import { Next } from 'koa';
+import dataFactory from '../../src/data-factory';
 import setDataFactory, { DataFactoryContext } from '../../src/middleware/data-factory';
 import createContext from '../context';
 
