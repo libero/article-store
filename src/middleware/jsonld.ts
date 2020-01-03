@@ -22,9 +22,7 @@ export default (context: Context = {}): Middleware<DefaultState, DatasetContext>
   const parser = new ParserJsonld();
   const serializer = new SerializerJsonld({ compact: true, context });
 
-  return async (
-    { request, response }: DatasetContext, next: Next,
-  ): Promise<void> => {
+  return async ({ request, response }: DatasetContext, next: Next): Promise<void> => {
     if (request.is('jsonld')) {
       request.dataset = await fromStream(request.dataset, parser.import(request.req));
     }
