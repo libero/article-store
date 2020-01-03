@@ -6,6 +6,7 @@ import logger from 'koa-logger';
 import { DataFactory } from 'rdf-js';
 import Articles from './articles';
 import apiDocumentationLink from './middleware/api-documentation-link';
+import setDataFactory, { DataFactoryContext } from './middleware/data-factory';
 import emptyResponse from './middleware/empty-response';
 import errorHandler from './middleware/error-handler';
 import jsonld from './middleware/jsonld';
@@ -13,10 +14,9 @@ import routing from './middleware/routing';
 
 export type AppState = DefaultState;
 
-export type AppContext = RouterContext<AppState, {
+export type AppContext = RouterContext<AppState, DataFactoryContext<{
   articles: Articles;
-  dataFactory: DataFactory;
-}>;
+}>>;
 
 export type AppMiddleware = Middleware<AppState, AppContext>;
 
@@ -42,6 +42,7 @@ export default (
   app.use(cors({
     exposeHeaders: ['Link'],
   }));
+  app.use(setDataFactory(dataFactory));
   app.use(jsonld({
     '@language': 'en',
     hydra: 'http://www.w3.org/ns/hydra/core#',
