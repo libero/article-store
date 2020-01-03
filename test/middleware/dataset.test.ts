@@ -1,11 +1,10 @@
 import 'jest-rdf';
-import { AppContext } from '../../src/app';
 import datasetFactory from '../../src/dataset-factory';
-import dataset from '../../src/middleware/dataset';
-import createContext, { Headers } from '../context';
+import dataset, { DatasetContext } from '../../src/middleware/dataset';
+import createContext from '../context';
 
-const makeRequest = async (body?: string, headers?: Headers): Promise<AppContext> => {
-  const context = createContext({ body, headers, method: body ? 'POST' : 'GET' });
+const makeRequest = async (): Promise<DatasetContext> => {
+  const context = createContext();
 
   await dataset(datasetFactory)(context, jest.fn());
 
