@@ -19,7 +19,18 @@ export default (): AppMiddleware => (
       term: namedNode(url.resolve(request.origin, router.url(Routes.ArticleList))),
     });
 
-    const [list, count] = await Promise.all([all(articles), articles.count()]);
+    const listPromise = all(articles)
+      .then((list): void => {
+        list.forEach(([id, article]: [BlankNode, DatasetCore]): void => {
+          graph.addOut(hydra.member, id);
+          addAll(graph.dataset, article);
+        });
+      });
+
+    const countPromise = articles.count()
+      .then((count): void => {
+        graph.addOut(hydra.totalItems, toRdf(count));
+      });
 
     graph.addOut(rdf.type, hydra.Collection);
     graph.addOut(hydra.title, literal('List of articles', 'en'));
@@ -27,12 +38,8 @@ export default (): AppMiddleware => (
       manages.addOut(hydra.property, rdf.type);
       manages.addOut(hydra.object, schema.Article);
     });
-    graph.addOut(hydra.totalItems, toRdf(count));
 
-    list.forEach(([id, article]: [BlankNode, DatasetCore]): void => {
-      graph.addOut(hydra.member, id);
-      addAll(graph.dataset, article);
-    });
+    await Promise.all([listPromise, countPromise]);
 
     response.status = constants.HTTP_STATUS_OK;
 
