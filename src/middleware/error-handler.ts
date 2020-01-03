@@ -6,8 +6,9 @@ import { DatasetContext } from './dataset';
 const handleHttpError = (
   error: HttpError,
   {
-    dataFactory: { blankNode, literal, quad },
-    datasetFactory: { dataset },
+    dataFactory: {
+      blankNode, dataset, literal, quad,
+    },
     response,
   }: DatasetContext,
 ): void => {

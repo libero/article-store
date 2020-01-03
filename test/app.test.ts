@@ -1,11 +1,9 @@
-import dataFactory from '@rdfjs/data-model';
 import Koa from 'koa';
 import parseLinkHeader from 'parse-link-header';
 import request from 'supertest';
 import InMemoryArticles from '../src/adaptors/in-memory-articles';
 import createApp from '../src/app';
-import Articles from '../src/articles';
-import datasetFactory from '../src/dataset-factory';
+import dataFactory from '../src/data-factory';
 import createRouter from '../src/router';
 import Routes from '../src/routes';
 
@@ -15,11 +13,9 @@ const parseHeader = (header: string): Array<string> => header.split(',').map(tri
 const router = createRouter();
 const apiDocumentationPath = router.url(Routes.ApiDocumentation);
 let app: Koa;
-let articles: Articles;
 
 beforeEach((): void => {
-  articles = new InMemoryArticles();
-  app = createApp(articles, router, apiDocumentationPath, dataFactory, datasetFactory);
+  app = createApp(new InMemoryArticles(), router, apiDocumentationPath, dataFactory);
 });
 
 describe('the application', (): void => {

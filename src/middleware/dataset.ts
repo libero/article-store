@@ -9,16 +9,14 @@ export type WithDataset<T extends Request | Response> = T & {
 };
 
 export type DatasetContext<CustomT = DefaultContext> = CustomT & DataFactoryContext<{
-  datasetFactory: DatasetCoreFactory;
   request: WithDataset<Request>;
   response: WithDataset<Response>;
-}>;
+}, DatasetCoreFactory>;
 
-export default (datasetFactory: DatasetCoreFactory): Middleware<DefaultState, DatasetContext> => (
+export default (): Middleware<DefaultState, DatasetContext> => (
   async (context: DatasetContext, next: Next): Promise<void> => {
-    Object.assign(context, { datasetFactory });
-    Object.assign(context.request, { dataset: datasetFactory.dataset() });
-    Object.assign(context.response, { dataset: datasetFactory.dataset() });
+    Object.assign(context.request, { dataset: context.dataFactory.dataset() });
+    Object.assign(context.response, { dataset: context.dataFactory.dataset() });
 
     await next();
   }

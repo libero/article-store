@@ -24,8 +24,7 @@ export default (
   articles: Articles,
   router: Router<AppState, AppContext>,
   apiDocumentationPath: string,
-  dataFactory: DataFactory,
-  datasetFactory: DatasetCoreFactory,
+  dataFactory: DataFactory & DatasetCoreFactory,
 ): Koa<AppState, AppContext> => {
   const app = new Koa<AppState, AppContext>();
 
@@ -38,7 +37,7 @@ export default (
     exposeHeaders: ['Link'],
   }));
   app.use(setDataFactory(dataFactory));
-  app.use(addDatasets(datasetFactory));
+  app.use(addDatasets());
   app.use(jsonld({
     '@language': 'en',
     hydra: 'http://www.w3.org/ns/hydra/core#',
