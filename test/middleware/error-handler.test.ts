@@ -1,8 +1,7 @@
-import dataFactory, { blankNode, literal, quad } from '@rdfjs/data-model';
+import { blankNode, literal, quad } from '@rdfjs/data-model';
 import createHttpError, { UnknownError } from 'http-errors';
 import 'jest-rdf';
 import { Response } from 'koa';
-import datasetFactory from '../../src/dataset-factory';
 import { WithDataset } from '../../src/middleware/dataset';
 import errorHandler from '../../src/middleware/error-handler';
 import { hydra, rdf } from '../../src/namespaces';
@@ -14,7 +13,7 @@ const makeRequest = async (
 ): Promise<WithDataset<Response>> => {
   const context = createContext({ errorListener });
 
-  return runMiddleware(errorHandler(dataFactory, datasetFactory), context, next);
+  return runMiddleware(errorHandler(), context, next);
 };
 
 const next = (error: UnknownError) => async (): Promise<void> => {

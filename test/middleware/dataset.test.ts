@@ -12,6 +12,12 @@ const makeRequest = async (): Promise<DatasetContext> => {
 };
 
 describe('Dataset middleware', (): void => {
+  it('adds a dataset factory to the context', async (): Promise<void> => {
+    const { datasetFactory: actual } = await makeRequest();
+
+    expect(actual).toBe(datasetFactory);
+  });
+
   it('adds an empty dataset to the request', async (): Promise<void> => {
     const { request } = await makeRequest();
 

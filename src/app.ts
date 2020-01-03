@@ -5,7 +5,8 @@ import logger from 'koa-logger';
 import { DataFactory, DatasetCoreFactory } from 'rdf-js';
 import Articles from './articles';
 import apiDocumentationLink from './middleware/api-documentation-link';
-import dataset, { DatasetContext } from './middleware/dataset';
+import setDataFactory from './middleware/data-factory';
+import addDatasets, { DatasetContext } from './middleware/dataset';
 import emptyResponse from './middleware/empty-response';
 import errorHandler from './middleware/error-handler';
 import jsonld from './middleware/jsonld';
@@ -15,7 +16,6 @@ export type AppState = DefaultState;
 
 export type AppContext = RouterContext<AppState, DatasetContext<{
   articles: Articles;
-  dataFactory: DataFactory;
 }>>;
 
 export type AppMiddleware = Middleware<AppState, AppContext>;
@@ -30,7 +30,6 @@ export default (
   const app = new Koa<AppState, AppContext>();
 
   app.context.articles = articles;
-  app.context.dataFactory = dataFactory;
   app.context.router = router;
 
   app.use(logger());
@@ -38,7 +37,8 @@ export default (
   app.use(cors({
     exposeHeaders: ['Link'],
   }));
-  app.use(dataset(datasetFactory));
+  app.use(setDataFactory(dataFactory));
+  app.use(addDatasets(datasetFactory));
   app.use(jsonld({
     '@language': 'en',
     hydra: 'http://www.w3.org/ns/hydra/core#',
@@ -47,7 +47,7 @@ export default (
     schema: 'http://schema.org/',
   }));
   app.use(apiDocumentationLink(apiDocumentationPath));
-  app.use(errorHandler(dataFactory, datasetFactory));
+  app.use(errorHandler());
   app.use(routing(router));
 
   return app;

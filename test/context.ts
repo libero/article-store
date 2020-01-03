@@ -64,6 +64,6 @@ export default ({
   response.dataset = datasetFactory.dataset();
 
   return {
-    app, articles, dataFactory, method, path, request, response, router,
+    app, articles, dataFactory, datasetFactory, method, path, request, response, router,
   } as unknown as AppContext;
 };

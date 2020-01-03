@@ -1,14 +1,15 @@
 import createError, { HttpError, UnknownError } from 'http-errors';
 import { DefaultState, Middleware, Next } from 'koa';
-import { DataFactory, DatasetCoreFactory } from 'rdf-js';
 import { hydra, rdf } from '../namespaces';
 import { DatasetContext } from './dataset';
 
 const handleHttpError = (
   error: HttpError,
-  { blankNode, literal, quad }: DataFactory,
-  { dataset }: DatasetCoreFactory,
-  { response }: DatasetContext,
+  {
+    dataFactory: { blankNode, literal, quad },
+    datasetFactory: { dataset },
+    response,
+  }: DatasetContext,
 ): void => {
   response.status = error.status;
 
@@ -32,13 +33,12 @@ const toHttpError = (error: UnknownError): HttpError => (
   error instanceof HttpError ? error : createError(error)
 );
 
-export default (dataFactory: DataFactory, datasetFactory: DatasetCoreFactory):
-  Middleware<DefaultState, DatasetContext> => (
+export default (): Middleware<DefaultState, DatasetContext> => (
   async (context: DatasetContext, next: Next): Promise<void> => {
     try {
       await next();
     } catch (error) {
-      handleHttpError(toHttpError(error), dataFactory, datasetFactory, context);
+      handleHttpError(toHttpError(error), context);
 
       context.app.emit('error', error, context);
     }
