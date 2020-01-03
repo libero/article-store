@@ -19,7 +19,7 @@ describe('not an article error', (): void => {
   it('may have types', async (): Promise<void> => {
     const error = new NotAnArticle([schema.NewsArticle, literal('book')]);
 
-    expect(error.message).toBe('Article type must be http://schema.org/Article (\'http://schema.org/NewsArticle, book\' was given)');
+    expect(error.message).toBe('Article type must be http://schema.org/Article (\'http://schema.org/NewsArticle, "book"\' was given)');
     expect(error.types).toStrictEqual([schema.NewsArticle, literal('book')]);
   });
 });

@@ -120,7 +120,7 @@ describe('in-memory articles', (): void => {
     await articles.set(id3, createArticle(id3));
     await articles.set(id2, createArticle(id2));
 
-    const ids = (await all(articles)).map(([id]: [BlankNode, DatasetCore]): BlankNode => id);
+    const ids = (await all(articles)).map((parts: [BlankNode, DatasetCore]): BlankNode => parts[0]);
 
     expect(ids).toStrictEqual([id1, id3, id2]);
   });
