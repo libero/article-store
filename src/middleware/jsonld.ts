@@ -8,10 +8,10 @@ import {
 } from 'koa';
 import pEvent from 'p-event';
 import { fromStream, toStream } from 'rdf-dataset-ext';
-import { DatasetContext, WithDataset } from './dataset';
+import { DatasetContext } from './dataset';
 
-const responseHasContent = (response: WithDataset<Response>): boolean => (
-  response.body || response.status === constants.HTTP_STATUS_NO_CONTENT || !response.dataset.size
+const responseHasContent = (response: Response): boolean => (
+  response.body || response.status === constants.HTTP_STATUS_NO_CONTENT
 );
 
 export default (context: Context = {}): Middleware<DefaultState, DatasetContext> => {
@@ -29,7 +29,7 @@ export default (context: Context = {}): Middleware<DefaultState, DatasetContext>
 
     await next();
 
-    if (responseHasContent(response)) {
+    if (responseHasContent(response) || !response.dataset.size) {
       return;
     }
 
