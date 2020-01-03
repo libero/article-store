@@ -30,10 +30,10 @@ describe('add article', (): void => {
   });
 
   it('should throw an error if id is already set', async (): Promise<void> => {
-    const id = blankNode();
+    const id = blankNode('12345');
 
     await expect(makeRequest(createArticle(id))).rejects.toBeInstanceOf(createHttpError.Forbidden);
-    await expect(makeRequest(createArticle(id))).rejects.toHaveProperty('message', `Article IDs must not be set ('_:${id.value}' was given)`);
+    await expect(makeRequest(createArticle(id))).rejects.toHaveProperty('message', 'Article IDs must not be set (\'_:12345\' was given)');
   });
 
   it('should throw an error if it is not a schema:Article', async (): Promise<void> => {

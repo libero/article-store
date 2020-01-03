@@ -11,7 +11,7 @@ describe('article not found error', (): void => {
   it('should have a message', async (): Promise<void> => {
     const error = new ArticleNotFound(blankNode('12345'));
 
-    expect(error.message).toBe('Article 12345 could not be found');
+    expect(error.message).toBe('Article _:12345 could not be found');
   });
 
   it('should have an ID', async (): Promise<void> => {

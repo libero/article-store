@@ -1,4 +1,4 @@
-import { blankNode, namedNode } from '@rdfjs/data-model';
+import { blankNode } from '@rdfjs/data-model';
 import jsonld from 'jsonld';
 import { Next, Response } from 'koa';
 import InMemoryArticles from '../../src/adaptors/in-memory-articles';
