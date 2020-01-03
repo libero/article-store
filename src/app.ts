@@ -29,7 +29,6 @@ export default (
   const app = new Koa<AppState, AppContext>();
 
   app.context.articles = articles;
-  app.context.dataFactory = dataFactory;
   app.context.router = router;
 
   app.use(logger());
