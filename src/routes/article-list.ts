@@ -1,6 +1,7 @@
 import all from 'it-all';
-import { Iri, JsonLdObj } from 'jsonld/jsonld-spec';
+import { JsonLdObj } from 'jsonld/jsonld-spec';
 import { Next } from 'koa';
+import { BlankNode } from 'rdf-js';
 import { hydra, rdf, schema } from 'rdf-namespaces';
 import { AppContext, AppMiddleware } from '../app';
 import Routes from './index';
@@ -24,7 +25,7 @@ export default (): AppMiddleware => (
       },
       [hydra.totalItems]: count,
       [hydra.member]: {
-        '@list': list.map((parts: [Iri, JsonLdObj]): JsonLdObj => parts[1]),
+        '@list': list.map((parts: [BlankNode, JsonLdObj]): JsonLdObj => parts[1]),
       },
     };
     response.type = 'jsonld';

@@ -1,10 +1,10 @@
-import { Iri } from 'jsonld/jsonld-spec';
+import { BlankNode } from 'rdf-js';
 
 export default class ArticleNotFound extends Error {
-  readonly id: Iri;
+  readonly id: BlankNode;
 
-  constructor(id: Iri) {
-    super(`Article ${id} could not be found`);
+  constructor(id: BlankNode) {
+    super(`Article ${id.value} could not be found`);
 
     this.id = id;
   }

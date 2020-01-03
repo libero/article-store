@@ -1,3 +1,4 @@
+import { blankNode, namedNode } from '@rdfjs/data-model';
 import jsonld from 'jsonld';
 import { Next, Response } from 'koa';
 import InMemoryArticles from '../../src/adaptors/in-memory-articles';
@@ -40,8 +41,8 @@ describe('article list', (): void => {
   it('should return articles in the list', async (): Promise<void> => {
     const articles = new InMemoryArticles();
 
-    const id1 = '_:1';
-    const id2 = '_:2';
+    const id1 = blankNode();
+    const id2 = blankNode();
 
     await articles.set(id1, createArticle(id1));
     await articles.set(id2, createArticle(id2));

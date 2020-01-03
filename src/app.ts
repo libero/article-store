@@ -3,6 +3,7 @@ import Router, { RouterContext } from '@koa/router';
 import Koa, { DefaultState, Middleware } from 'koa';
 import bodyParser from 'koa-bodyparser';
 import logger from 'koa-logger';
+import { DataFactory } from 'rdf-js';
 import Articles from './articles';
 import apiDocumentationLink from './middleware/api-documentation-link';
 import emptyResponse from './middleware/empty-response';
@@ -14,6 +15,7 @@ export type AppState = DefaultState;
 
 export type AppContext = RouterContext<AppState, {
   articles: Articles;
+  dataFactory: DataFactory;
 }>;
 
 export type AppMiddleware = Middleware<AppState, AppContext>;
@@ -22,10 +24,12 @@ export default (
   articles: Articles,
   router: Router<AppState, AppContext>,
   apiDocumentationPath: string,
+  dataFactory: DataFactory,
 ): Koa<AppState, AppContext> => {
   const app = new Koa<AppState, AppContext>();
 
   app.context.articles = articles;
+  app.context.dataFactory = dataFactory;
   app.context.router = router;
 
   app.use(logger());
