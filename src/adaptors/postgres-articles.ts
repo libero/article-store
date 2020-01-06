@@ -49,6 +49,6 @@ export default class PostgresArticles implements Articles {
   }
 
   async* [Symbol.asyncIterator](): AsyncIterator<[BlankNode, JsonLdObj]> {
-    yield* await this.database.any('SELECT article FROM articles').then((rows) => rows.map((row) => [stringToTerm(row.uuid), row.article])) as [[BlankNode, JsonLdObj]];
+    yield* await this.database.any('SELECT article FROM articles').then((rows) => rows.map((row) => [stringToTerm(row.article['@id']), row.article])) as [[BlankNode, JsonLdObj]];
   }
 }
