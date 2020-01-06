@@ -64,4 +64,11 @@ describe('add article', (): void => {
     await expect(makeRequest(article)).rejects.toBeInstanceOf(createHttpError.BadRequest);
     await expect(makeRequest(article)).rejects.toHaveProperty('message', 'Article must have at least one http://schema.org/name');
   });
+
+  it('should call the next middleware', async (): Promise<void> => {
+    const next = jest.fn();
+    await makeRequest(createArticle(), next);
+
+    expect(next).toHaveBeenCalledTimes(1);
+  });
 });

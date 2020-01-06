@@ -1,17 +1,17 @@
 import {
   DefaultContext, DefaultState, Middleware, Next, Request, Response,
 } from 'koa';
-import { DatasetCore, DatasetCoreFactory } from 'rdf-js';
+import { DataFactory, DatasetCore, DatasetCoreFactory } from 'rdf-js';
 import { DataFactoryContext } from './data-factory';
 
 export type WithDataset<T extends Request | Response> = T & {
   dataset: DatasetCore;
 };
 
-export type DatasetContext<CustomT = DefaultContext> = CustomT & DataFactoryContext<{
+export type DatasetContext<Context = DefaultContext> = DataFactoryContext<Context & {
   request: WithDataset<Request>;
   response: WithDataset<Response>;
-}, DatasetCoreFactory>;
+}, DataFactory & DatasetCoreFactory>;
 
 export default (): Middleware<DefaultState, DatasetContext> => (
   async (context: DatasetContext, next: Next): Promise<void> => {
