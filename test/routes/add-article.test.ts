@@ -1,4 +1,4 @@
-import { blankNode } from '@rdfjs/data-model';
+import { blankNode, namedNode } from '@rdfjs/data-model';
 import createHttpError from 'http-errors';
 import all from 'it-all';
 import { JsonLdObj } from 'jsonld/jsonld-spec';
@@ -30,31 +30,21 @@ describe('add article', (): void => {
   });
 
   it('should throw an error if id is already set', async (): Promise<void> => {
-    const id = blankNode('12345');
+    const article = createArticle({ id: blankNode('12345') });
 
-    await expect(makeRequest(createArticle(id))).rejects.toBeInstanceOf(createHttpError.Forbidden);
-    await expect(makeRequest(createArticle(id))).rejects.toHaveProperty('message', 'Article IDs must not be set (\'_:12345\' was given)');
+    await expect(makeRequest(article)).rejects.toBeInstanceOf(createHttpError.Forbidden);
+    await expect(makeRequest(article)).rejects.toHaveProperty('message', 'Article IDs must not be set (\'_:12345\' was given)');
   });
 
   it('should throw an error if it is not a schema:Article', async (): Promise<void> => {
-    const article = {
-      ...createArticle(),
-      '@type': 'http://schema.org/NewsArticle',
-    };
+    const article = createArticle({ types: [namedNode('http://schema.org/NewsArticle')] });
 
     await expect(makeRequest(article)).rejects.toBeInstanceOf(createHttpError.BadRequest);
     await expect(makeRequest(article)).rejects.toHaveProperty('message', 'Article type must be http://schema.org/Article (\'http://schema.org/NewsArticle\' was given)');
   });
 
-  it.each([
-    undefined,
-    [],
-    { '@value': null },
-  ])('should throw an error if the schema:name is %s', async (name: unknown): Promise<void> => {
-    const article = {
-      ...createArticle(),
-      'http://schema.org/name': name,
-    };
+  it('should throw an error if it has no schema:name', async (): Promise<void> => {
+    const article = createArticle({ name: null });
 
     await expect(makeRequest(article)).rejects.toBeInstanceOf(createHttpError.BadRequest);
     await expect(makeRequest(article)).rejects.toHaveProperty('message', 'Article must have at least one http://schema.org/name');
