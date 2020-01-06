@@ -1,6 +1,6 @@
+import dataFactory from '@rdfjs/data-model';
 import InMemoryArticles from './adaptors/in-memory-articles';
 import createApp from './app';
-import dataFactory from './data-factory';
 import createRouter from './router';
 import Routes from './routes';
 
