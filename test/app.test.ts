@@ -11,11 +11,10 @@ const trim = (value: string): string => value.trim();
 const parseHeader = (header: string): Array<string> => header.split(',').map(trim);
 
 const router = createRouter();
-const apiDocumentationPath = router.url(Routes.ApiDocumentation);
 let app: Koa;
 
 beforeEach((): void => {
-  app = createApp(new InMemoryArticles(), router, apiDocumentationPath, dataFactory);
+  app = createApp(new InMemoryArticles(), router, router.url(Routes.ApiDocumentation), dataFactory);
 });
 
 describe('the application', (): void => {
