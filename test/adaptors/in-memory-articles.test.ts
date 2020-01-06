@@ -1,10 +1,11 @@
-import { blankNode, namedNode } from '@rdfjs/data-model';
+import { blankNode } from '@rdfjs/data-model';
 import all from 'it-all';
 import { JsonLdObj } from 'jsonld/jsonld-spec';
 import { BlankNode } from 'rdf-js';
 import InMemoryArticles from '../../src/adaptors/in-memory-articles';
 import ArticleNotFound from '../../src/errors/article-not-found';
 import NotAnArticle from '../../src/errors/not-an-article';
+import { schema } from '../../src/namespaces';
 import createArticle from '../create-article';
 
 describe('in-memory articles', (): void => {
@@ -48,7 +49,7 @@ describe('in-memory articles', (): void => {
     await expect(articles.set(id, {
       ...createArticle(id),
       '@type': 'http://schema.org/NewsArticle',
-    })).rejects.toThrow(new NotAnArticle([namedNode('http://schema.org/NewsArticle')]));
+    })).rejects.toThrow(new NotAnArticle([schema.NewsArticle]));
   });
 
   it('throws an error if it has no type', async (): Promise<void> => {
