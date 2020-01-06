@@ -1,6 +1,5 @@
 import formatLinkHeader from 'format-link-header';
 import { Context, Middleware, Next } from 'koa';
-import { hydra } from 'rdf-namespaces';
 import url from 'url';
 
 export default (path: string): Middleware => (
@@ -8,7 +7,7 @@ export default (path: string): Middleware => (
     await next();
 
     const link = {
-      rel: hydra.apiDocumentation,
+      rel: 'http://www.w3.org/ns/hydra/core#apiDocumentation',
       url: url.resolve(request.origin, path),
     };
 

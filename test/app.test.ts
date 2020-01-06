@@ -1,3 +1,4 @@
+import dataFactory from '@rdfjs/data-model';
 import Koa from 'koa';
 import parseLinkHeader from 'parse-link-header';
 import request from 'supertest';
@@ -13,7 +14,7 @@ const router = createRouter();
 let app: Koa;
 
 beforeEach((): void => {
-  app = createApp(new InMemoryArticles(), router, router.url(Routes.ApiDocumentation));
+  app = createApp(new InMemoryArticles(), router, router.url(Routes.ApiDocumentation), dataFactory);
 });
 
 describe('the application', (): void => {

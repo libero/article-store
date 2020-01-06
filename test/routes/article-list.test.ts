@@ -1,9 +1,11 @@
+import { blankNode } from '@rdfjs/data-model';
 import jsonld from 'jsonld';
 import { Next, Response } from 'koa';
 import InMemoryArticles from '../../src/adaptors/in-memory-articles';
 import Articles from '../../src/articles';
 import articleList from '../../src/routes/article-list';
 import createContext from '../context';
+import createArticle from '../create-article';
 import runMiddleware from '../middleware';
 
 const makeRequest = async (next?: Next, articles?: Articles): Promise<Response> => (
@@ -39,16 +41,11 @@ describe('article list', (): void => {
   it('should return articles in the list', async (): Promise<void> => {
     const articles = new InMemoryArticles();
 
-    await articles.add({
-      '@id': '_:24231',
-      '@type': 'http://schema.org/Article',
-      'http://schema.org/name': 'Homo naledi, a new species of the genus Homo from the Dinaledi Chamber, South Africa',
-    });
-    await articles.add({
-      '@id': '_:09560',
-      '@type': 'http://schema.org/Article',
-      'http://schema.org/name': 'The age of Homo naledi and associated sediments in the Rising Star Cave, South Africa',
-    });
+    const id1 = blankNode();
+    const id2 = blankNode();
+
+    await articles.set(id1, createArticle(id1));
+    await articles.set(id2, createArticle(id2));
 
     const response = await makeRequest(undefined, articles);
     const graph = await jsonld.expand(response.body);

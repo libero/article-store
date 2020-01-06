@@ -1,48 +1,45 @@
-import { Iri, JsonLdObj } from 'jsonld/jsonld-spec';
+import { JsonLdObj } from 'jsonld/jsonld-spec';
+import { BlankNode, Term } from 'rdf-js';
 import { schema } from 'rdf-namespaces';
+import { stringToTerm, termToString } from 'rdf-string';
 import Articles from '../articles';
-import ArticleHasNoId from '../errors/article-has-no-id';
 import ArticleNotFound from '../errors/article-not-found';
 import NotAnArticle from '../errors/not-an-article';
 
 export default class InMemoryArticles implements Articles {
-  private articles: { [key: string]: JsonLdObj } = {};
+  private articles: { [id: string]: [BlankNode, JsonLdObj] } = {};
 
-  async add(article: JsonLdObj): Promise<void> {
+  async set(id: BlankNode, article: JsonLdObj): Promise<void> {
     const types = [].concat(article['@type'] || []);
 
-    if (!(types.includes(schema.Article))) {
-      throw new NotAnArticle(types);
+    if (!(types.includes(schema.Article)) || article['@id'] !== termToString(id)) {
+      throw new NotAnArticle(types.map((type: string): Term => stringToTerm(type)));
     }
 
-    if (!('@id' in article)) {
-      throw new ArticleHasNoId();
-    }
-
-    this.articles[article['@id']] = article;
+    this.articles[id.value] = [id, article];
   }
 
-  async get(id: Iri): Promise<JsonLdObj> {
-    if (!(id in this.articles)) {
+  async get(id: BlankNode): Promise<JsonLdObj> {
+    if (!(id.value in this.articles)) {
       throw new ArticleNotFound(id);
     }
 
-    return this.articles[id];
+    return this.articles[id.value][1];
   }
 
-  async remove(id: Iri): Promise<void> {
-    delete this.articles[id];
+  async remove(id: BlankNode): Promise<void> {
+    delete this.articles[id.value];
   }
 
-  async contains(id: Iri): Promise<boolean> {
-    return id in this.articles;
+  async contains(id: BlankNode): Promise<boolean> {
+    return id.value in this.articles;
   }
 
   async count(): Promise<number> {
     return Object.values(this.articles).length;
   }
 
-  async* [Symbol.asyncIterator](): AsyncIterator<JsonLdObj> {
+  async* [Symbol.asyncIterator](): AsyncIterator<[BlankNode, JsonLdObj]> {
     yield* Object.values(this.articles);
   }
 }

@@ -1,4 +1,5 @@
 import Router from '@koa/router';
+import dataFactory from '@rdfjs/data-model';
 import { UnknownError } from 'http-errors';
 import { JsonLdObj } from 'jsonld/jsonld-spec';
 import Koa, { Context } from 'koa';
@@ -41,6 +42,6 @@ export default ({
   response.res = new ServerResponse();
 
   return {
-    app, articles, method, path, request, response, router,
-  } as AppContext;
+    app, articles, dataFactory, method, path, request, response, router,
+  } as unknown as AppContext;
 };

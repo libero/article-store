@@ -1,3 +1,4 @@
+import { blankNode } from '@rdfjs/data-model';
 import createHttpError from 'http-errors';
 import all from 'it-all';
 import { JsonLdObj } from 'jsonld/jsonld-spec';
@@ -25,12 +26,14 @@ describe('add article', (): void => {
     expect(response.status).toBe(201);
     expect(response.get('Location')).toBe('http://example.com/path-to/article-list');
     expect(await articles.count()).toBe(1);
-    expect((await all(articles))[0]['http://schema.org/name']).toEqual([{ '@value': 'Article' }]);
+    expect((await all(articles))[0][1]['http://schema.org/name']).toEqual([{ '@value': 'Article' }]);
   });
 
   it('should throw an error if id is already set', async (): Promise<void> => {
-    await expect(makeRequest(createArticle('_:1'))).rejects.toBeInstanceOf(createHttpError.Forbidden);
-    await expect(makeRequest(createArticle('_:1'))).rejects.toHaveProperty('message', 'Article IDs must not be set (\'_:1\' was given)');
+    const id = blankNode('12345');
+
+    await expect(makeRequest(createArticle(id))).rejects.toBeInstanceOf(createHttpError.Forbidden);
+    await expect(makeRequest(createArticle(id))).rejects.toHaveProperty('message', 'Article IDs must not be set (\'_:12345\' was given)');
   });
 
   it('should throw an error if it is not a schema:Article', async (): Promise<void> => {
@@ -55,5 +58,12 @@ describe('add article', (): void => {
 
     await expect(makeRequest(article)).rejects.toBeInstanceOf(createHttpError.BadRequest);
     await expect(makeRequest(article)).rejects.toHaveProperty('message', 'Article must have at least one http://schema.org/name');
+  });
+
+  it('should call the next middleware', async (): Promise<void> => {
+    const next = jest.fn();
+    await makeRequest(createArticle(), next);
+
+    expect(next).toHaveBeenCalledTimes(1);
   });
 });
