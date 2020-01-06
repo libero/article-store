@@ -44,8 +44,8 @@ describe('article list', (): void => {
     const id1 = blankNode();
     const id2 = blankNode();
 
-    await articles.set(id1, createArticle(id1));
-    await articles.set(id2, createArticle(id2));
+    await articles.set(id1, createArticle({ id: id1 }));
+    await articles.set(id2, createArticle({ id: id2 }));
 
     const response = await makeRequest(undefined, articles);
     const graph = await jsonld.expand(response.body);
