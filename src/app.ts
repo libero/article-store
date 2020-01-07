@@ -11,6 +11,7 @@ import emptyResponse from './middleware/empty-response';
 import errorHandler from './middleware/error-handler';
 import jsonld from './middleware/jsonld';
 import routing from './middleware/routing';
+import namespaces from './namespaces';
 
 export type AppState = DefaultState;
 
@@ -44,10 +45,7 @@ export default (
   app.use(setDataFactory(dataFactory));
   app.use(jsonld({
     '@language': 'en',
-    hydra: 'http://www.w3.org/ns/hydra/core#',
-    owl: 'http://www.w3.org/2002/07/owl#',
-    rdf: 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
-    schema: 'http://schema.org/',
+    ...namespaces,
   }));
   app.use(apiDocumentationLink(apiDocumentationPath));
   app.use(errorHandler());

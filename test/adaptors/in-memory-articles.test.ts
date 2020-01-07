@@ -1,10 +1,11 @@
-import { blankNode, namedNode } from '@rdfjs/data-model';
+import { blankNode } from '@rdfjs/data-model';
 import all from 'it-all';
 import { JsonLdObj } from 'jsonld/jsonld-spec';
 import { BlankNode } from 'rdf-js';
 import InMemoryArticles from '../../src/adaptors/in-memory-articles';
 import ArticleNotFound from '../../src/errors/article-not-found';
 import NotAnArticle from '../../src/errors/not-an-article';
+import { schema } from '../../src/namespaces';
 import createArticle from '../create-article';
 
 describe('in-memory articles', (): void => {
@@ -14,7 +15,7 @@ describe('in-memory articles', (): void => {
 
     expect(await articles.contains(id)).toBe(false);
 
-    await articles.set(id, createArticle(id));
+    await articles.set(id, createArticle({ id }));
 
     expect(await articles.contains(id)).toBe(true);
   });
@@ -22,11 +23,9 @@ describe('in-memory articles', (): void => {
   it('can add an article with multiple types', async (): Promise<void> => {
     const articles = new InMemoryArticles();
     const id = blankNode();
+    const article = createArticle({ id, types: [schema.Article, schema.NewsArticle] });
 
-    await articles.set(id, {
-      ...createArticle(id),
-      '@type': ['http://schema.org/Article', 'http://schema.org/NewsArticle'],
-    });
+    await articles.set(id, article);
 
     expect(await articles.contains(id)).toBe(true);
   });
@@ -35,8 +34,8 @@ describe('in-memory articles', (): void => {
     const articles = new InMemoryArticles();
     const id = blankNode();
 
-    await articles.set(id, createArticle(id, 'Original'));
-    await articles.set(id, createArticle(id, 'Updated'));
+    await articles.set(id, createArticle({ id, name: 'Original' }));
+    await articles.set(id, createArticle({ id, name: 'Updated' }));
 
     expect((await articles.get(id))['http://schema.org/name']).toBe('Updated');
   });
@@ -44,27 +43,23 @@ describe('in-memory articles', (): void => {
   it('throws an error if it is not an article', async (): Promise<void> => {
     const articles = new InMemoryArticles();
     const id = blankNode();
+    const article = createArticle({ types: [schema.NewsArticle] });
 
-    await expect(articles.set(id, {
-      ...createArticle(id),
-      '@type': 'http://schema.org/NewsArticle',
-    })).rejects.toThrow(new NotAnArticle([namedNode('http://schema.org/NewsArticle')]));
+    await expect(articles.set(id, article)).rejects.toThrow(new NotAnArticle([schema.NewsArticle]));
   });
 
   it('throws an error if it has no type', async (): Promise<void> => {
     const articles = new InMemoryArticles();
     const id = blankNode();
+    const article = createArticle({ types: [] });
 
-    await expect(articles.set(id, {
-      ...createArticle(id),
-      '@type': undefined,
-    })).rejects.toThrow(new NotAnArticle());
+    await expect(articles.set(id, article)).rejects.toThrow(new NotAnArticle());
   });
 
   it('can retrieve an article', async (): Promise<void> => {
     const articles = new InMemoryArticles();
     const id = blankNode();
-    const article = createArticle(id);
+    const article = createArticle({ id });
 
     await articles.set(id, article);
 
@@ -83,7 +78,7 @@ describe('in-memory articles', (): void => {
     const articles = new InMemoryArticles();
     const id = blankNode();
 
-    await articles.set(id, createArticle(id));
+    await articles.set(id, createArticle({ id }));
     await articles.remove(id);
 
     expect(await articles.contains(id)).toBe(false);
@@ -104,9 +99,9 @@ describe('in-memory articles', (): void => {
     const id1 = blankNode();
     const id2 = blankNode();
 
-    await articles.set(id1, createArticle(id1));
-    await articles.set(id2, createArticle(id2));
-    await articles.set(id2, createArticle(id2));
+    await articles.set(id1, createArticle({ id: id1 }));
+    await articles.set(id2, createArticle({ id: id2 }));
+    await articles.set(id2, createArticle({ id: id2 }));
 
     expect(await articles.count()).toBe(2);
   });
@@ -118,9 +113,9 @@ describe('in-memory articles', (): void => {
     const id2 = blankNode();
     const id3 = blankNode();
 
-    await articles.set(id1, createArticle(id1));
-    await articles.set(id3, createArticle(id3));
-    await articles.set(id2, createArticle(id2));
+    await articles.set(id1, createArticle({ id: id1 }));
+    await articles.set(id3, createArticle({ id: id3 }));
+    await articles.set(id2, createArticle({ id: id2 }));
 
     const ids = (await all(articles)).map((parts: [BlankNode, JsonLdObj]): BlankNode => parts[0]);
 
