@@ -10,11 +10,9 @@ import runMiddleware, { Next } from '../middleware';
 
 const makeRequest = async (
   next?: Next, errorListener?: ErrorListener,
-): Promise<WithDataset<Response>> => {
-  const context = createContext({ errorListener });
-
-  return runMiddleware<ReturnType<typeof createContext>>(errorHandler(), context, next);
-};
+): Promise<WithDataset<Response>> => (
+  runMiddleware(errorHandler(), createContext({ errorListener }), next)
+);
 
 const next = (error: UnknownError) => async (): Promise<void> => {
   throw error;

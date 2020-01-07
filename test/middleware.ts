@@ -1,10 +1,11 @@
 import { ExtendableContext } from 'koa';
 import { Middleware } from 'koa-compose';
+import { AppContext } from '../src/app';
 
-export type Next<CustomT extends ExtendableContext = ExtendableContext> =
+export type Next<CustomT extends ExtendableContext = AppContext> =
   (context: CustomT) => Promise<void>;
 
-export default async <CustomT extends ExtendableContext>(
+export default async <CustomT extends ExtendableContext = AppContext>(
   middleware: Middleware<CustomT>,
   context: CustomT,
   next?: Next<CustomT>,
