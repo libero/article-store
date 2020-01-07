@@ -1,3 +1,4 @@
+import clownface from 'clownface';
 import createHttpError from 'http-errors';
 import { constants } from 'http2';
 import { Next } from 'koa';
@@ -14,17 +15,11 @@ export default (): AppMiddleware => (
   async ({
     articles, dataFactory: { blankNode, quad }, request, response, router,
   }: AppContext, next: Next): Promise<void> => {
-    const foundArticles = request.dataset.match(undefined, rdf.type, schema.Article);
+    const id = clownface({ dataset: request.dataset }).has(rdf.type, schema.Article).term;
 
-    if (foundArticles.size > 1) {
-      throw new createHttpError.BadRequest('Multiple articles found');
-    }
-
-    if (foundArticles.size === 0) {
+    if (!id) {
       throw new createHttpError.BadRequest(`No ${termToString(schema.Article)} found`);
     }
-
-    const id = [...foundArticles][0].subject;
 
     if (id.termType !== 'BlankNode') {
       throw new createHttpError.BadRequest(`Article must have a blank node identifier (${termToString(id)} given)`);
