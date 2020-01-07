@@ -1,10 +1,11 @@
-import { blankNode, namedNode } from '@rdfjs/data-model';
+import { blankNode } from '@rdfjs/data-model';
 import createHttpError from 'http-errors';
 import all from 'it-all';
 import { JsonLdObj } from 'jsonld/jsonld-spec';
 import { Next, Response } from 'koa';
 import InMemoryArticles from '../../src/adaptors/in-memory-articles';
 import Articles from '../../src/articles';
+import { schema } from '../../src/namespaces';
 import addArticle from '../../src/routes/add-article';
 import createContext from '../context';
 import createArticle from '../create-article';
@@ -37,7 +38,7 @@ describe('add article', (): void => {
   });
 
   it('should throw an error if it is not a schema:Article', async (): Promise<void> => {
-    const article = createArticle({ types: [namedNode('http://schema.org/NewsArticle')] });
+    const article = createArticle({ types: [schema.NewsArticle] });
 
     await expect(makeRequest(article)).rejects.toBeInstanceOf(createHttpError.BadRequest);
     await expect(makeRequest(article)).rejects.toHaveProperty('message', 'Article type must be http://schema.org/Article (\'http://schema.org/NewsArticle\' was given)');

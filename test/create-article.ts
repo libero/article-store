@@ -1,9 +1,9 @@
-import { namedNode } from '@rdfjs/data-model';
 import deepFilter from 'deep-filter';
 import { Options } from 'jsonld';
 import { JsonLdObj } from 'jsonld/jsonld-spec';
 import { BlankNode, NamedNode } from 'rdf-js';
 import { termToString } from 'rdf-string';
+import { schema } from '../src/namespaces';
 
 const isNotUndefined = (arg: unknown): boolean => arg !== undefined;
 
@@ -16,7 +16,7 @@ type Options = {
 export default ({
   id = undefined,
   name = 'Article',
-  types = [namedNode('http://schema.org/Article')],
+  types = [schema.Article],
 }: Options = {}): JsonLdObj => (
   deepFilter({
     '@id': id ? termToString(id) : undefined,

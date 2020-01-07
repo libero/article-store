@@ -1,10 +1,11 @@
-import { blankNode, namedNode } from '@rdfjs/data-model';
+import { blankNode } from '@rdfjs/data-model';
 import all from 'it-all';
 import { JsonLdObj } from 'jsonld/jsonld-spec';
 import { BlankNode } from 'rdf-js';
 import InMemoryArticles from '../../src/adaptors/in-memory-articles';
 import ArticleNotFound from '../../src/errors/article-not-found';
 import NotAnArticle from '../../src/errors/not-an-article';
+import { schema } from '../../src/namespaces';
 import createArticle from '../create-article';
 
 describe('in-memory articles', (): void => {
@@ -22,10 +23,7 @@ describe('in-memory articles', (): void => {
   it('can add an article with multiple types', async (): Promise<void> => {
     const articles = new InMemoryArticles();
     const id = blankNode();
-    const article = createArticle({
-      id,
-      types: [namedNode('http://schema.org/Article'), namedNode('http://schema.org/NewsArticle')],
-    });
+    const article = createArticle({ id, types: [schema.Article, schema.NewsArticle] });
 
     await articles.set(id, article);
 
@@ -45,9 +43,9 @@ describe('in-memory articles', (): void => {
   it('throws an error if it is not an article', async (): Promise<void> => {
     const articles = new InMemoryArticles();
     const id = blankNode();
-    const article = createArticle({ types: [namedNode('http://schema.org/NewsArticle')] });
+    const article = createArticle({ types: [schema.NewsArticle] });
 
-    await expect(articles.set(id, article)).rejects.toThrow(new NotAnArticle([namedNode('http://schema.org/NewsArticle')]));
+    await expect(articles.set(id, article)).rejects.toThrow(new NotAnArticle([schema.NewsArticle]));
   });
 
   it('throws an error if it has no type', async (): Promise<void> => {
