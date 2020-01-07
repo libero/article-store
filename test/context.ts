@@ -2,9 +2,9 @@ import Router from '@koa/router';
 import dataFactory from '@rdfjs/data-model';
 import { UnknownError } from 'http-errors';
 import { JsonLdObj } from 'jsonld/jsonld-spec';
-import Koa, { Context } from 'koa';
-import Request from 'koa/lib/request';
-import Response from 'koa/lib/response';
+import Koa, { Context, Request, Response } from 'koa';
+import KoaRequest from 'koa/lib/request';
+import KoaResponse from 'koa/lib/response';
 import { Request as IncomingMessage, Response as ServerResponse } from 'mock-http';
 import InMemoryArticles from '../src/adaptors/in-memory-articles';
 import { AppContext } from '../src/app';
@@ -33,11 +33,12 @@ export default ({
   const app = new Koa();
   app.on('error', errorListener || jest.fn());
 
-  const request = Object.create(Request);
-  const response = Object.create(Response);
+  const request = Object.create(KoaRequest) as Request;
   request.app = app;
   request.body = body;
   request.req = new IncomingMessage({ headers: { host: 'example.com' } });
+
+  const response = Object.create(KoaResponse) as Response;
   response.req = request.req;
   response.res = new ServerResponse();
 
