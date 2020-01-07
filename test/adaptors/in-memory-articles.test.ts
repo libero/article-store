@@ -1,6 +1,6 @@
 import { blankNode, literal, quad } from '@rdfjs/data-model';
 import all from 'it-all';
-import { equals } from 'rdf-dataset-ext';
+import 'jest-rdf';
 import { BlankNode, DatasetCore } from 'rdf-js';
 import InMemoryArticles from '../../src/adaptors/in-memory-articles';
 import ArticleNotFound from '../../src/errors/article-not-found';
@@ -63,7 +63,7 @@ describe('in-memory articles', (): void => {
 
     await articles.set(id, article);
 
-    expect(equals(await articles.get(id), article)).toBe(true);
+    expect([...await articles.get(id)]).toEqualRdfQuadArray([...article]);
   });
 
   it('throws an error if the article is not found', async (): Promise<void> => {
