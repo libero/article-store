@@ -1,17 +1,15 @@
-import { Middleware, ParameterizedContext, Response } from 'koa';
-import { AppContext, AppState } from '../src/app';
-import { WithDataset } from '../src/middleware/dataset';
+import { ExtendableContext } from 'koa';
+import { Middleware } from 'koa-compose';
 
-export type Next<StateT = AppState, CustomT = AppContext> = (
-  context: ParameterizedContext<StateT, CustomT>
-) => Promise<void>;
+export type Next<CustomT extends ExtendableContext = ExtendableContext> =
+  (context: CustomT) => Promise<void>;
 
-export default async <StateT = AppState, CustomT = AppContext>(
-  middleware: Middleware<StateT, CustomT>,
-  context: ParameterizedContext<StateT, CustomT>,
-  next?: Next<StateT, CustomT>,
-): Promise<WithDataset<Response>> => {
+export default async <CustomT extends ExtendableContext>(
+  middleware: Middleware<CustomT>,
+  context: CustomT,
+  next?: Next<CustomT>,
+): Promise<CustomT['response']> => {
   await middleware(context, next ? (): Promise<void> => next(context) : jest.fn());
 
-  return context.response as WithDataset<Response>;
+  return context.response;
 };

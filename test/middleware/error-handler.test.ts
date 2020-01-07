@@ -13,7 +13,7 @@ const makeRequest = async (
 ): Promise<WithDataset<Response>> => {
   const context = createContext({ errorListener });
 
-  return runMiddleware(errorHandler(), context, next);
+  return runMiddleware<ReturnType<typeof createContext>>(errorHandler(), context, next);
 };
 
 const next = (error: UnknownError) => async (): Promise<void> => {
