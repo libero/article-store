@@ -5,7 +5,7 @@ import { addAll } from 'rdf-dataset-ext';
 import { Quad } from 'rdf-js';
 import { AppContext } from '../../src/app';
 import jsonld from '../../src/middleware/jsonld';
-import namespaces, { rdf, schema } from '../../src/namespaces';
+import { rdf, schema } from '../../src/namespaces';
 import createContext, { Headers } from '../context';
 import { Next } from '../middleware';
 
@@ -87,7 +87,7 @@ describe('JSON-LD middleware', (): void => {
     const context = {
       '@base': 'http://example.com',
       '@language': 'en',
-      ...namespaces,
+      schema: 'http://schema.org/',
     };
 
     const { response } = await makeRequest(null, null, next(null, quads), context);
