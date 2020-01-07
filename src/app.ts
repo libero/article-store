@@ -2,15 +2,15 @@ import cors from '@koa/cors';
 import Router, { RouterContext } from '@koa/router';
 import Koa, { DefaultState, Middleware } from 'koa';
 import logger from 'koa-logger';
-import { DataFactory, DatasetCoreFactory } from 'rdf-js';
 import Articles from './articles';
 import apiDocumentationLink from './middleware/api-documentation-link';
 import setDataFactory from './middleware/data-factory';
-import addDatasets, { DatasetContext } from './middleware/dataset';
+import addDatasets, { DatasetContext, ExtendedDataFactory } from './middleware/dataset';
 import emptyResponse from './middleware/empty-response';
 import errorHandler from './middleware/error-handler';
 import jsonld from './middleware/jsonld';
 import routing from './middleware/routing';
+import namespaces from './namespaces';
 
 export type AppState = DefaultState;
 
@@ -24,7 +24,7 @@ export default (
   articles: Articles,
   router: Router<AppState, AppContext>,
   apiDocumentationPath: string,
-  dataFactory: DataFactory & DatasetCoreFactory,
+  dataFactory: ExtendedDataFactory,
 ): Koa<AppState, AppContext> => {
   const app = new Koa<AppState, AppContext>();
 
@@ -40,10 +40,7 @@ export default (
   app.use(addDatasets());
   app.use(jsonld({
     '@language': 'en',
-    hydra: 'http://www.w3.org/ns/hydra/core#',
-    owl: 'http://www.w3.org/2002/07/owl#',
-    rdf: 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
-    schema: 'http://schema.org/',
+    ...namespaces,
   }));
   app.use(apiDocumentationLink(apiDocumentationPath));
   app.use(errorHandler());

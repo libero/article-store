@@ -8,7 +8,7 @@ import { DatasetCore } from 'rdf-js';
 import InMemoryArticles from '../src/adaptors/in-memory-articles';
 import { AppContext } from '../src/app';
 import Articles from '../src/articles';
-import dataFactory from '../src/data-factory';
+import dataFactory, { dataset } from '../src/data-factory';
 import { WithDataset } from '../src/middleware/dataset';
 
 export type ErrorListener = (error: UnknownError, context: Context) => void;
@@ -35,7 +35,7 @@ const dummyRouter = {
 export default ({
   articles = new InMemoryArticles(),
   body,
-  dataset = dataFactory.dataset(),
+  dataset: requestDataset = dataset(),
   errorListener,
   headers = {},
   method,
@@ -48,7 +48,7 @@ export default ({
   const request = Object.create(Request) as WithDataset<Request>;
   const response = Object.create(Response) as WithDataset<Response>;
   request.app = app;
-  request.dataset = dataset;
+  request.dataset = requestDataset;
   request.req = new IncomingMessage({
     buffer: body ? Buffer.from(body) : null,
     headers: {
@@ -60,7 +60,7 @@ export default ({
   });
   response.req = request.req;
   response.res = new ServerResponse();
-  response.dataset = dataFactory.dataset();
+  response.dataset = dataset();
 
   return {
     app, articles, dataFactory, method, path, request, response, router,

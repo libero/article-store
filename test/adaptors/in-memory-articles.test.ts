@@ -1,11 +1,11 @@
-import all from 'it-all';
 import { blankNode, literal, quad } from '@rdfjs/data-model';
+import all from 'it-all';
 import { equals } from 'rdf-dataset-ext';
 import { BlankNode, DatasetCore } from 'rdf-js';
 import InMemoryArticles from '../../src/adaptors/in-memory-articles';
 import ArticleNotFound from '../../src/errors/article-not-found';
 import NotAnArticle from '../../src/errors/not-an-article';
-import { rdf, schema } from '../../src/namespaces';
+import { schema } from '../../src/namespaces';
 import createArticle from '../create-article';
 
 describe('in-memory articles', (): void => {
@@ -15,7 +15,7 @@ describe('in-memory articles', (): void => {
 
     expect(await articles.contains(id)).toBe(false);
 
-    await articles.set(id, createArticle(id));
+    await articles.set(id, createArticle({ id }));
 
     expect(await articles.contains(id)).toBe(true);
   });
@@ -23,8 +23,9 @@ describe('in-memory articles', (): void => {
   it('can add an article with multiple types', async (): Promise<void> => {
     const articles = new InMemoryArticles();
     const id = blankNode();
+    const article = createArticle({ id, types: [schema.Article, schema.NewsArticle] });
 
-    await articles.set(id, createArticle(id).add(quad(id, rdf.type, schema.NewsArticle)));
+    await articles.set(id, article);
 
     expect(await articles.contains(id)).toBe(true);
   });
@@ -33,8 +34,8 @@ describe('in-memory articles', (): void => {
     const articles = new InMemoryArticles();
     const id = blankNode();
 
-    await articles.set(id, createArticle(id, literal('Original')));
-    await articles.set(id, createArticle(id, literal('Updated')));
+    await articles.set(id, createArticle({ id, name: literal('Original') }));
+    await articles.set(id, createArticle({ id, name: literal('Updated') }));
 
     expect((await articles.get(id)).has(quad(id, schema('name'), literal('Updated')))).toBe(true);
   });
@@ -42,10 +43,7 @@ describe('in-memory articles', (): void => {
   it('throws an error if it is not an article', async (): Promise<void> => {
     const articles = new InMemoryArticles();
     const id = blankNode();
-
-    const article = createArticle(id)
-      .delete(quad(id, rdf.type, schema.Article))
-      .add(quad(id, rdf.type, schema.NewsArticle));
+    const article = createArticle({ id, types: [schema.NewsArticle] });
 
     await expect(articles.set(id, article)).rejects.toThrow(new NotAnArticle([schema.NewsArticle]));
   });
@@ -53,8 +51,7 @@ describe('in-memory articles', (): void => {
   it('throws an error if it has no type', async (): Promise<void> => {
     const articles = new InMemoryArticles();
     const id = blankNode();
-
-    const article = createArticle(id).delete(quad(id, rdf.type, schema.Article));
+    const article = createArticle({ id, types: [] });
 
     await expect(articles.set(id, article)).rejects.toThrow(new NotAnArticle());
   });
@@ -62,7 +59,7 @@ describe('in-memory articles', (): void => {
   it('can retrieve an article', async (): Promise<void> => {
     const articles = new InMemoryArticles();
     const id = blankNode();
-    const article = createArticle(id);
+    const article = createArticle({ id });
 
     await articles.set(id, article);
 
@@ -81,7 +78,7 @@ describe('in-memory articles', (): void => {
     const articles = new InMemoryArticles();
     const id = blankNode();
 
-    await articles.set(id, createArticle(id));
+    await articles.set(id, createArticle({ id }));
     await articles.remove(id);
 
     expect(await articles.contains(id)).toBe(false);
@@ -102,9 +99,9 @@ describe('in-memory articles', (): void => {
     const id1 = blankNode();
     const id2 = blankNode();
 
-    await articles.set(id1, createArticle(id1));
-    await articles.set(id2, createArticle(id2));
-    await articles.set(id2, createArticle(id2));
+    await articles.set(id1, createArticle({ id: id1 }));
+    await articles.set(id2, createArticle({ id: id2 }));
+    await articles.set(id2, createArticle({ id: id2 }));
 
     expect(await articles.count()).toBe(2);
   });
@@ -116,9 +113,9 @@ describe('in-memory articles', (): void => {
     const id2 = blankNode();
     const id3 = blankNode();
 
-    await articles.set(id1, createArticle(id1));
-    await articles.set(id3, createArticle(id3));
-    await articles.set(id2, createArticle(id2));
+    await articles.set(id1, createArticle({ id: id1 }));
+    await articles.set(id3, createArticle({ id: id3 }));
+    await articles.set(id2, createArticle({ id: id2 }));
 
     const ids = (await all(articles)).map((parts: [BlankNode, DatasetCore]): BlankNode => parts[0]);
 

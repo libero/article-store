@@ -8,10 +8,12 @@ export type WithDataset<T extends Request | Response> = T & {
   dataset: DatasetCore;
 };
 
+export type ExtendedDataFactory = DataFactory & DatasetCoreFactory;
+
 export type DatasetContext<Context = DefaultContext> = DataFactoryContext<Context & {
   request: WithDataset<Request>;
   response: WithDataset<Response>;
-}, DataFactory & DatasetCoreFactory>;
+}, ExtendedDataFactory>;
 
 export default (): Middleware<DefaultState, DatasetContext> => (
   async (context: DatasetContext, next: Next): Promise<void> => {

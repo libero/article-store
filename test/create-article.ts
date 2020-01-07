@@ -1,12 +1,31 @@
-import { termToString } from 'rdf-string';
-import { blankNode, literal, quad } from '@rdfjs/data-model';
-import { DatasetCore, Quad_Subject as QuadSubject } from 'rdf-js';
-import dataFactory from '../src/data-factory';
+import {
+  DatasetCore, Literal, NamedNode, Quad_Subject as QuadSubject,
+} from 'rdf-js';
+import {
+  blankNode, dataset, literal, quad,
+} from '../src/data-factory';
 import { rdf, schema } from '../src/namespaces';
 
-export default (id: QuadSubject = blankNode(), name = literal(`Article ${termToString(id)}`)): DatasetCore => (
-  dataFactory.dataset([
-    quad(id, rdf.type, schema.Article),
-    quad(id, schema('name'), name),
-  ])
-);
+type Options = {
+  id?: QuadSubject;
+  name?: Literal;
+  types?: Array<NamedNode>;
+}
+
+export default ({
+  id = blankNode(),
+  name = literal('Article'),
+  types = [schema.Article],
+}: Options = {}): DatasetCore => {
+  const article = dataset();
+
+  types.forEach((type: NamedNode): void => {
+    article.add(quad(id, rdf.type, type));
+  });
+
+  if (name) {
+    article.add(quad(id, schema('name'), name));
+  }
+
+  return article;
+};
