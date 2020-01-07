@@ -6,7 +6,7 @@
     "@rdfjs/data-model": "^1.1.2",
     "@rdfjs/namespace": "^1.1.0",
     "content-type": "^1.0.4",
-    "format-link-header": "^2.1.0",
+    "format-link-header": "^3.0.0",
     "http-errors": "^1.7.3",
     "it-all": "^1.0.1",
     "jsonld": "^2.0.1",
