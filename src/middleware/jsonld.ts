@@ -1,26 +1,39 @@
+import ParserJsonld from '@rdfjs/parser-jsonld';
+import SerializerJsonld from '@rdfjs/serializer-jsonld-ext';
 import { format as formatContentType } from 'content-type';
-import jsonld from 'jsonld';
-import { Context as JsonLdContext } from 'jsonld/jsonld-spec';
+import { constants } from 'http2';
+import { Context } from 'jsonld/jsonld-spec';
 import {
-  Context, Middleware, Next, Response,
+  DefaultStateExtends, Middleware, Next, Response,
 } from 'koa';
+import pEvent from 'p-event';
+import { fromStream, toStream } from 'rdf-dataset-ext';
+import { DatasetContext } from './dataset';
 
-const isJsonLd = (response: Response): boolean => response.is('jsonld') && typeof response.body === 'object';
+const responseHasContent = (response: Response): boolean => (
+  response.body || response.status === constants.HTTP_STATUS_NO_CONTENT
+);
 
-export default (context: JsonLdContext): Middleware => (
-  async ({ response }: Context, next: Next): Promise<void> => {
+export default (context: Context = {}): Middleware<DefaultStateExtends, DatasetContext> => {
+  const contentType = {
+    type: 'application/ld+json',
+    parameters: { profile: 'http://www.w3.org/ns/json-ld#compacted' },
+  };
+  const parser = new ParserJsonld();
+  const serializer = new SerializerJsonld({ compact: true, context });
+
+  return async ({ request, response }: DatasetContext, next: Next): Promise<void> => {
+    if (request.is('jsonld')) {
+      await fromStream(request.dataset, parser.import(request.req));
+    }
+
     await next();
 
-    if (!isJsonLd(response)) {
+    if (responseHasContent(response) || !response.dataset.size) {
       return;
     }
 
-    const contentType = {
-      type: 'application/ld+json',
-      parameters: { profile: 'http://www.w3.org/ns/json-ld#compacted' },
-    };
-
-    response.body = await jsonld.compact(response.body, context);
+    response.body = await pEvent(serializer.import(toStream(response.dataset)), 'data');
     response.set('Content-Type', formatContentType(contentType));
-  }
-);
+  };
+};

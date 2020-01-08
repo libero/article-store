@@ -3,7 +3,7 @@ import createHttpError from 'http-errors';
 import { Context, Next, Response } from 'koa';
 import routing from '../../src/middleware/routing';
 import createContext from '../context';
-import runMiddleware from '../middleware';
+import runMiddleware, { NextMiddleware } from '../middleware';
 
 const createRouter = (): Router => {
   const router = new Router();
@@ -17,11 +17,11 @@ const createRouter = (): Router => {
   return router;
 };
 
-const makeRequest = async (method: string, path: string): Promise<Response> => {
+const makeRequest = async (method: string, path: string, next?: NextMiddleware): Promise<Response> => {
   const router = createRouter();
   const context = createContext({ method, path, router });
 
-  return runMiddleware(routing(context.router), context);
+  return runMiddleware(routing(context.router), context, next);
 };
 
 describe('routing middleware', (): void => {
@@ -39,5 +39,12 @@ describe('routing middleware', (): void => {
     it('if the method does not match', async (): Promise<void> => {
       await expect(makeRequest('GET', '/')).rejects.toThrowError(new createHttpError.MethodNotAllowed());
     });
+  });
+
+  it('should call the next middleware', async (): Promise<void> => {
+    const next = jest.fn();
+    await makeRequest('DELETE', '/', next);
+
+    expect(next).toHaveBeenCalledTimes(1);
   });
 });

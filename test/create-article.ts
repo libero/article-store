@@ -1,12 +1,31 @@
-import deepFilter from 'deep-filter';
-import { Iri, JsonLdObj } from 'jsonld/jsonld-spec';
+import {
+  DatasetCore, Literal, NamedNode, Quad_Subject as QuadSubject,
+} from 'rdf-js';
+import {
+  blankNode, dataset, literal, quad,
+} from '../src/data-factory';
+import { rdf, schema } from '../src/namespaces';
 
-const isNotUndefined = (arg: unknown): boolean => arg !== undefined;
+type Options = {
+  id?: QuadSubject;
+  name?: Literal;
+  types?: Array<NamedNode>;
+}
 
-export default (id?: Iri, name = id ? `Article ${id}` : 'Article'): JsonLdObj => (
-  deepFilter({
-    '@id': id,
-    '@type': 'http://schema.org/Article',
-    'http://schema.org/name': name,
-  }, isNotUndefined)
-);
+export default ({
+  id = blankNode(),
+  name = literal('Article'),
+  types = [schema.Article],
+}: Options = {}): DatasetCore => {
+  const article = dataset();
+
+  types.forEach((type: NamedNode): void => {
+    article.add(quad(id, rdf.type, type));
+  });
+
+  if (name) {
+    article.add(quad(id, schema('name'), name));
+  }
+
+  return article;
+};
