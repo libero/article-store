@@ -39,7 +39,7 @@ wait-healthy: ## Wait for the containers to be healthy
 		echo "No containers running"; \
 		exit 1; \
 	fi; \
-	for service in $${services}; do \
+	for service in $${services[@]}; do \
 		.scripts/docker/wait-healthy.sh "$${service}"; \
 	done
 
