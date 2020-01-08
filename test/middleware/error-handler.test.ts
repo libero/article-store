@@ -6,10 +6,10 @@ import { WithDataset } from '../../src/middleware/dataset';
 import errorHandler from '../../src/middleware/error-handler';
 import { hydra, rdf } from '../../src/namespaces';
 import createContext, { ErrorListener } from '../context';
-import runMiddleware, { Next } from '../middleware';
+import runMiddleware, { NextMiddleware } from '../middleware';
 
 const makeRequest = async (
-  next?: Next, errorListener?: ErrorListener,
+  next?: NextMiddleware, errorListener?: ErrorListener,
 ): Promise<WithDataset<Response>> => (
   runMiddleware(errorHandler(), createContext({ errorListener }), next)
 );

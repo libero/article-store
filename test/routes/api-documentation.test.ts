@@ -1,12 +1,12 @@
 import { namedNode, quad } from '@rdfjs/data-model';
-import { Next, Response } from 'koa';
+import { Response } from 'koa';
 import { WithDataset } from '../../src/middleware/dataset';
 import { hydra, rdf } from '../../src/namespaces';
 import apiDocumentation from '../../src/routes/api-documentation';
 import createContext from '../context';
-import runMiddleware from '../middleware';
+import runMiddleware, { NextMiddleware } from '../middleware';
 
-const makeRequest = async (next?: Next): Promise<WithDataset<Response>> => (
+const makeRequest = async (next?: NextMiddleware): Promise<WithDataset<Response>> => (
   runMiddleware(apiDocumentation(), createContext(), next)
 );
 

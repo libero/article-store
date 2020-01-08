@@ -3,7 +3,7 @@ import {
 } from '@rdfjs/data-model';
 import createHttpError from 'http-errors';
 import all from 'it-all';
-import { Next, Response } from 'koa';
+import { Response } from 'koa';
 import { DatasetCore } from 'rdf-js';
 import InMemoryArticles from '../../src/adaptors/in-memory-articles';
 import Articles from '../../src/articles';
@@ -11,11 +11,11 @@ import { schema } from '../../src/namespaces';
 import addArticle from '../../src/routes/add-article';
 import createContext from '../context';
 import createArticle from '../create-article';
-import runMiddleware from '../middleware';
+import runMiddleware, { NextMiddleware } from '../middleware';
 
 const makeRequest = async (
   dataset?: DatasetCore,
-  next?: Next,
+  next?: NextMiddleware,
   articles: Articles = new InMemoryArticles(),
 ): Promise<Response> => (
   runMiddleware(addArticle(), createContext({ articles, dataset }), next)

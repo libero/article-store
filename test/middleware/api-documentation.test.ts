@@ -2,9 +2,9 @@ import { Response } from 'koa';
 import parseLinkHeader from 'parse-link-header';
 import apiDocumentation from '../../src/middleware/api-documentation-link';
 import createContext from '../context';
-import runMiddleware, { Next } from '../middleware';
+import runMiddleware, { NextMiddleware } from '../middleware';
 
-const makeRequest = async (next?: Next): Promise<Response> => (
+const makeRequest = async (next?: NextMiddleware): Promise<Response> => (
   runMiddleware(apiDocumentation('/path-to/api-documentation'), createContext(), next)
 );
 

@@ -9,10 +9,10 @@ import { AppContext } from '../../src/app';
 import jsonld from '../../src/middleware/jsonld';
 import { rdf, schema } from '../../src/namespaces';
 import createContext, { Headers } from '../context';
-import { Next } from '../middleware';
+import { NextMiddleware } from '../middleware';
 
 const makeRequest = async (
-  body?: string, headers?: Headers, next: Next = jest.fn(), jsonLdContext: JsonLdContext = {},
+  body?: string, headers?: Headers, next: NextMiddleware = jest.fn(), jsonLdContext: JsonLdContext = {},
 ): Promise<AppContext> => {
   const context = createContext({ body, headers, method: body ? 'POST' : 'GET' });
 
