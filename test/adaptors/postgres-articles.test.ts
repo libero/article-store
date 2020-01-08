@@ -11,12 +11,16 @@ import ArticleNotFound from '../../src/errors/article-not-found';
 import NotAnArticle from '../../src/errors/not-an-article';
 import { schema } from '../../src/namespaces';
 import createArticle from '../create-article';
+import CreateDb from '../../src/tools/create-db';
 
 let database: IBaseProtocol<IMain>;
 
 beforeAll(async (): Promise<void> => {
   jest.setTimeout(10000);
-  database = await pgSetup().then(() => getDatabase()).then((db) => pgPromise()(db.databaseURL));
+  database = await getDatabase().then((db) => pgPromise()(db.databaseURL));
+  await pgSetup();
+  await new CreateDb(database).init();
+  jest.setTimeout(5000);
 });
 
 afterAll(async (): Promise<void> => {
