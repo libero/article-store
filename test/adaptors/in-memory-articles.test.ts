@@ -1,7 +1,7 @@
-import { blankNode } from '@rdfjs/data-model';
+import { blankNode, literal, quad } from '@rdfjs/data-model';
 import all from 'it-all';
-import { JsonLdObj } from 'jsonld/jsonld-spec';
-import { BlankNode } from 'rdf-js';
+import 'jest-rdf';
+import { BlankNode, DatasetCore } from 'rdf-js';
 import InMemoryArticles from '../../src/adaptors/in-memory-articles';
 import ArticleNotFound from '../../src/errors/article-not-found';
 import NotAnArticle from '../../src/errors/not-an-article';
@@ -34,16 +34,16 @@ describe('in-memory articles', (): void => {
     const articles = new InMemoryArticles();
     const id = blankNode();
 
-    await articles.set(id, createArticle({ id, name: 'Original' }));
-    await articles.set(id, createArticle({ id, name: 'Updated' }));
+    await articles.set(id, createArticle({ id, name: literal('Original') }));
+    await articles.set(id, createArticle({ id, name: literal('Updated') }));
 
-    expect((await articles.get(id))['http://schema.org/name']).toBe('Updated');
+    expect((await articles.get(id)).has(quad(id, schema('name'), literal('Updated')))).toBe(true);
   });
 
   it('throws an error if it is not an article', async (): Promise<void> => {
     const articles = new InMemoryArticles();
     const id = blankNode();
-    const article = createArticle({ types: [schema.NewsArticle] });
+    const article = createArticle({ id, types: [schema.NewsArticle] });
 
     await expect(articles.set(id, article)).rejects.toThrow(new NotAnArticle([schema.NewsArticle]));
   });
@@ -51,7 +51,7 @@ describe('in-memory articles', (): void => {
   it('throws an error if it has no type', async (): Promise<void> => {
     const articles = new InMemoryArticles();
     const id = blankNode();
-    const article = createArticle({ types: [] });
+    const article = createArticle({ id, types: [] });
 
     await expect(articles.set(id, article)).rejects.toThrow(new NotAnArticle());
   });
@@ -63,7 +63,7 @@ describe('in-memory articles', (): void => {
 
     await articles.set(id, article);
 
-    expect((await articles.get(id))).toStrictEqual(article);
+    expect([...await articles.get(id)]).toEqualRdfQuadArray([...article]);
   });
 
   it('throws an error if the article is not found', async (): Promise<void> => {
@@ -117,7 +117,7 @@ describe('in-memory articles', (): void => {
     await articles.set(id3, createArticle({ id: id3 }));
     await articles.set(id2, createArticle({ id: id2 }));
 
-    const ids = (await all(articles)).map((parts: [BlankNode, JsonLdObj]): BlankNode => parts[0]);
+    const ids = (await all(articles)).map((parts: [BlankNode, DatasetCore]): BlankNode => parts[0]);
 
     expect(ids).toStrictEqual([id1, id3, id2]);
   });

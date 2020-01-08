@@ -1,8 +1,10 @@
-import { blankNode } from '@rdfjs/data-model';
+import {
+  blankNode, literal, namedNode, quad,
+} from '@rdfjs/data-model';
 import createHttpError from 'http-errors';
 import all from 'it-all';
-import { JsonLdObj } from 'jsonld/jsonld-spec';
 import { Response } from 'koa';
+import { DatasetCore } from 'rdf-js';
 import InMemoryArticles from '../../src/adaptors/in-memory-articles';
 import Articles from '../../src/articles';
 import { schema } from '../../src/namespaces';
@@ -12,36 +14,42 @@ import createArticle from '../create-article';
 import runMiddleware, { NextMiddleware } from '../middleware';
 
 const makeRequest = async (
-  body: JsonLdObj = {},
+  dataset?: DatasetCore,
   next?: NextMiddleware,
   articles: Articles = new InMemoryArticles(),
 ): Promise<Response> => (
-  runMiddleware(addArticle(), createContext({ articles, body }), next)
+  runMiddleware(addArticle(), createContext({ articles, dataset }), next)
 );
 
 describe('add article', (): void => {
   it('should return a successful response', async (): Promise<void> => {
     const articles = new InMemoryArticles();
-    const response = await makeRequest(createArticle(), undefined, articles);
+    const id = blankNode();
+    const name = literal('Article');
+    const response = await makeRequest(createArticle({ id, name }), undefined, articles);
 
     expect(response.status).toBe(201);
     expect(response.get('Location')).toBe('http://example.com/path-to/article-list');
     expect(await articles.count()).toBe(1);
-    expect((await all(articles))[0][1]['http://schema.org/name']).toEqual([{ '@value': 'Article' }]);
-  });
 
-  it('should throw an error if id is already set', async (): Promise<void> => {
-    const article = createArticle({ id: blankNode('12345') });
+    const [newId, dataset] = (await all(articles))[0];
 
-    await expect(makeRequest(article)).rejects.toBeInstanceOf(createHttpError.Forbidden);
-    await expect(makeRequest(article)).rejects.toHaveProperty('message', 'Article IDs must not be set (\'_:12345\' was given)');
+    expect(dataset.has(quad(newId, schema('name'), name))).toBe(true);
   });
 
   it('should throw an error if it is not a schema:Article', async (): Promise<void> => {
     const article = createArticle({ types: [schema.NewsArticle] });
 
     await expect(makeRequest(article)).rejects.toBeInstanceOf(createHttpError.BadRequest);
-    await expect(makeRequest(article)).rejects.toHaveProperty('message', 'Article type must be http://schema.org/Article (\'http://schema.org/NewsArticle\' was given)');
+    await expect(makeRequest(article)).rejects.toHaveProperty('message', 'No http://schema.org/Article found');
+  });
+
+  it('should throw an error if the articles does not have a blank node identifier', async (): Promise<void> => {
+    const id = namedNode('http://example.com/my-article');
+    const article = createArticle({ id });
+
+    await expect(makeRequest(article)).rejects.toBeInstanceOf(createHttpError.BadRequest);
+    await expect(makeRequest(article)).rejects.toHaveProperty('message', 'Article must have a blank node identifier (http://example.com/my-article given)');
   });
 
   it('should throw an error if it has no schema:name', async (): Promise<void> => {

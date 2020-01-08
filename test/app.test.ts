@@ -1,8 +1,8 @@
-import dataFactory from '@rdfjs/data-model';
 import parseLinkHeader from 'parse-link-header';
 import request from 'supertest';
 import InMemoryArticles from '../src/adaptors/in-memory-articles';
 import createApp, { App } from '../src/app';
+import dataFactory from '../src/data-factory';
 import createRouter from '../src/router';
 import Routes from '../src/routes';
 
