@@ -3,7 +3,7 @@ import createHttpError from 'http-errors';
 import { Context, Next, Response } from 'koa';
 import routing from '../../src/middleware/routing';
 import createContext from '../context';
-import runMiddleware from '../middleware';
+import runMiddleware, { NextMiddleware } from '../middleware';
 
 const createRouter = (): Router => {
   const router = new Router();
@@ -17,7 +17,7 @@ const createRouter = (): Router => {
   return router;
 };
 
-const makeRequest = async (method: string, path: string, next?: Next): Promise<Response> => {
+const makeRequest = async (method: string, path: string, next?: NextMiddleware): Promise<Response> => {
   const router = createRouter();
   const context = createContext({ method, path, router });
 

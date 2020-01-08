@@ -1,9 +1,9 @@
 import { Context, Response } from 'koa';
 import emptyResponse from '../../src/middleware/empty-response';
 import createContext from '../context';
-import runMiddleware, { Next } from '../middleware';
+import runMiddleware, { NextMiddleware } from '../middleware';
 
-const makeRequest = async (next?: Next): Promise<Response> => (
+const makeRequest = async (next?: NextMiddleware): Promise<Response> => (
   runMiddleware(emptyResponse(), createContext(), next)
 );
 

@@ -3,9 +3,9 @@ import jsonld from 'jsonld';
 import { Response } from 'koa';
 import errorHandler from '../../src/middleware/error-handler';
 import createContext, { ErrorListener } from '../context';
-import runMiddleware, { Next } from '../middleware';
+import runMiddleware, { NextMiddleware } from '../middleware';
 
-const makeRequest = async (next?: Next, errorListener?: ErrorListener): Promise<Response> => {
+const makeRequest = async (next?: NextMiddleware, errorListener?: ErrorListener): Promise<Response> => {
   const context = createContext({ errorListener });
 
   return runMiddleware(errorHandler(), context, next);

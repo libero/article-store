@@ -3,9 +3,9 @@ import { Context as JsonLdContext } from 'jsonld/jsonld-spec';
 import { Context, Response } from 'koa';
 import jsonld from '../../src/middleware/jsonld';
 import createContext from '../context';
-import runMiddleware, { Next } from '../middleware';
+import runMiddleware, { NextMiddleware } from '../middleware';
 
-const makeRequest = async (next?: Next, jsonLdContext: JsonLdContext = {}): Promise<Response> => (
+const makeRequest = async (next?: NextMiddleware, jsonLdContext: JsonLdContext = {}): Promise<Response> => (
   runMiddleware(jsonld(jsonLdContext), createContext(), next)
 );
 

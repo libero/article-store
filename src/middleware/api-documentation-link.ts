@@ -1,9 +1,11 @@
 import formatLinkHeader from 'format-link-header';
-import { Context, Middleware, Next } from 'koa';
+import {
+  DefaultStateExtends, ExtendableContext, Middleware, Next,
+} from 'koa';
 import url from 'url';
 
-export default (path: string): Middleware => (
-  async ({ request, response }: Context, next: Next): Promise<void> => {
+export default (path: string): Middleware<DefaultStateExtends, ExtendableContext> => (
+  async ({ request, response }: ExtendableContext, next: Next): Promise<void> => {
     await next();
 
     const link = {

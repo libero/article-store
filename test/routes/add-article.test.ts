@@ -2,18 +2,18 @@ import { blankNode } from '@rdfjs/data-model';
 import createHttpError from 'http-errors';
 import all from 'it-all';
 import { JsonLdObj } from 'jsonld/jsonld-spec';
-import { Next, Response } from 'koa';
+import { Response } from 'koa';
 import InMemoryArticles from '../../src/adaptors/in-memory-articles';
 import Articles from '../../src/articles';
 import { schema } from '../../src/namespaces';
 import addArticle from '../../src/routes/add-article';
 import createContext from '../context';
 import createArticle from '../create-article';
-import runMiddleware from '../middleware';
+import runMiddleware, { NextMiddleware } from '../middleware';
 
 const makeRequest = async (
   body: JsonLdObj = {},
-  next?: Next,
+  next?: NextMiddleware,
   articles: Articles = new InMemoryArticles(),
 ): Promise<Response> => (
   runMiddleware(addArticle(), createContext({ articles, body }), next)
