@@ -21,19 +21,20 @@ export default class PostgresArticles implements Articles {
       throw new NotAnArticle(types.map((type: string): Term => stringToTerm(type)));
     }
 
-    await this.database.none('INSERT INTO articles(uuid, article) VALUES ($[uuid], $[article])', {
+    await this.database.none('INSERT INTO articles(uuid, article) VALUES ($[uuid], $[article]) ON CONFLICT (uuid) DO UPDATE SET article = $[article]', {
       uuid: id.value,
       article,
     });
   }
 
   async get(id: BlankNode): Promise<JsonLdObj> {
-    const article = this.database.one('SELECT article FROM articles WHERE uuid = $[uuid]', { uuid: id.value }, (data: { article: [BlankNode, JsonLdObj] }) => data.article[1]);
-    if (!article) {
-      throw new ArticleNotFound(id);
-    }
+    return this.database.oneOrNone('SELECT article FROM articles WHERE uuid = $[uuid]', { uuid: id.value }, (data: { article: JsonLdObj } | null) => {
+      if (!data) {
+        throw new ArticleNotFound(id);
+      }
 
-    return article;
+      return data.article;
+    });
   }
 
   async remove(id: BlankNode): Promise<void> {
