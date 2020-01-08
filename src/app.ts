@@ -21,12 +21,14 @@ export type AppContext = RouterContext<AppState, DataFactoryContext<{
 
 export type AppMiddleware = Middleware<AppState, AppContext>;
 
+export type App = Koa<AppState, AppContext>
+
 export default (
   articles: Articles,
   router: Router<AppState, AppContext>,
   apiDocumentationPath: string,
   dataFactory: DataFactory,
-): Koa<AppState, AppContext> => {
+): App => {
   const app = new Koa<AppState, AppContext>();
 
   app.context.articles = articles;
