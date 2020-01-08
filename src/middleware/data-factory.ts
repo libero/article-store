@@ -1,14 +1,13 @@
 import {
-  DefaultContext, DefaultState, Middleware, Next,
+  DefaultContextExtends, DefaultState, ExtendableContext, Middleware, Next,
 } from 'koa';
 import { DataFactory } from 'rdf-js';
 
-export type DataFactoryContext<Context extends DefaultContext = DefaultContext,
+export type DataFactoryContext<Context extends DefaultContextExtends = DefaultContextExtends,
   Factory extends DataFactory = DataFactory> = Context & { dataFactory: Factory };
 
-export default <Factory extends DataFactory>(dataFactory: Factory):
-  Middleware<DefaultState, DataFactoryContext<{}, Factory>> => (
-  async (context: DataFactoryContext<{}, Factory>, next: Next): Promise<void> => {
+export default (dataFactory: DataFactory): Middleware<DefaultState, ExtendableContext> => (
+  async (context: ExtendableContext, next: Next): Promise<void> => {
     Object.assign(context, { dataFactory });
 
     await next();
