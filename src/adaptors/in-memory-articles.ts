@@ -11,8 +11,7 @@ export default class InMemoryArticles implements Articles {
 
   async set(id: BlankNode, article: DatasetCore): Promise<void> {
     if (article.match(id, rdf.type, schema.Article).size === 0) {
-      const types = [...article.match(id, rdf.type)].map((quad: Quad): QuadObject => quad.object);
-      throw new NotAnArticle(types);
+      throw new NotAnArticle([...article.match(id, rdf.type)].map((quad: Quad): QuadObject => quad.object));
     }
 
     this.articles[id.value] = [id, article];

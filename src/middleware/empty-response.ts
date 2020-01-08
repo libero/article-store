@@ -1,5 +1,5 @@
 import {
-  DefaultState, ExtendableContext, Middleware, Next, Response,
+  DefaultStateExtends, ExtendableContext, Middleware, Next, Response,
 } from 'koa';
 
 const makeResponseEmpty = (response: Response): void => {
@@ -8,7 +8,7 @@ const makeResponseEmpty = (response: Response): void => {
   response.remove('Content-Type');
 };
 
-export default (): Middleware<DefaultState, ExtendableContext> => (
+export default (): Middleware<DefaultStateExtends, ExtendableContext> => (
   async ({ response }: ExtendableContext, next: Next): Promise<void> => {
     await next();
 

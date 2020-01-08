@@ -46,7 +46,6 @@ export default ({
   app.on('error', errorListener || jest.fn());
 
   const request = Object.create(KoaRequest) as WithDataset<Request>;
-  const response = Object.create(KoaResponse) as WithDataset<Response>;
   request.app = app;
   request.dataset = requestDataset;
   request.req = new IncomingMessage({
@@ -58,6 +57,8 @@ export default ({
     },
     method,
   });
+
+  const response = Object.create(KoaResponse) as WithDataset<Response>;
   response.req = request.req;
   response.res = new ServerResponse();
   response.dataset = dataset();

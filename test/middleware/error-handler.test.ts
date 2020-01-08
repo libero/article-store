@@ -8,9 +8,7 @@ import { hydra, rdf } from '../../src/namespaces';
 import createContext, { ErrorListener } from '../context';
 import runMiddleware, { NextMiddleware } from '../middleware';
 
-const makeRequest = async (
-  next?: NextMiddleware, errorListener?: ErrorListener,
-): Promise<WithDataset<Response>> => (
+const makeRequest = async (next?: NextMiddleware, errorListener?: ErrorListener): Promise<WithDataset<Response>> => (
   runMiddleware(errorHandler(), createContext({ errorListener }), next)
 );
 

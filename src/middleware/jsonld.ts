@@ -4,7 +4,7 @@ import { format as formatContentType } from 'content-type';
 import { constants } from 'http2';
 import { Context } from 'jsonld/jsonld-spec';
 import {
-  DefaultState, Middleware, Next, Response,
+  DefaultStateExtends, Middleware, Next, Response,
 } from 'koa';
 import pEvent from 'p-event';
 import { fromStream, toStream } from 'rdf-dataset-ext';
@@ -14,7 +14,7 @@ const responseHasContent = (response: Response): boolean => (
   response.body || response.status === constants.HTTP_STATUS_NO_CONTENT
 );
 
-export default (context: Context = {}): Middleware<DefaultState, DatasetContext> => {
+export default (context: Context = {}): Middleware<DefaultStateExtends, DatasetContext> => {
   const contentType = {
     type: 'application/ld+json',
     parameters: { profile: 'http://www.w3.org/ns/json-ld#compacted' },

@@ -1,5 +1,5 @@
 import {
-  DefaultContextExtends, DefaultState, ExtendableContext, Middleware, Next, Request, Response,
+  DefaultContextExtends, DefaultStateExtends, ExtendableContext, Middleware, Next, Request, Response,
 } from 'koa';
 import { DataFactory, DatasetCore, DatasetCoreFactory } from 'rdf-js';
 import { DataFactoryContext } from './data-factory';
@@ -14,10 +14,8 @@ export type DatasetContext<Context extends DefaultContextExtends = DefaultContex
     response: WithDataset<Response>;
   }, ExtendedDataFactory>;
 
-type LocalContext = DataFactoryContext<ExtendableContext, ExtendedDataFactory>;
-
-export default (): Middleware<DefaultState, LocalContext> => (
-  async (context: LocalContext, next: Next): Promise<void> => {
+export default (): Middleware<DefaultStateExtends, DataFactoryContext<ExtendableContext, ExtendedDataFactory>> => (
+  async (context: DataFactoryContext<ExtendableContext, ExtendedDataFactory>, next: Next): Promise<void> => {
     Object.assign(context.request, { dataset: context.dataFactory.dataset() });
     Object.assign(context.response, { dataset: context.dataFactory.dataset() });
 

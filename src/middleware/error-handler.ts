@@ -1,6 +1,6 @@
 import createError, { HttpError, UnknownError } from 'http-errors';
 import {
-  DefaultState, ExtendableContext, Middleware, Next,
+  DefaultStateExtends, ExtendableContext, Middleware, Next,
 } from 'koa';
 import { hydra, rdf } from '../namespaces';
 import { DatasetContext } from './dataset';
@@ -36,7 +36,7 @@ const toHttpError = (error: UnknownError): HttpError => (
   error instanceof HttpError ? error : createError(error)
 );
 
-export default (): Middleware<DefaultState, DatasetContext<ExtendableContext>> => (
+export default (): Middleware<DefaultStateExtends, DatasetContext<ExtendableContext>> => (
   async (context: DatasetContext<ExtendableContext>, next: Next): Promise<void> => {
     try {
       await next();
