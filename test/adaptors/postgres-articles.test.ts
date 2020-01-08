@@ -3,24 +3,31 @@ import all from 'it-all';
 import { JsonLdObj } from 'jsonld/jsonld-spec';
 import { BlankNode } from 'rdf-js';
 import pgPromise, { IBaseProtocol, IMain } from 'pg-promise';
+import pgSetup from '@databases/pg-test/jest/globalSetup';
+import pgTeardown from '@databases/pg-test/jest/globalTeardown';
+import getDatabase from '@databases/pg-test';
 import PostgresArticles from '../../src/adaptors/postgres-articles';
 import ArticleNotFound from '../../src/errors/article-not-found';
 import NotAnArticle from '../../src/errors/not-an-article';
 import { schema } from '../../src/namespaces';
 import createArticle from '../create-article';
-import db from '../../src/db';
 
 let database: IBaseProtocol<IMain>;
 
-beforeAll((): void => {
-  database = pgPromise()(db);
+beforeAll(async (): Promise<void> => {
+  jest.setTimeout(10000);
+  database = await pgSetup().then(() => getDatabase()).then((db) => pgPromise()(db.databaseURL));
 });
 
-beforeEach(async (): Promise<void> => {
-  await database.none('TRUNCATE articles');
+afterAll(async (): Promise<void> => {
+  await pgTeardown();
 });
 
 describe('postgres articles', (): void => {
+  beforeEach(async (): Promise<void> => {
+    await database.none('TRUNCATE articles');
+  });
+
   it('can add an article', async (): Promise<void> => {
     const articles = new PostgresArticles(database);
     const id = blankNode();
