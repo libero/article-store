@@ -1,4 +1,5 @@
 import { literal, namedNode, quad } from '@rdfjs/data-model';
+import namespace from '@rdfjs/namespace';
 import { parse as parseContentType } from 'content-type';
 import 'jest-rdf';
 import { addAll } from 'rdf-dataset-ext';
@@ -36,27 +37,31 @@ const next = (body = null, quads: Array<Quad> = [], type = null, status = null) 
   }
 );
 
+const dc = namespace('http://purl.org/dc/elements/1.1/');
+
 const id = namedNode('http://example.com/object');
 const quads = [
   quad(id, rdf.type, schema.Article),
   quad(id, schema('name'), literal('English Name', 'en')),
-  quad(id, schema('name'), literal('French Name', 'fr')),
+  quad(id, dc.title, literal('English Title', 'en')),
+  quad(id, dc.title, literal('French Title', 'fr')),
 ];
 
 const jsonLd = {
   '@id': 'http://example.com/object',
   '@type': 'http://schema.org/Article',
-  'http://schema.org/name': [{ '@language': 'en', '@value': 'English Name' }, {
-    '@language': 'fr',
-    '@value': 'French Name',
-  }],
+  'http://schema.org/name': { '@value': 'English Name', '@language': 'en' },
+  'http://purl.org/dc/elements/1.1/title': [
+    { '@value': 'English Title', '@language': 'en' },
+    { '@value': 'French Title', '@language': 'fr' },
+  ],
 };
 
 describe('JSON-LD middleware', (): void => {
   it('adds a dataset to the request with JSON-LD body', async (): Promise<void> => {
     const { request } = await makeRequest(JSON.stringify(jsonLd), { 'Content-Type': 'application/ld+json' });
 
-    expect([...request.dataset]).toEqualRdfQuadArray(quads);
+    expect([...request.dataset]).toBeRdfIsomorphic(quads);
   });
 
   it('does nothing if there is a request body that isn\'t JSON-LD', async (): Promise<void> => {
@@ -69,11 +74,26 @@ describe('JSON-LD middleware', (): void => {
     const { response } = await makeRequest(null, null, next(null, quads));
 
     const contentType = parseContentType(response);
+    const expected = {
+      '@id': 'http://example.com/object',
+      '@type': 'http://schema.org/Article',
+      'http://purl.org/dc/elements/1.1/title': [
+        { '@value': 'English Title' },
+        { '@value': 'French Title', '@language': 'fr' },
+      ],
+      'http://schema.org/name': { '@value': 'English Name', '@language': 'en' },
+    };
 
     expect(response.type).toBe('application/ld+json');
     expect(contentType.type).toBe('application/ld+json');
     expect(contentType.parameters).toMatchObject({ profile: 'http://www.w3.org/ns/json-ld#compacted' });
-    expect(response.body).toStrictEqual(jsonLd);
+    expect(response.body).toMatchObject(expected);
+    expect(response.status).toBe(200);
+  });
+
+  it('sets the response status code as 200 OK if there is a dataset', async (): Promise<void> => {
+    const { response } = await makeRequest(null, null, next(null, quads));
+
     expect(response.status).toBe(200);
   });
 
@@ -87,7 +107,8 @@ describe('JSON-LD middleware', (): void => {
     const context = {
       '@base': 'http://example.com',
       '@language': 'en',
-      schema: 'http://schema.org/',
+      '@vocab': 'http://schema.org/',
+      dc: 'http://purl.org/dc/elements/1.1/',
     };
 
     const { response } = await makeRequest(null, null, next(null, quads), context);
@@ -95,8 +116,9 @@ describe('JSON-LD middleware', (): void => {
     const expected = {
       '@context': context,
       '@id': 'object',
-      '@type': 'schema:Article',
-      'schema:name': ['English Name', { '@value': 'French Name', '@language': 'fr' }],
+      '@type': 'Article',
+      name: 'English Name',
+      'dc:title': ['English Title', { '@value': 'French Title', '@language': 'fr' }],
     };
 
     expect(response.body).toStrictEqual(expected);
