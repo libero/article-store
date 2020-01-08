@@ -1,29 +1,47 @@
+import clownface, { Clownface } from 'clownface';
+import { constants } from 'http2';
+import all from 'it-all';
 import { Next } from 'koa';
-import { hydra, rdf, schema } from 'rdf-namespaces';
+import { addAll } from 'rdf-dataset-ext';
+import { BlankNode, DatasetCore } from 'rdf-js';
+import { toRdf } from 'rdf-literal';
+import url from 'url';
 import { AppContext, AppMiddleware } from '../app';
+import { hydra, rdf, schema } from '../namespaces';
 import Routes from './index';
 
 export default (): AppMiddleware => (
   async ({
-    articles, request, response, router,
+    dataFactory: { literal, namedNode }, articles, request, response, router,
   }: AppContext, next: Next): Promise<void> => {
-    response.body = {
-      '@context': {
-        '@base': request.origin,
-      },
-      '@id': router.url(Routes.ArticleList),
-      '@type': hydra.Collection,
-      [hydra.title]: { '@value': 'List of articles', '@language': 'en' },
-      'http://www.w3.org/ns/hydra/core#manages': {
-        'http://www.w3.org/ns/hydra/core#property': { '@id': rdf.type },
-        'http://www.w3.org/ns/hydra/core#object': { '@id': schema.Article },
-      },
-      [hydra.totalItems]: await articles.count(),
-      [hydra.member]: {
-        '@list': [...articles],
-      },
-    };
-    response.type = 'jsonld';
+    const graph = clownface({
+      dataset: response.dataset,
+      term: namedNode(url.resolve(request.origin, router.url(Routes.ArticleList))),
+    });
+
+    const listPromise = all(articles)
+      .then((list): void => {
+        list.forEach(([id, article]: [BlankNode, DatasetCore]): void => {
+          graph.addOut(hydra.member, id);
+          addAll(graph.dataset, article);
+        });
+      });
+
+    const countPromise = articles.count()
+      .then((count): void => {
+        graph.addOut(hydra.totalItems, toRdf(count));
+      });
+
+    graph.addOut(rdf.type, hydra.Collection);
+    graph.addOut(hydra.title, literal('List of articles', 'en'));
+    graph.addOut(hydra.manages, (manages: Clownface): void => {
+      manages.addOut(hydra.property, rdf.type);
+      manages.addOut(hydra.object, schema.Article);
+    });
+
+    await Promise.all([listPromise, countPromise]);
+
+    response.status = constants.HTTP_STATUS_OK;
 
     await next();
   }
