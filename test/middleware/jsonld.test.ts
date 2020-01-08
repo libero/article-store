@@ -50,8 +50,8 @@ const quads = [
 
 const jsonLd = {
   '@id': 'http://example.com/object',
-  '@type': 'http://schema.org/Article',
-  'http://schema.org/name': { '@value': 'English Name', '@language': 'en' },
+  '@type': ['http://schema.org/Article'],
+  'http://schema.org/name': [{ '@value': 'English Name', '@language': 'en' }],
   'http://purl.org/dc/elements/1.1/title': [
     { '@value': 'English Title', '@language': 'en' },
     { '@value': 'French Title', '@language': 'fr' },

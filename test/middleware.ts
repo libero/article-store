@@ -5,7 +5,7 @@ import { AppContext } from '../src/app';
 export type NextMiddleware<CustomT extends ExtendableContext = AppContext> =
   (context: CustomT) => Promise<void>;
 
-export default async <CustomT extends ExtendableContext = AppContext>(
+export default async <CustomT extends ExtendableContext>(
   middleware: Middleware<CustomT>,
   context: CustomT,
   next?: NextMiddleware<CustomT>,
