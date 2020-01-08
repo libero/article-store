@@ -2,6 +2,7 @@ import { literal, namedNode, quad } from '@rdfjs/data-model';
 import namespace from '@rdfjs/namespace';
 import { parse as parseContentType } from 'content-type';
 import 'jest-rdf';
+import { Context as JsonLdContext } from 'jsonld/jsonld-spec';
 import { addAll } from 'rdf-dataset-ext';
 import { Quad } from 'rdf-js';
 import { AppContext } from '../../src/app';
@@ -11,7 +12,7 @@ import createContext, { Headers } from '../context';
 import { Next } from '../middleware';
 
 const makeRequest = async (
-  body?: string, headers?: Headers, next: Next = jest.fn(), jsonLdContext = {},
+  body?: string, headers?: Headers, next: Next = jest.fn(), jsonLdContext: JsonLdContext = {},
 ): Promise<AppContext> => {
   const context = createContext({ body, headers, method: body ? 'POST' : 'GET' });
 
