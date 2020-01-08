@@ -34,7 +34,7 @@ describe('the application', (): void => {
 
     expect(response.get('Access-Control-Allow-Origin')).toBe('http://example.com');
     expect(parseHeader(response.get('Vary'))).toContain('Origin');
-    expect(parseHeader(response.get('Access-Control-Expose-Headers'))).toContain('Link');
+    expect(parseHeader(response.get('Access-Control-Expose-Headers'))).toEqual(expect.arrayContaining(['Link', 'Location']));
   });
 
   it('should have an API documentation link', async (): Promise<void> => {

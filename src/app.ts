@@ -42,7 +42,7 @@ export default (
     },
   }));
   app.use(cors({
-    exposeHeaders: ['Link'],
+    exposeHeaders: ['Link', 'Location'],
   }));
   app.use(setDataFactory(dataFactory));
   app.use(jsonld({
