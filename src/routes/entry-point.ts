@@ -1,23 +1,30 @@
+import clownface, { Clownface } from 'clownface';
+import { constants } from 'http2';
 import { Next } from 'koa';
-import { hydra, schema } from 'rdf-namespaces';
+import { NamedNode } from 'rdf-js';
+import url from 'url';
 import { AppContext, AppMiddleware } from '../app';
+import { hydra, rdf, schema } from '../namespaces';
 import Routes from './index';
 
 export default (): AppMiddleware => (
-  async ({ request, response, router }: AppContext, next: Next): Promise<void> => {
-    response.body = {
-      '@context': {
-        '@base': request.origin,
-      },
-      '@id': router.url(Routes.EntryPoint),
-      '@type': schema.EntryPoint,
-      [schema.name]: { '@value': 'Article Store', '@language': 'en' },
-      [hydra.collection]: {
-        '@id': router.url(Routes.ArticleList),
-        '@type': hydra.Collection,
-      },
-    };
-    response.type = 'jsonld';
+  async ({
+    dataFactory: { literal, namedNode }, request, response, router,
+  }: AppContext, next: Next): Promise<void> => {
+    const createNamedNode = (route: Routes): NamedNode => namedNode(url.resolve(request.origin, router.url(route)));
+
+    const graph = clownface({
+      dataset: response.dataset,
+      term: createNamedNode(Routes.EntryPoint),
+    });
+
+    graph.addOut(rdf.type, schema.EntryPoint);
+    graph.addOut(schema('name'), literal('Article Store', 'en'));
+    graph.addOut(hydra.collection, createNamedNode(Routes.ArticleList), (list: Clownface): void => {
+      list.addOut(rdf.type, hydra.Collection);
+    });
+
+    response.status = constants.HTTP_STATUS_OK;
 
     await next();
   }

@@ -1,10 +1,12 @@
-import jsonld from 'jsonld';
+import { namedNode, quad } from '@rdfjs/data-model';
 import { Response } from 'koa';
+import { WithDataset } from '../../src/middleware/dataset';
+import { hydra, rdf, schema } from '../../src/namespaces';
 import entryPoint from '../../src/routes/entry-point';
 import createContext from '../context';
 import runMiddleware, { NextMiddleware } from '../middleware';
 
-const makeRequest = async (next?: NextMiddleware): Promise<Response> => (
+const makeRequest = async (next?: NextMiddleware): Promise<WithDataset<Response>> => (
   runMiddleware(entryPoint(), createContext(), next)
 );
 
@@ -13,21 +15,15 @@ describe('entry-point', (): void => {
     const response = await makeRequest();
 
     expect(response.status).toBe(200);
-    expect(response.type).toBe('application/ld+json');
   });
 
   it('should return the entry point', async (): Promise<void> => {
-    const response = await makeRequest();
-    const graph = await jsonld.expand(response.body);
+    const { dataset } = await makeRequest();
+    const id = namedNode('http://example.com/path-to/entry-point');
 
-    expect(graph).toHaveLength(1);
-
-    const object = graph[0];
-
-    expect(object['@id']).toBe('http://example.com/path-to/entry-point');
-    expect(object['@type']).toContain('http://schema.org/EntryPoint');
-    expect(object).toHaveProperty(['http://schema.org/name']);
-    expect(object).toHaveProperty(['http://www.w3.org/ns/hydra/core#collection']);
+    expect(dataset.has(quad(id, rdf.type, schema.EntryPoint))).toBe(true);
+    expect(dataset.match(id, schema('name')).size).toBe(1);
+    expect(dataset.match(id, hydra.collection).size).toBe(1);
   });
 
   it('should call the next middleware', async (): Promise<void> => {
