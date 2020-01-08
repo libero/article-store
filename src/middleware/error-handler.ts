@@ -1,8 +1,10 @@
 import createError, { HttpError, UnknownError } from 'http-errors';
-import { Context, Middleware, Next } from 'koa';
+import {
+  DefaultStateExtends, ExtendableContext, Middleware, Next,
+} from 'koa';
 import { hydra } from 'rdf-namespaces';
 
-const handleHttpError = (error: HttpError, { response }: Context): void => {
+const handleHttpError = (error: HttpError, { response }: ExtendableContext): void => {
   response.status = error.status;
   response.body = {
     '@type': hydra.Status,
@@ -20,8 +22,8 @@ const toHttpError = (error: UnknownError): HttpError => (
   error instanceof HttpError ? error : createError(error)
 );
 
-export default (): Middleware => (
-  async (context: Context, next: Next): Promise<void> => {
+export default (): Middleware<DefaultStateExtends, ExtendableContext> => (
+  async (context: ExtendableContext, next: Next): Promise<void> => {
     try {
       await next();
     } catch (error) {
