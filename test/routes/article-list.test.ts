@@ -1,14 +1,14 @@
 import { blankNode } from '@rdfjs/data-model';
 import jsonld from 'jsonld';
-import { Next, Response } from 'koa';
+import { Response } from 'koa';
 import InMemoryArticles from '../../src/adaptors/in-memory-articles';
 import Articles from '../../src/articles';
 import articleList from '../../src/routes/article-list';
 import createContext from '../context';
 import createArticle from '../create-article';
-import runMiddleware from '../middleware';
+import runMiddleware, { NextMiddleware } from '../middleware';
 
-const makeRequest = async (next?: Next, articles?: Articles): Promise<Response> => (
+const makeRequest = async (next?: NextMiddleware, articles?: Articles): Promise<Response> => (
   runMiddleware(articleList(), createContext({ articles }), next)
 );
 

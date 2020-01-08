@@ -1,10 +1,10 @@
 import jsonld from 'jsonld';
-import { Next, Response } from 'koa';
+import { Response } from 'koa';
 import entryPoint from '../../src/routes/entry-point';
-import runMiddleware from '../middleware';
 import createContext from '../context';
+import runMiddleware, { NextMiddleware } from '../middleware';
 
-const makeRequest = async (next?: Next): Promise<Response> => (
+const makeRequest = async (next?: NextMiddleware): Promise<Response> => (
   runMiddleware(entryPoint(), createContext(), next)
 );
 
