@@ -9,10 +9,7 @@ export type WithDataset<T extends Request | Response> = T & { dataset: DatasetCo
 export type ExtendedDataFactory = DataFactory & DatasetCoreFactory;
 
 export type DatasetContext<Context extends DefaultContextExtends = DefaultContextExtends> =
-  DataFactoryContext<Context & {
-    request: WithDataset<Request>;
-    response: WithDataset<Response>;
-  }, ExtendedDataFactory>;
+  DataFactoryContext<Context & { request: WithDataset<Request>; response: WithDataset<Response> }, ExtendedDataFactory>;
 
 export default (): Middleware<DefaultStateExtends, DataFactoryContext<ExtendableContext, ExtendedDataFactory>> => (
   async (context: DataFactoryContext<ExtendableContext, ExtendedDataFactory>, next: Next): Promise<void> => {
