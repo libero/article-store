@@ -14,9 +14,11 @@ import namespaces from './namespaces';
 
 export type AppState = DefaultState;
 
-export type AppContext = RouterContext<AppState, DatasetContext<{
+export type AppRouterContext = DatasetContext<{
   articles: Articles;
-}>>;
+}>;
+
+export type AppContext = RouterContext<AppState, AppRouterContext>;
 
 export type AppMiddleware = Middleware<AppState, AppContext>;
 
@@ -24,7 +26,7 @@ export type App = Koa<AppState, AppContext>
 
 export default (
   articles: Articles,
-  router: Router<AppState, AppContext>,
+  router: Router<AppState, AppRouterContext>,
   apiDocumentationPath: string,
   dataFactory: ExtendedDataFactory,
 ): App => {
