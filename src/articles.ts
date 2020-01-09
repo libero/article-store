@@ -1,10 +1,9 @@
-import { JsonLdObj } from 'jsonld/jsonld-spec';
-import { BlankNode } from 'rdf-js';
+import { BlankNode, DatasetCore } from 'rdf-js';
 
-interface Articles extends AsyncIterable<[BlankNode, JsonLdObj]> {
-  set(id: BlankNode, article: JsonLdObj): Promise<void>;
+interface Articles extends AsyncIterable<[BlankNode, DatasetCore]> {
+  set(id: BlankNode, article: DatasetCore): Promise<void>;
 
-  get(id: BlankNode): Promise<JsonLdObj>;
+  get(id: BlankNode): Promise<DatasetCore>;
 
   remove(id: BlankNode): Promise<void>;
 

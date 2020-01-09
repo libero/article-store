@@ -1,8 +1,8 @@
-import dataFactory from '@rdfjs/data-model';
 import parseLinkHeader from 'parse-link-header';
 import request from 'supertest';
 import InMemoryArticles from '../src/adaptors/in-memory-articles';
 import createApp, { App } from '../src/app';
+import dataFactory from '../src/data-factory';
 import createRouter from '../src/router';
 import Routes from '../src/routes';
 
@@ -34,7 +34,7 @@ describe('the application', (): void => {
 
     expect(response.get('Access-Control-Allow-Origin')).toBe('http://example.com');
     expect(parseHeader(response.get('Vary'))).toContain('Origin');
-    expect(parseHeader(response.get('Access-Control-Expose-Headers'))).toContain('Link');
+    expect(parseHeader(response.get('Access-Control-Expose-Headers'))).toEqual(expect.arrayContaining(['Link', 'Location']));
   });
 
   it('should have an API documentation link', async (): Promise<void> => {

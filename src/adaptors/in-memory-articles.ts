@@ -1,25 +1,23 @@
-import { JsonLdObj } from 'jsonld/jsonld-spec';
-import { BlankNode, Term } from 'rdf-js';
-import { schema } from 'rdf-namespaces';
-import { stringToTerm, termToString } from 'rdf-string';
+import {
+  BlankNode, DatasetCore, Quad, Quad_Object as QuadObject,
+} from 'rdf-js';
 import Articles from '../articles';
 import ArticleNotFound from '../errors/article-not-found';
 import NotAnArticle from '../errors/not-an-article';
+import { rdf, schema } from '../namespaces';
 
 export default class InMemoryArticles implements Articles {
-  private articles: { [id: string]: [BlankNode, JsonLdObj] } = {};
+  private articles: { [id: string]: [BlankNode, DatasetCore] } = {};
 
-  async set(id: BlankNode, article: JsonLdObj): Promise<void> {
-    const types = [].concat(article['@type'] || []);
-
-    if (!(types.includes(schema.Article)) || article['@id'] !== termToString(id)) {
-      throw new NotAnArticle(types.map((type: string): Term => stringToTerm(type)));
+  async set(id: BlankNode, article: DatasetCore): Promise<void> {
+    if (article.match(id, rdf.type, schema.Article).size === 0) {
+      throw new NotAnArticle([...article.match(id, rdf.type)].map((quad: Quad): QuadObject => quad.object));
     }
 
     this.articles[id.value] = [id, article];
   }
 
-  async get(id: BlankNode): Promise<JsonLdObj> {
+  async get(id: BlankNode): Promise<DatasetCore> {
     if (!(id.value in this.articles)) {
       throw new ArticleNotFound(id);
     }
@@ -39,7 +37,7 @@ export default class InMemoryArticles implements Articles {
     return Object.values(this.articles).length;
   }
 
-  async* [Symbol.asyncIterator](): AsyncIterator<[BlankNode, JsonLdObj]> {
+  async* [Symbol.asyncIterator](): AsyncIterator<[BlankNode, DatasetCore]> {
     yield* Object.values(this.articles);
   }
 }

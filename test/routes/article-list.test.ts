@@ -1,14 +1,16 @@
-import { blankNode } from '@rdfjs/data-model';
-import jsonld from 'jsonld';
+import { blankNode, namedNode, quad } from '@rdfjs/data-model';
 import { Response } from 'koa';
+import { toRdf } from 'rdf-literal';
 import InMemoryArticles from '../../src/adaptors/in-memory-articles';
 import Articles from '../../src/articles';
+import { WithDataset } from '../../src/middleware/dataset';
+import { hydra, rdf } from '../../src/namespaces';
 import articleList from '../../src/routes/article-list';
 import createContext from '../context';
 import createArticle from '../create-article';
 import runMiddleware, { NextMiddleware } from '../middleware';
 
-const makeRequest = async (next?: NextMiddleware, articles?: Articles): Promise<Response> => (
+const makeRequest = async (next?: NextMiddleware, articles?: Articles): Promise<WithDataset<Response>> => (
   runMiddleware(articleList(), createContext({ articles }), next)
 );
 
@@ -17,25 +19,17 @@ describe('article list', (): void => {
     const response = await makeRequest();
 
     expect(response.status).toBe(200);
-    expect(response.type).toBe('application/ld+json');
   });
 
   it('should return an empty list', async (): Promise<void> => {
-    const response = await makeRequest();
-    const graph = await jsonld.expand(response.body);
+    const { dataset } = await makeRequest();
+    const id = namedNode('http://example.com/path-to/article-list');
 
-    expect(graph).toHaveLength(1);
-
-    const object = graph[0];
-
-    expect(object['@id']).toBe('http://example.com/path-to/article-list');
-    expect(object['@type']).toContain('http://www.w3.org/ns/hydra/core#Collection');
-    expect(object).toHaveProperty(['http://www.w3.org/ns/hydra/core#title']);
-    expect(object).toHaveProperty(['http://www.w3.org/ns/hydra/core#manages']);
-    expect(object).toHaveProperty(['http://www.w3.org/ns/hydra/core#totalItems']);
-    expect(object['http://www.w3.org/ns/hydra/core#totalItems'][0]['@value']).toEqual(0);
-    expect(object).toHaveProperty(['http://www.w3.org/ns/hydra/core#member']);
-    expect(object['http://www.w3.org/ns/hydra/core#member'][0]['@list']).toHaveLength(0);
+    expect(dataset.has(quad(id, rdf.type, hydra.Collection))).toBe(true);
+    expect(dataset.match(id, hydra.title).size).toBe(1);
+    expect(dataset.match(id, hydra.manages).size).toBe(1);
+    expect(dataset.match(id, hydra.totalItems, toRdf(0)).size).toBe(1);
+    expect(dataset.match(id, hydra.member).size).toBe(0);
   });
 
   it('should return articles in the list', async (): Promise<void> => {
@@ -47,14 +41,10 @@ describe('article list', (): void => {
     await articles.set(id1, createArticle({ id: id1 }));
     await articles.set(id2, createArticle({ id: id2 }));
 
-    const response = await makeRequest(undefined, articles);
-    const graph = await jsonld.expand(response.body);
+    const { dataset } = await makeRequest(undefined, articles);
+    const id = namedNode('http://example.com/path-to/article-list');
 
-    expect(graph).toHaveLength(1);
-
-    const object = graph[0];
-
-    expect(object['http://www.w3.org/ns/hydra/core#member'][0]['@list']).toHaveLength(2);
+    expect(dataset.match(id, hydra.member).size).toBe(2);
   });
 
   it('should call the next middleware', async (): Promise<void> => {
