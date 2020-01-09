@@ -1,4 +1,3 @@
-import dataFactory from '@rdfjs/data-model';
 import pgPromise from 'pg-promise';
 import createApp from './app';
 import dataFactory from './data-factory';
