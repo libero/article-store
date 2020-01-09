@@ -49,7 +49,7 @@ export default ({
   request.app = app;
   request.dataset = requestDataset;
   request.req = new IncomingMessage({
-    buffer: body ? Buffer.from(body) : null,
+    buffer: typeof body === 'string' ? Buffer.from(body) : undefined,
     headers: {
       ...headers,
       'content-length': typeof body === 'string' ? String(body.length) : undefined,
