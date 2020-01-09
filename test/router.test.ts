@@ -6,7 +6,7 @@ describe('router', (): void => {
 
   Object.keys(Routes).forEach((name: string): void => {
     it(`has a route named ${name}`, (): void => {
-      expect(router.route(Routes[name])).toBeTruthy();
+      expect(router.route(Routes[name])).toMatchObject({ name: Routes[name] });
     });
   });
 });
