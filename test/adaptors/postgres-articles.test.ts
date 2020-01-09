@@ -3,28 +3,25 @@ import all from 'it-all';
 import { JsonLdObj } from 'jsonld/jsonld-spec';
 import { BlankNode } from 'rdf-js';
 import pgPromise, { IBaseProtocol, IMain } from 'pg-promise';
-import pgSetup from '@databases/pg-test/jest/globalSetup';
-import pgTeardown from '@databases/pg-test/jest/globalTeardown';
-import getDatabase from '@databases/pg-test';
 import PostgresArticles from '../../src/adaptors/postgres-articles';
 import ArticleNotFound from '../../src/errors/article-not-found';
 import NotAnArticle from '../../src/errors/not-an-article';
 import { schema } from '../../src/namespaces';
 import createArticle from '../create-article';
-import CreateDb from '../../src/tools/create-db';
+import CreateTables from '../../src/tools/create-tables';
+import db from '../../src/db';
 
+let pgp: IMain;
 let database: IBaseProtocol<IMain>;
 
 beforeAll(async (): Promise<void> => {
-  jest.setTimeout(10000);
-  database = await getDatabase().then((db) => pgPromise()(db.databaseURL));
-  await pgSetup();
-  await new CreateDb(database).init();
-  jest.setTimeout(5000);
+  pgp = pgPromise();
+  database = pgp(db);
+  await new CreateTables(database).run();
 });
 
-afterAll(async (): Promise<void> => {
-  await pgTeardown();
+afterAll((): void => {
+  pgp.end();
 });
 
 describe('postgres articles', (): void => {

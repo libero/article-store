@@ -1,13 +1,13 @@
 import { IBaseProtocol, IMain } from 'pg-promise';
 
-export default class CreateDb {
+export default class CreateTables {
   private database: IBaseProtocol<IMain>;
 
   public constructor(database: IBaseProtocol<IMain>) {
     this.database = database;
   }
 
-  async init(): Promise<void> {
+  async run(): Promise<void> {
     await this.database.none('DROP TABLE IF EXISTS articles');
     await this.database.none(`CREATE TABLE IF NOT EXISTS articles (
       uuid VARCHAR (32) NOT NULL UNIQUE,
