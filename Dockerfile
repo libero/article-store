@@ -47,6 +47,7 @@ ENV NODE_ENV=development
 COPY .eslintignore \
     .eslintrc.js \
     jest.config.js \
+    stryker.conf.js \
     tsconfig.json \
     ./
 COPY --from=npm-dev /app/ .

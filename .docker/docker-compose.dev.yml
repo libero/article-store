@@ -12,5 +12,6 @@ services:
       - ../src/:/app/src
       - ../package.json:/app/package.json
       - ../package-lock.json:/app/package-lock.json
+      - ../stryker.conf.js:/app/stryker.conf.js
       - ../test/:/app/test
       - ../tsconfig.json:/app/tsconfig.json

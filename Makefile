@@ -72,6 +72,10 @@ test: export TARGET = dev
 test: ## Run the tests
 	${DOCKER_COMPOSE} run --rm app npm run test
 
+mutation-test: export TARGET = dev
+mutation-test: ## Run the mutation tests
+	${DOCKER_COMPOSE} run --rm app npm run test:mutation
+
 run:
 	${DOCKER_COMPOSE} up --abort-on-container-exit --exit-code-from app; ${DOCKER_COMPOSE} down
 
