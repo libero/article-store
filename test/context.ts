@@ -1,8 +1,6 @@
 import Router from '@koa/router';
 import { UnknownError } from 'http-errors';
 import Koa, { Context, Request, Response } from 'koa';
-import KoaRequest from 'koa/lib/request';
-import KoaResponse from 'koa/lib/response';
 import { Request as IncomingMessage, Response as ServerResponse } from 'mock-http';
 import { DatasetCore } from 'rdf-js';
 import InMemoryArticles from '../src/adaptors/in-memory-articles';
@@ -45,7 +43,7 @@ export default ({
   const app = new Koa();
   app.on('error', errorListener || jest.fn());
 
-  const request = Object.create(KoaRequest) as WithDataset<Request>;
+  const request = Object.create(app.request) as WithDataset<Request>;
   request.app = app;
   request.dataset = requestDataset;
   request.req = new IncomingMessage({
@@ -58,7 +56,7 @@ export default ({
     method,
   });
 
-  const response = Object.create(KoaResponse) as WithDataset<Response>;
+  const response = Object.create(app.response) as WithDataset<Response>;
   response.req = request.req;
   response.res = new ServerResponse();
   response.dataset = dataset();
