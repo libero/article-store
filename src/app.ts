@@ -36,7 +36,7 @@ export default (
   app.use(logger());
   app.use(emptyResponse());
   app.use(cors({
-    exposeHeaders: ['Link'],
+    exposeHeaders: ['Link', 'Location'],
   }));
   app.use(setDataFactory(dataFactory));
   app.use(addDatasets());
