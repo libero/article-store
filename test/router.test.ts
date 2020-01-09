@@ -5,9 +5,9 @@ import Routes from '../src/routes';
 describe('router', (): void => {
   const router = createRouter();
 
-  Object.keys(Routes).forEach((name: string): void => {
+  Object.values(Routes).forEach((name: string): void => {
     it(`has a route named ${name}`, (): void => {
-      expect(router.route(Routes[name])).toBeInstanceOf(Layer);
+      expect(router.route(name)).toBeInstanceOf(Layer);
     });
   });
 });
