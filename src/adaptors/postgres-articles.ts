@@ -9,8 +9,6 @@ import pEvent from 'p-event';
 import { fromStream, toStream } from 'rdf-dataset-ext';
 import { JsonLdObj } from 'jsonld/jsonld-spec';
 import toReadableStream from 'to-readable-stream';
-import dataset from '@rdfjs/dataset';
-import model from '@rdfjs/data-model';
 import createDataset from 'rdf-dataset-indexed';
 import Articles from '../articles';
 import ArticleNotFound from '../errors/article-not-found';
