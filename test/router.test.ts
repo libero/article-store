@@ -4,9 +4,9 @@ import Routes from '../src/routes';
 describe('router', (): void => {
   const router = createRouter();
 
-  Object.keys(Routes).forEach((name: string): void => {
+  Object.values(Routes).forEach((name: string): void => {
     it(`has a route named ${name}`, (): void => {
-      expect(router.route(Routes[name])).toMatchObject({ name: Routes[name] });
+      expect(router.route(name)).toMatchObject({ name });
     });
   });
 });

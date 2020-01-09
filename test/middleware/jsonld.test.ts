@@ -21,7 +21,7 @@ const makeRequest = async (
   return context;
 };
 
-const next = (body = null, quads: Array<Quad> = [], type = null, status = null) => (
+const next = (body?: unknown, quads?: Array<Quad>, type?: string, status?: number) => (
   async ({ response }: AppContext): Promise<void> => {
     if (body) {
       response.body = body;
@@ -72,7 +72,7 @@ describe('JSON-LD middleware', (): void => {
   });
 
   it('sets the response JSON-LD body with the dataset', async (): Promise<void> => {
-    const { response } = await makeRequest(null, null, next(null, quads));
+    const { response } = await makeRequest(undefined, undefined, next(undefined, quads));
 
     const contentType = parseContentType(response);
     const expected = {
@@ -93,13 +93,13 @@ describe('JSON-LD middleware', (): void => {
   });
 
   it('sets the response status code as 200 OK if there is a dataset', async (): Promise<void> => {
-    const { response } = await makeRequest(null, null, next(null, quads));
+    const { response } = await makeRequest(undefined, undefined, next(undefined, quads));
 
     expect(response.status).toBe(200);
   });
 
   it('does not override the response status code', async (): Promise<void> => {
-    const { response } = await makeRequest(null, null, next(null, quads, null, 201));
+    const { response } = await makeRequest(undefined, undefined, next(undefined, quads, undefined, 201));
 
     expect(response.status).toBe(201);
   });
@@ -112,7 +112,7 @@ describe('JSON-LD middleware', (): void => {
       dc: 'http://purl.org/dc/elements/1.1/',
     };
 
-    const { response } = await makeRequest(null, null, next(null, quads), context);
+    const { response } = await makeRequest(undefined, undefined, next(undefined, quads), context);
 
     const expected = {
       '@context': context,
@@ -134,14 +134,14 @@ describe('JSON-LD middleware', (): void => {
   });
 
   it('does nothing to the response if the body is already set', async (): Promise<void> => {
-    const { response } = await makeRequest(null, null, next('some text', quads));
+    const { response } = await makeRequest(undefined, undefined, next('some text', quads));
 
     expect(response.type).toBe('text/plain');
     expect(response.body).toBe('some text');
   });
 
   it('does nothing to the response if the status code is 204 No Content', async (): Promise<void> => {
-    const { response } = await makeRequest(null, null, next(null, quads, null, 204));
+    const { response } = await makeRequest(undefined, undefined, next(undefined, quads, undefined, 204));
 
     expect(response.headers).not.toHaveProperty('content-type');
     expect(response.body).toBe(undefined);
