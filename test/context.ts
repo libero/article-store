@@ -16,7 +16,7 @@ export type Headers = Record<string, string>;
 type Options = {
   articles?: Articles;
   body?: string;
-  dataset?: DatasetCore;
+  dataset?: DatasetCore | false;
   errorListener?: ErrorListener;
   headers?: Headers;
   method?: string;
@@ -45,7 +45,9 @@ export default ({
 
   const request = Object.create(app.request) as WithDataset<Request>;
   request.app = app;
-  request.dataset = requestDataset;
+  if (requestDataset) {
+    request.dataset = requestDataset;
+  }
   request.req = new IncomingMessage({
     buffer: typeof body === 'string' ? Buffer.from(body) : undefined,
     headers: {
@@ -59,7 +61,9 @@ export default ({
   const response = Object.create(app.response) as WithDataset<Response>;
   response.req = request.req;
   response.res = new ServerResponse();
-  response.dataset = dataset();
+  if (requestDataset) {
+    response.dataset = dataset();
+  }
 
   return {
     app, articles, dataFactory, method, path, request, response, router,

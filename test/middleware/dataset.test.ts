@@ -3,7 +3,7 @@ import dataset, { DatasetContext } from '../../src/middleware/dataset';
 import createContext from '../context';
 
 const makeRequest = async (next: Next = jest.fn()): Promise<DatasetContext> => {
-  const context = createContext();
+  const context = createContext({ dataset: false });
 
   await dataset()(context, next);
 
