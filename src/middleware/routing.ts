@@ -1,11 +1,11 @@
-import Router, { Middleware, RouterContext } from '@koa/router';
+import Router, { Middleware, RouterParamContext } from '@koa/router';
 import createHttpError from 'http-errors';
 import { DefaultContextExtends, DefaultStateExtends, Next } from 'koa';
 import compose from 'koa-compose';
 
 const notFound = <State extends DefaultStateExtends, Context extends DefaultContextExtends>
   (): Middleware<State, Context> => (
-    async ({ _matchedRoute }: RouterContext<State, Context>, next: Next): Promise<void> => {
+    async ({ _matchedRoute }: RouterParamContext<State, Context>, next: Next): Promise<void> => {
       await next();
 
       if (typeof _matchedRoute === 'undefined') {
