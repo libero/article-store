@@ -44,7 +44,7 @@ export default class PostgresArticles implements Articles {
   }
 
   async get(id: BlankNode): Promise<DatasetCore> {
-    const article = await this.database.oneOrNone('SELECT article FROM articles WHERE uuid = $[uuid]', { uuid: termToString(id) }, async (data: { article: string } | null): Promise<string | null> => (
+    const article = await this.database.one('SELECT article FROM articles WHERE uuid = $[uuid]', { uuid: termToString(id) }, (data: { article: string } | null) => (
       (data) ? data.article : data
     ));
 
