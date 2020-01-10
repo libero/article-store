@@ -3,7 +3,7 @@
     "target": "es2019",
     "module": "commonjs",
     "outDir": "build",
-    "alwaysStrict": true,
+    "strict": true,
     "esModuleInterop": true
   },
   "include": [
