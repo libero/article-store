@@ -1,6 +1,9 @@
 import createRouter from '../src/router';
 import Routes from '../src/routes';
 
+/**
+ * @group unit
+ */
 describe('router', (): void => {
   const router = createRouter();
 

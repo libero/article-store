@@ -10,6 +10,9 @@ const makeRequest = async (next: Next = jest.fn()): Promise<DatasetContext> => {
   return context;
 };
 
+/**
+ * @group unit
+ */
 describe('Dataset middleware', (): void => {
   it('adds an empty dataset to the request', async (): Promise<void> => {
     const { request } = await makeRequest();

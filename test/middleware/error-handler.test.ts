@@ -16,6 +16,9 @@ const next = (error: UnknownError) => async (): Promise<void> => {
   throw error;
 };
 
+/**
+ * @group unit
+ */
 describe('error-handler middleware', (): void => {
   describe('for an http error', (): void => {
     it('should capture the error and return an error response', async (): Promise<void> => {

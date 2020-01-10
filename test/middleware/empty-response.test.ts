@@ -7,6 +7,9 @@ const makeRequest = async (next?: NextMiddleware): Promise<Response> => (
   runMiddleware(emptyResponse(), createContext(), next)
 );
 
+/**
+ * @group unit
+ */
 describe('Empty response middleware', (): void => {
   it('sets an empty string body if it has not been set', async (): Promise<void> => {
     const response = await makeRequest();

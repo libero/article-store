@@ -8,6 +8,9 @@ const makeRequest = async (next?: NextMiddleware): Promise<Response> => (
   runMiddleware(apiDocumentation('/path-to/api-documentation'), createContext(), next)
 );
 
+/**
+ * @group unit
+ */
 describe('API documentation link middleware', (): void => {
   it('adds the API documentation link', async (): Promise<void> => {
     const response = await makeRequest();

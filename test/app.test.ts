@@ -16,6 +16,9 @@ beforeEach((): void => {
   app = createApp(new InMemoryArticles(), router, router.url(Routes.ApiDocumentation), dataFactory);
 });
 
+/**
+ * @group unit
+ */
 describe('the application', (): void => {
   it('should respond with 200 OK on the root', async (): Promise<void> => {
     const response = await request(app.callback()).get('/');

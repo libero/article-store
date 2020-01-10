@@ -1,6 +1,9 @@
 import { blankNode } from '@rdfjs/data-model';
 import ArticleNotFound from '../../src/errors/article-not-found';
 
+/**
+ * @group unit
+ */
 describe('article not found error', (): void => {
   it('should be an error', async (): Promise<void> => {
     const error = new ArticleNotFound(blankNode());

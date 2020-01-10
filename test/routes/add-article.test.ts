@@ -21,6 +21,9 @@ const makeRequest = async (
   runMiddleware(addArticle(), createContext({ articles, dataset }), next)
 );
 
+/**
+ * @group unit
+ */
 describe('add article', (): void => {
   it('should return a successful response', async (): Promise<void> => {
     const articles = new InMemoryArticles();

@@ -10,6 +10,9 @@ const makeRequest = async (next?: NextMiddleware): Promise<WithDataset<Response>
   runMiddleware(apiDocumentation(), createContext(), next)
 );
 
+/**
+ * @group unit
+ */
 describe('API documentation', (): void => {
   it('should return a successful response', async (): Promise<void> => {
     const response = await makeRequest();

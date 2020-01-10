@@ -12,6 +12,9 @@ const makeRequest = async (next: Next = jest.fn()): Promise<DataFactoryContext> 
   return context;
 };
 
+/**
+ * @group unit
+ */
 describe('Data factory middleware', (): void => {
   it('adds a data factory to the context', async (): Promise<void> => {
     const { dataFactory: actual } = await makeRequest();

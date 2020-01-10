@@ -58,6 +58,9 @@ const jsonLd = {
   ],
 };
 
+/**
+ * @group unit
+ */
 describe('JSON-LD middleware', (): void => {
   it('adds a dataset to the request with JSON-LD body', async (): Promise<void> => {
     const { request } = await makeRequest(JSON.stringify(jsonLd), { 'Content-Type': 'application/ld+json' });

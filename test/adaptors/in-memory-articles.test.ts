@@ -8,6 +8,9 @@ import NotAnArticle from '../../src/errors/not-an-article';
 import { schema } from '../../src/namespaces';
 import createArticle from '../create-article';
 
+/**
+ * @group unit
+ */
 describe('in-memory articles', (): void => {
   it('can add an article', async (): Promise<void> => {
     const articles = new InMemoryArticles();

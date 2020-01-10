@@ -2,6 +2,9 @@ import { literal } from '@rdfjs/data-model';
 import NotAnArticle from '../../src/errors/not-an-article';
 import { schema } from '../../src/namespaces';
 
+/**
+ * @group unit
+ */
 describe('not an article error', (): void => {
   it('should be an error', async (): Promise<void> => {
     const error = new NotAnArticle();

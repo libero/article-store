@@ -14,6 +14,9 @@ const makeRequest = async (next?: NextMiddleware, articles?: Articles): Promise<
   runMiddleware(articleList(), createContext({ articles }), next)
 );
 
+/**
+ * @group unit
+ */
 describe('article list', (): void => {
   it('should return a successful response', async (): Promise<void> => {
     const response = await makeRequest();

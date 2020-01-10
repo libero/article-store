@@ -24,6 +24,9 @@ const makeRequest = async (method: string, path: string, next?: NextMiddleware):
   return runMiddleware(routing(context.router), context, next);
 };
 
+/**
+ * @group unit
+ */
 describe('routing middleware', (): void => {
   it('should match the method and path', async (): Promise<void> => {
     const response = await makeRequest('DELETE', '/');
