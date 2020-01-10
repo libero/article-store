@@ -44,13 +44,15 @@ export default class PostgresArticles implements Articles {
   }
 
   async get(id: BlankNode): Promise<DatasetCore> {
-    return this.database.oneOrNone('SELECT article FROM articles WHERE uuid = $[uuid]', { uuid: termToString(id) }, async (data: { article: string } | null) => {
-      if (!data) {
-        throw new ArticleNotFound(id);
-      }
+    const article = await this.database.oneOrNone('SELECT article FROM articles WHERE uuid = $[uuid]', { uuid: termToString(id) }, async (data: { article: string } | null): Promise<string | null> => (
+      (data) ? data.article : data
+    ));
 
-      return fromStream(this.dataFactory.dataset(), this.parser.import(toReadableStream(data.article)));
-    });
+    if (!article) {
+      throw new ArticleNotFound(id);
+    }
+
+    return fromStream(this.dataFactory.dataset(), this.parser.import(toReadableStream(article)));
   }
 
   async remove(id: BlankNode): Promise<void> {
@@ -69,7 +71,7 @@ export default class PostgresArticles implements Articles {
     yield* await this.database.any('SELECT uuid, article FROM articles').then((rows) => rows.map(async (row: { uuid: string; article: string }) => [stringToTerm(row.uuid), await fromStream(this.dataFactory.dataset(), this.parser.import(toReadableStream(row.article)))])) as [[BlankNode, DatasetCore]];
   }
 
-  async static createTables(database: IBaseProtocol<IMain>): Promise<void> {
+  static async createTables(database: IBaseProtocol<IMain>): Promise<void> {
     await database.none('DROP TABLE IF EXISTS articles');
     await database.none(`CREATE TABLE IF NOT EXISTS articles (
       uuid varchar (34) NOT NULL UNIQUE,
