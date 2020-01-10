@@ -1,5 +1,5 @@
 import pgPromise from 'pg-promise';
 import db from '../db';
-import CreateTables from './create-tables';
+import PostgresArticles from '../adaptors/postgres-articles';
 
-new CreateTables(pgPromise()(db)).run();
+PostgresArticles.createTables(pgPromise()(db));

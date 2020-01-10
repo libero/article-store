@@ -1,5 +1,6 @@
 import { blankNode, literal, quad } from '@rdfjs/data-model';
 import all from 'it-all';
+import 'jest-rdf';
 import { BlankNode, DatasetCore } from 'rdf-js';
 import pgPromise, { IBaseProtocol, IMain } from 'pg-promise';
 import PostgresArticles from '../../src/adaptors/postgres-articles';
@@ -7,8 +8,8 @@ import ArticleNotFound from '../../src/errors/article-not-found';
 import NotAnArticle from '../../src/errors/not-an-article';
 import { schema } from '../../src/namespaces';
 import createArticle from '../create-article';
-import CreateTables from '../../src/tools/create-tables';
 import db from '../../src/db';
+import dataFactory from '../../src/data-factory';
 
 let pgp: IMain;
 let database: IBaseProtocol<IMain>;
@@ -16,7 +17,7 @@ let database: IBaseProtocol<IMain>;
 beforeAll(async (): Promise<void> => {
   pgp = pgPromise();
   database = pgp(db);
-  await new CreateTables(database).run();
+  await PostgresArticles.createTables(database);
 });
 
 afterAll((): void => {
@@ -29,7 +30,7 @@ describe('postgres articles', (): void => {
   });
 
   it('can add an article', async (): Promise<void> => {
-    const articles = new PostgresArticles(database);
+    const articles = new PostgresArticles(database, dataFactory);
     const id = blankNode();
 
     expect(await articles.contains(id)).toBe(false);
@@ -40,7 +41,7 @@ describe('postgres articles', (): void => {
   });
 
   it('can add an article with multiple types', async (): Promise<void> => {
-    const articles = new PostgresArticles(database);
+    const articles = new PostgresArticles(database, dataFactory);
     const id = blankNode();
     const article = createArticle({ id, types: [schema.Article, schema.NewsArticle] });
 
@@ -50,7 +51,7 @@ describe('postgres articles', (): void => {
   });
 
   it('can update an article', async (): Promise<void> => {
-    const articles = new PostgresArticles(database);
+    const articles = new PostgresArticles(database, dataFactory);
     const id = blankNode();
 
     await articles.set(id, createArticle({ id, name: literal('Original') }));
@@ -60,7 +61,7 @@ describe('postgres articles', (): void => {
   });
 
   it('throws an error if it is not an article', async (): Promise<void> => {
-    const articles = new PostgresArticles(database);
+    const articles = new PostgresArticles(database, dataFactory);
     const id = blankNode();
     const article = createArticle({ id, types: [schema.NewsArticle] });
 
@@ -68,7 +69,7 @@ describe('postgres articles', (): void => {
   });
 
   it('throws an error if it has no type', async (): Promise<void> => {
-    const articles = new PostgresArticles(database);
+    const articles = new PostgresArticles(database, dataFactory);
     const id = blankNode();
     const article = createArticle({ id, types: [] });
 
@@ -76,7 +77,7 @@ describe('postgres articles', (): void => {
   });
 
   it('can retrieve an article', async (): Promise<void> => {
-    const articles = new PostgresArticles(database);
+    const articles = new PostgresArticles(database, dataFactory);
     const id = blankNode();
     const article = createArticle({ id });
 
@@ -86,7 +87,7 @@ describe('postgres articles', (): void => {
   });
 
   it('throws an error if the article is not found', async (): Promise<void> => {
-    const articles = new PostgresArticles(database);
+    const articles = new PostgresArticles(database, dataFactory);
     const id = blankNode();
 
     await expect(articles.get(id)).rejects.toBeInstanceOf(ArticleNotFound);
@@ -94,7 +95,7 @@ describe('postgres articles', (): void => {
   });
 
   it('can remove an article', async (): Promise<void> => {
-    const articles = new PostgresArticles(database);
+    const articles = new PostgresArticles(database, dataFactory);
     const id = blankNode();
 
     await articles.set(id, createArticle({ id }));
@@ -104,14 +105,14 @@ describe('postgres articles', (): void => {
   });
 
   it('does nothing when trying to remove an article that is not there', async (): Promise<void> => {
-    const articles = new PostgresArticles(database);
+    const articles = new PostgresArticles(database, dataFactory);
     const id = blankNode();
 
     await expect(articles.remove(id)).resolves.not.toThrow();
   });
 
   it('can count the number of articles', async (): Promise<void> => {
-    const articles = new PostgresArticles(database);
+    const articles = new PostgresArticles(database, dataFactory);
 
     expect(await articles.count()).toBe(0);
 
@@ -126,7 +127,7 @@ describe('postgres articles', (): void => {
   });
 
   it('can iterate through the articles', async (): Promise<void> => {
-    const articles = new PostgresArticles(database);
+    const articles = new PostgresArticles(database, dataFactory);
 
     const id1 = blankNode();
     const id2 = blankNode();

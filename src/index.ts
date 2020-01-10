@@ -6,7 +6,7 @@ import PostgresArticles from './adaptors/postgres-articles';
 import Routes from './routes';
 import db from './db';
 
-const articles = new PostgresArticles(pgPromise()(db));
+const articles = new PostgresArticles(pgPromise()(db), dataFactory);
 const router = createRouter();
 const apiDocumentationPath = router.url(Routes.ApiDocumentation);
 
