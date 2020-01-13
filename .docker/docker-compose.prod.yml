@@ -7,3 +7,5 @@ services:
       args:
         image_tag: ${IMAGE_TAG:-master}
     image: libero/article-store:${IMAGE_TAG:-master}
+    depends_on:
+      - db
