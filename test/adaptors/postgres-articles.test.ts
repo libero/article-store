@@ -24,7 +24,7 @@ afterAll((): void => {
   pgp.end();
 });
 
-describe('postgres articles', (): void => {
+describe('postgres articles (#integration)', (): void => {
   beforeEach(async (): Promise<void> => {
     await database.none('TRUNCATE articles');
   });
