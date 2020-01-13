@@ -27,6 +27,7 @@ module.exports = {
       ignoreTemplateLiterals: true,
     }],
     'no-undef': 'off',
+    'import/extensions': ['error', 'never'],
   },
   settings: {
     'import/resolver': {
