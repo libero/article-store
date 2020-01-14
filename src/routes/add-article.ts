@@ -14,14 +14,15 @@ export default (): AppMiddleware => (
   async ({
     articles, dataFactory: { namedNode, quad }, request, response, router,
   }: AppContext, next: Next): Promise<void> => {
+    console.log(request.dataset);
     const id = clownface({ dataset: request.dataset }).has(rdf.type, schema.Article).term;
 
     if (!id) {
       throw new createHttpError.BadRequest(`No ${termToString(schema.Article)} found`);
     }
 
-    if (id.termType !== 'NamedNode') {
-      throw new createHttpError.BadRequest(`Article must have a named node identifier (${termToString(id)} given)`);
+    if (id.termType !== 'BlankNode') {
+      throw new createHttpError.BadRequest(`Article must have a blank node identifier (${termToString(id)} given)`);
     }
 
     if (request.dataset.match(id, schema('name')).size === 0) {

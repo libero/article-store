@@ -2,7 +2,7 @@ import {
   DatasetCore, Literal, NamedNode, Quad_Subject as QuadSubject,
 } from 'rdf-js';
 import {
-  dataset, literal, namedNode, quad,
+  blankNode, dataset, literal, quad,
 } from '../src/data-factory';
 import { rdf, schema } from '../src/namespaces';
 
@@ -13,7 +13,7 @@ type Options = {
 }
 
 export default ({
-  id = namedNode('one'),
+  id = blankNode(),
   name = literal('Article'),
   types = [schema.Article],
 }: Options = {}): DatasetCore => {
