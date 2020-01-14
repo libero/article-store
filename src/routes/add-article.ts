@@ -12,7 +12,7 @@ import Routes from './index';
 
 export default (): AppMiddleware => (
   async ({
-    articles, dataFactory: { blankNode, quad }, request, response, router,
+    articles, dataFactory: { namedNode, quad }, request, response, router,
   }: AppContext, next: Next): Promise<void> => {
     const id = clownface({ dataset: request.dataset }).has(rdf.type, schema.Article).term;
 
@@ -28,7 +28,7 @@ export default (): AppMiddleware => (
       throw new createHttpError.BadRequest(`Article must have at least one ${termToString(schema('name'))}`);
     }
 
-    const newId = blankNode(uniqueString());
+    const newId = namedNode(uniqueString());
 
     [...request.dataset].forEach((originalQuad: Quad): void => {
       let newQuad: Quad;

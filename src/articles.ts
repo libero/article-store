@@ -1,13 +1,13 @@
-import { BlankNode, DatasetCore } from 'rdf-js';
+import { DatasetCore, NamedNode } from 'rdf-js';
 
-interface Articles extends AsyncIterable<[BlankNode, DatasetCore]> {
-  set(id: BlankNode, article: DatasetCore): Promise<void>;
+interface Articles extends AsyncIterable<[NamedNode, DatasetCore]> {
+  set(id: NamedNode, article: DatasetCore): Promise<void>;
 
-  get(id: BlankNode): Promise<DatasetCore>;
+  get(id: NamedNode): Promise<DatasetCore>;
 
-  remove(id: BlankNode): Promise<void>;
+  remove(id: NamedNode): Promise<void>;
 
-  contains(id: BlankNode): Promise<boolean>;
+  contains(id: NamedNode): Promise<boolean>;
 
   count(): Promise<number>;
 }
