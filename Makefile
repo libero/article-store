@@ -71,12 +71,16 @@ fix: export TARGET = dev
 fix: ## Fix linting issues in the code
 	${DOCKER_COMPOSE} run --rm app npm run lint:fix
 
-test: export TARGET = test
-test: ## Run the tests
+test: export TARGET = dev
+test: ## Run all the tests
 	${DOCKER_COMPOSE} run --rm app npm run test
 
-test-integration: export TARGET = dev
-test-integration: ## Run the integration tests
+unit-test: export TARGET = test
+unit-test: ## Run the unit tests
+	${DOCKER_COMPOSE} run --rm app npm run test:unit
+
+integration-test: export TARGET = dev
+integration-test: ## Run the integration tests
 	${DOCKER_COMPOSE} run --rm app npm run test:integration
 
 run:
