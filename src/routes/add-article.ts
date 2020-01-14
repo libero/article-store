@@ -14,7 +14,6 @@ export default (): AppMiddleware => (
   async ({
     articles, dataFactory: { namedNode, quad }, request, response, router,
   }: AppContext, next: Next): Promise<void> => {
-    console.log(request.dataset);
     const id = clownface({ dataset: request.dataset }).has(rdf.type, schema.Article).term;
 
     if (!id) {
