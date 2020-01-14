@@ -1,4 +1,4 @@
-import { blankNode, namedNode, quad } from '@rdfjs/data-model';
+import { namedNode, quad } from '@rdfjs/data-model';
 import { Response } from 'koa';
 import { toRdf } from 'rdf-literal';
 import InMemoryArticles from '../../src/adaptors/in-memory-articles';
@@ -35,8 +35,8 @@ describe('article list', (): void => {
   it('should return articles in the list', async (): Promise<void> => {
     const articles = new InMemoryArticles();
 
-    const id1 = blankNode();
-    const id2 = blankNode();
+    const id1 = namedNode('one');
+    const id2 = namedNode('two');
 
     await articles.set(id1, createArticle({ id: id1 }));
     await articles.set(id2, createArticle({ id: id2 }));
