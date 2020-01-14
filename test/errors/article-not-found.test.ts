@@ -3,7 +3,7 @@ import ArticleNotFound from '../../src/errors/article-not-found';
 
 describe('article not found error', (): void => {
   it('should be an error', async (): Promise<void> => {
-    const error = new ArticleNotFound(namedNode('1'));
+    const error = new ArticleNotFound(namedNode('one'));
 
     expect(error).toBeInstanceOf(Error);
   });
@@ -15,7 +15,7 @@ describe('article not found error', (): void => {
   });
 
   it('should have an ID', async (): Promise<void> => {
-    const id = namedNode('1');
+    const id = namedNode('one');
     const error = new ArticleNotFound(id);
 
     expect(error.id).toBe(id);
