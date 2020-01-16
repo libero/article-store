@@ -29,7 +29,7 @@ describe('add article', (): void => {
     const response = await makeRequest(createArticle({ id, name }), undefined, articles);
 
     expect(response.status).toBe(201);
-    expect(response.get('Location')).toBe('http://example.com/path-to/article-list');
+    expect(response.get('Location')).toBe('http://example.com/path-to/article');
     expect(await articles.count()).toBe(1);
 
     const [newId, dataset] = (await all(articles))[0];
