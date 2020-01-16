@@ -28,7 +28,7 @@ export default (): AppMiddleware => (
       throw new createHttpError.BadRequest(`Article must have at least one ${termToString(schema('name'))}`);
     }
 
-    const newId = namedNode(uniqueString());
+    const newId = namedNode(url.resolve(request.origin, router.url(Routes.Article, { id: uniqueString() })));
 
     [...request.dataset].forEach((originalQuad: Quad): void => {
       let newQuad: Quad;
@@ -46,7 +46,7 @@ export default (): AppMiddleware => (
     await articles.set(newId, request.dataset);
 
     response.status = constants.HTTP_STATUS_CREATED;
-    response.set('Location', url.resolve(request.origin, router.url(Routes.ArticleList)));
+    response.set('Location', newId.value);
 
     await next();
   }
