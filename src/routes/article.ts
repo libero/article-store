@@ -3,15 +3,14 @@ import createHttpError from 'http-errors';
 import { constants } from 'http2';
 import { Next } from 'koa';
 import { addAll } from 'rdf-dataset-ext';
-import url from 'url';
 import { AppContext, AppMiddleware } from '../app';
 
 export default (): AppMiddleware => (
   async ({
-    dataFactory: { namedNode }, articles, request, response,
+    dataFactory: { namedNode }, articles, path, response,
   }: AppContext, next: Next): Promise<void> => {
-    if (response.status === constants.HTTP_STATUS_NOT_FOUND) {
-      const articleNamedNode = namedNode(url.resolve(request.origin, request.url));
+    if (!response.status || response.status === constants.HTTP_STATUS_NOT_FOUND) {
+      const articleNamedNode = namedNode(path);
       const graph = clownface({
         dataset: response.dataset,
         term: articleNamedNode,
