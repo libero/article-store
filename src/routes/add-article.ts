@@ -46,7 +46,7 @@ export default (): AppMiddleware => (
     await articles.set(newId, request.dataset);
 
     response.status = constants.HTTP_STATUS_CREATED;
-    response.set('Location', url.resolve(request.origin, router.url(Routes.ArticleList)));
+    response.set('Location', newId.value);
 
     await next();
   }

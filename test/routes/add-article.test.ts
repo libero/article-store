@@ -5,6 +5,7 @@ import createHttpError from 'http-errors';
 import all from 'it-all';
 import { Response } from 'koa';
 import { DatasetCore } from 'rdf-js';
+import Router from '@koa/router';
 import InMemoryArticles from '../../src/adaptors/in-memory-articles';
 import Articles from '../../src/articles';
 import { schema } from '../../src/namespaces';
@@ -17,8 +18,9 @@ const makeRequest = async (
   dataset?: DatasetCore,
   next?: NextMiddleware,
   articles: Articles = new InMemoryArticles(),
+  router?: Router,
 ): Promise<Response> => (
-  runMiddleware(addArticle(), createContext({ articles, dataset }), next)
+  runMiddleware(addArticle(), createContext({ articles, dataset, router }), next)
 );
 
 describe('add article', (): void => {
@@ -26,10 +28,15 @@ describe('add article', (): void => {
     const articles = new InMemoryArticles();
     const id = blankNode();
     const name = literal('Article');
-    const response = await makeRequest(createArticle({ id, name }), undefined, articles);
+    const dummyRouter = {
+      url(): string {
+        return '/path-to/article/one';
+      },
+    } as unknown as Router;
+    const response = await makeRequest(createArticle({ id, name }), undefined, articles, dummyRouter);
 
     expect(response.status).toBe(201);
-    expect(response.get('Location')).toBe('http://example.com/path-to/article-list');
+    expect(response.get('Location')).toBe('http://example.com/path-to/article/one');
     expect(await articles.count()).toBe(1);
 
     const [newId, dataset] = (await all(articles))[0];
