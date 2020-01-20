@@ -13,14 +13,10 @@ export default (): AppMiddleware => (
   }: AppContext, next: Next): Promise<void> => {
     if (!response.status || response.status === constants.HTTP_STATUS_NOT_FOUND) {
       const articleNamedNode = namedNode(url.resolve(request.origin, path));
-      const graph = clownface({
-        dataset: response.dataset,
-        term: articleNamedNode,
-      });
+      let article;
+
       try {
-        await articles.get(articleNamedNode).then((article) => {
-          addAll(graph.dataset, article);
-        });
+        article = await articles.get(articleNamedNode);
       } catch (error) {
         if (error instanceof ArticleNotFound) {
           throw new createHttpError.NotFound(error.message);
@@ -28,6 +24,13 @@ export default (): AppMiddleware => (
 
         throw error;
       }
+
+      const graph = clownface({
+        dataset: response.dataset,
+        term: articleNamedNode,
+      });
+
+      addAll(graph.dataset, article);
 
       response.status = constants.HTTP_STATUS_OK;
     }
