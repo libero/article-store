@@ -26,7 +26,7 @@ describe('article', (): void => {
     const id = namedNode('http://example.com/path-to/article/one');
     await articles.set(id, createArticle({ id }));
 
-    const response = await makeRequest(undefined, 'http://example.com/path-to/article/one', articles);
+    const response = await makeRequest(undefined, 'path-to/article/one', articles);
 
     expect(response.status).toBe(200);
   });
