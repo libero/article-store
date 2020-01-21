@@ -28,7 +28,7 @@ export default (): AppMiddleware => (
       throw new createHttpError.BadRequest(`Article must have at least one ${termToString(schema('name'))}`);
     }
 
-    const newId = namedNode(url.resolve(request.origin, router.url(Routes.Article, { id: uniqueString() })));
+    const newId = namedNode(url.resolve(request.origin, 'articles/'.concat(uniqueString())));
 
     [...request.dataset].forEach((originalQuad: Quad): void => {
       let newQuad: Quad;

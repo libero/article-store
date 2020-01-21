@@ -14,7 +14,6 @@ export default (): Router<AppState, AppServiceContext> => {
   router.get(Routes.ArticleList, '/articles', articleList());
   router.post(Routes.AddArticle, '/articles', addArticle());
   router.get(Routes.EntryPoint, '/', entryPoint());
-  router.get(Routes.Article, '/articles/:id', article());
   router.get(Routes.Article, /(|^$)/, article());
 
   return router;

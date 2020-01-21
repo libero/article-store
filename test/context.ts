@@ -25,8 +25,8 @@ type Options = {
 };
 
 const dummyRouter = {
-  url(name: string, params = {}): string {
-    return Router.url(`/path-to/${name}${(name === 'article') ? '/:id' : ''}`, params);
+  url(name: string): string {
+    return `/path-to/${name}`;
   },
 } as unknown as Router;
 
