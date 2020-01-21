@@ -8,11 +8,10 @@ import uniqueString from 'unique-string';
 import url from 'url';
 import { AppContext, AppMiddleware } from '../app';
 import { rdf, schema } from '../namespaces';
-import Routes from './index';
 
 export default (): AppMiddleware => (
   async ({
-    articles, dataFactory: { namedNode, quad }, request, response, router,
+    articles, dataFactory: { namedNode, quad }, request, response,
   }: AppContext, next: Next): Promise<void> => {
     const id = clownface({ dataset: request.dataset }).has(rdf.type, schema.Article).term;
 

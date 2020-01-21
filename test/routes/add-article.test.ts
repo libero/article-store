@@ -5,7 +5,6 @@ import createHttpError from 'http-errors';
 import all from 'it-all';
 import { Response } from 'koa';
 import { DatasetCore } from 'rdf-js';
-import Router from '@koa/router';
 import InMemoryArticles from '../../src/adaptors/in-memory-articles';
 import Articles from '../../src/articles';
 import { schema } from '../../src/namespaces';
