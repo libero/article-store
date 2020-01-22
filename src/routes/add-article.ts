@@ -1,6 +1,6 @@
 import clownface from 'clownface';
 import createHttpError from 'http-errors';
-import { constants } from 'http2';
+import { CREATED } from 'http-status-codes';
 import { Next } from 'koa';
 import { Quad } from 'rdf-js';
 import { termToString } from 'rdf-string';
@@ -45,7 +45,7 @@ export default (): AppMiddleware => (
 
     await articles.set(newId, request.dataset);
 
-    response.status = constants.HTTP_STATUS_CREATED;
+    response.status = CREATED;
     response.set('Location', url.resolve(request.origin, router.url(Routes.ArticleList)));
 
     await next();

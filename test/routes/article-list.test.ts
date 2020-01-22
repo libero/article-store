@@ -1,4 +1,5 @@
 import { namedNode, quad } from '@rdfjs/data-model';
+import { OK } from 'http-status-codes';
 import { Response } from 'koa';
 import { toRdf } from 'rdf-literal';
 import InMemoryArticles from '../../src/adaptors/in-memory-articles';
@@ -18,7 +19,7 @@ describe('article list', (): void => {
   it('should return a successful response', async (): Promise<void> => {
     const response = await makeRequest();
 
-    expect(response.status).toBe(200);
+    expect(response.status).toBe(OK);
   });
 
   it('should return an empty list', async (): Promise<void> => {

@@ -1,5 +1,6 @@
 import { blankNode, literal, quad } from '@rdfjs/data-model';
 import createHttpError from 'http-errors';
+import { INTERNAL_SERVER_ERROR, SERVICE_UNAVAILABLE } from 'http-status-codes';
 import 'jest-rdf';
 import { Response } from 'koa';
 import { WithDataset } from '../../src/middleware/dataset';
@@ -17,7 +18,7 @@ describe('error-handler middleware', (): void => {
     it('should capture the error and return an error response', async (): Promise<void> => {
       const response = await makeRequest(throwingNext(new createHttpError.ServiceUnavailable()));
 
-      expect(response.status).toBe(503);
+      expect(response.status).toBe(SERVICE_UNAVAILABLE);
     });
 
     it('should emit the error', async (): Promise<void> => {
@@ -47,7 +48,7 @@ describe('error-handler middleware', (): void => {
     it('should capture the error and return an error response', async (): Promise<void> => {
       const response = await makeRequest(throwingNext());
 
-      expect(response.status).toBe(500);
+      expect(response.status).toBe(INTERNAL_SERVER_ERROR);
     });
 
     it('should emit the error', async (): Promise<void> => {
