@@ -49,7 +49,7 @@ export default (
   }));
   app.use(apiDocumentationLink(apiDocumentationPath));
   app.use(errorHandler());
-  app.use(article(articles));
+  app.use(article());
   app.use(routing(router));
 
   return app;
