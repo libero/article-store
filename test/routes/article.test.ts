@@ -11,12 +11,16 @@ import createArticle from '../create-article';
 import runMiddleware, { NextMiddleware } from '../middleware';
 import { WithDataset } from '../../src/middleware/dataset';
 
+const dummyNext = async (): Promise<void> => {
+  throw new createHttpError.NotFound();
+};
+
 const makeRequest = async (
+  articles: Articles,
+  url: string,
   next?: NextMiddleware,
-  path?: string,
-  articles?: Articles,
 ): Promise<WithDataset<Response>> => (
-  runMiddleware(article(), createContext({ path, articles }), next)
+  runMiddleware(article(articles), createContext({ url }), typeof next !== 'undefined' ? next : dummyNext)
 );
 
 describe('article', (): void => {
@@ -26,14 +30,14 @@ describe('article', (): void => {
     const id = namedNode('http://example.com/path-to/article/one');
     await articles.set(id, createArticle({ id }));
 
-    const response = await makeRequest(undefined, 'path-to/article/one', articles);
+    const response = await makeRequest(articles, 'path-to/article/one');
 
     expect(response.status).toBe(200);
   });
 
   it('should throw an error if article is not found', async (): Promise<void> => {
     const articles = new InMemoryArticles();
-    const response = makeRequest(undefined, 'http://example.com/path-to/article/not-found', articles);
+    const response = makeRequest(articles, 'path-to/article/not-found');
 
     await expect(response).rejects.toBeInstanceOf(createHttpError.NotFound);
     await expect(response).rejects.toHaveProperty('message', 'Article http://example.com/path-to/article/not-found could not be found');
@@ -46,7 +50,7 @@ describe('article', (): void => {
     await articles.set(id, createArticle({ id }));
 
     const next = jest.fn();
-    await makeRequest(next, 'http://example.com/path-to/article/one', articles);
+    await makeRequest(articles, 'path-to/article/one', next);
 
     expect(next).toHaveBeenCalledTimes(1);
   });
