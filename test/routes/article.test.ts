@@ -14,26 +14,26 @@ import runMiddleware, { NextMiddleware } from '../middleware';
 import { WithDataset } from '../../src/middleware/dataset';
 import ArticleNotFound from '../../src/errors/article-not-found';
 
+const inMemoryArticles = new InMemoryArticles();
+
 const dummyNext = async (): Promise<void> => {
   throw new createHttpError.NotFound();
 };
 
 const makeRequest = async (
-  articles: Articles,
   url: string,
+  articles?: Articles,
   next?: NextMiddleware,
 ): Promise<WithDataset<Response>> => (
-  runMiddleware(article(articles), createContext({ url }), typeof next !== 'undefined' ? next : dummyNext)
+  runMiddleware(article(typeof articles !== 'undefined' ? articles : inMemoryArticles), createContext({ url }), typeof next !== 'undefined' ? next : dummyNext)
 );
 
 describe('article', (): void => {
   it('should return a successful response', async (): Promise<void> => {
-    const articles = new InMemoryArticles();
-
     const id = namedNode('http://example.com/path-to/article/one');
-    await articles.set(id, createArticle({ id }));
+    await inMemoryArticles.set(id, createArticle({ id }));
 
-    const response = await makeRequest(articles, 'path-to/article/one');
+    const response = await makeRequest('path-to/article/one');
 
     expect(response.status).toBe(OK);
   });
@@ -51,29 +51,32 @@ describe('article', (): void => {
     };
 
     const next = jest.fn();
-    await makeRequest(mockArticles, 'path-to/article/one', next);
+    await makeRequest('path-to/article/one', mockArticles, next);
     expect(mockArticles.get).toHaveBeenCalledTimes(0);
-    await expect(makeRequest(mockArticles, 'path-to/article/one')).rejects.toBeInstanceOf(createHttpError.NotFound);
+    await expect(makeRequest('path-to/article/one', mockArticles)).rejects.toBeInstanceOf(createHttpError.NotFound);
     expect(mockArticles.get).toHaveBeenCalledTimes(1);
     expect(mockArticles.get).toHaveBeenCalledWith(namedNode('http://example.com/path-to/article/one'));
   });
 
   it('should throw an error if article is not found', async (): Promise<void> => {
-    const articles = new InMemoryArticles();
-    const response = makeRequest(articles, 'path-to/article/not-found');
+    const response = makeRequest('path-to/article/not-found');
 
     await expect(response).rejects.toBeInstanceOf(createHttpError.NotFound);
     await expect(response).rejects.toHaveProperty('message', 'Article http://example.com/path-to/article/not-found could not be found');
   });
 
+  it('should throw error raised in next middleware', async (): Promise<void> => {
+    const next = async (): Promise<void> => {
+      throw new createHttpError.BadRequest();
+    };
+    const response = makeRequest('path-to/article/not-found', undefined, next);
+
+    await expect(response).rejects.toBeInstanceOf(createHttpError.BadRequest);
+  });
+
   it('should call the next middleware', async (): Promise<void> => {
-    const articles = new InMemoryArticles();
-
-    const id = namedNode('http://example.com/path-to/article/one');
-    await articles.set(id, createArticle({ id }));
-
     const next = jest.fn();
-    await makeRequest(articles, 'path-to/article/one', next);
+    await makeRequest('path-to/article/one', undefined, next);
 
     expect(next).toHaveBeenCalledTimes(1);
   });
