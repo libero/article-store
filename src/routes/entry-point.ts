@@ -1,5 +1,5 @@
 import clownface, { Clownface } from 'clownface';
-import { constants } from 'http2';
+import { OK } from 'http-status-codes';
 import { Next } from 'koa';
 import { NamedNode } from 'rdf-js';
 import url from 'url';
@@ -24,7 +24,7 @@ export default (): AppMiddleware => (
       list.addOut(rdf.type, hydra.Collection);
     });
 
-    response.status = constants.HTTP_STATUS_OK;
+    response.status = OK;
 
     await next();
   }

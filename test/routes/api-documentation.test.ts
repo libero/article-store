@@ -1,4 +1,5 @@
 import { namedNode, quad } from '@rdfjs/data-model';
+import { OK } from 'http-status-codes';
 import { Response } from 'koa';
 import { WithDataset } from '../../src/middleware/dataset';
 import { hydra, rdf } from '../../src/namespaces';
@@ -14,7 +15,7 @@ describe('API documentation', (): void => {
   it('should return a successful response', async (): Promise<void> => {
     const response = await makeRequest();
 
-    expect(response.status).toBe(200);
+    expect(response.status).toBe(OK);
   });
 
   it('should return the API documentation', async (): Promise<void> => {
