@@ -40,7 +40,6 @@ export default ({
   method,
   path,
   router = dummyRouter,
-  url,
 }: Options = {}): AppContext => {
   const app = new Koa();
   app.on('error', errorListener || jest.fn());
@@ -56,7 +55,6 @@ export default ({
       host: 'example.com',
     },
     method,
-    url: typeof url === 'string' ? url : undefined,
   });
 
   const response = Object.create(app.response) as WithDataset<Response>;

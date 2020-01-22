@@ -4,13 +4,14 @@ import {
   DefaultStateExtends, Middleware, Next,
 } from 'koa';
 import url from 'url';
-import Articles from '../articles';
+import { AppContext } from '../app';
 import { namedNode } from '../data-factory';
 import ArticleNotFound from '../errors/article-not-found';
-import { DatasetContext } from '../middleware/dataset';
 
-export default (articles: Articles): Middleware<DefaultStateExtends, DatasetContext> => (
-  async ({ request, response }: DatasetContext, next: Next): Promise<void> => {
+export default (): Middleware<DefaultStateExtends, AppContext> => (
+  async ({
+    path, articles, request, response,
+  }: AppContext, next: Next): Promise<void> => {
     try {
       await next();
     } catch (error) {
@@ -19,7 +20,7 @@ export default (articles: Articles): Middleware<DefaultStateExtends, DatasetCont
       }
 
       try {
-        response.dataset = await articles.get(namedNode(url.resolve(request.origin, request.url)));
+        response.dataset = await articles.get(namedNode(url.resolve(request.origin, path)));
       } catch (getError) {
         if (getError instanceof ArticleNotFound) {
           throw new createHttpError.NotFound(getError.message);

@@ -17,11 +17,11 @@ const dummyNext = async (): Promise<void> => {
 };
 
 const makeRequest = async (
-  url: string,
+  path: string,
   articles?: Articles,
   next?: NextMiddleware,
 ): Promise<WithDataset<Response>> => (
-  runMiddleware(article(typeof articles !== 'undefined' ? articles : new InMemoryArticles()), createContext({ url }), typeof next !== 'undefined' ? next : dummyNext)
+  runMiddleware(article(), createContext({ articles, path }), typeof next !== 'undefined' ? next : dummyNext)
 );
 
 describe('article', (): void => {
