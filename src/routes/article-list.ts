@@ -1,5 +1,5 @@
 import clownface, { Clownface } from 'clownface';
-import { constants } from 'http2';
+import { OK } from 'http-status-codes';
 import all from 'it-all';
 import { Next } from 'koa';
 import { addAll } from 'rdf-dataset-ext';
@@ -41,7 +41,7 @@ export default (): AppMiddleware => (
 
     await Promise.all([listPromise, countPromise]);
 
-    response.status = constants.HTTP_STATUS_OK;
+    response.status = OK;
 
     await next();
   }
