@@ -11,6 +11,7 @@ import errorHandler from './middleware/error-handler';
 import jsonld from './middleware/jsonld';
 import routing from './middleware/routing';
 import namespaces from './namespaces';
+import article from './routes/article';
 
 export type AppState = DefaultState;
 
@@ -48,6 +49,7 @@ export default (
   }));
   app.use(apiDocumentationLink(apiDocumentationPath));
   app.use(errorHandler());
+  app.use(article(articles));
   app.use(routing(router));
 
   return app;
