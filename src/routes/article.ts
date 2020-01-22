@@ -1,6 +1,6 @@
 import clownface from 'clownface';
 import createHttpError from 'http-errors';
-import { constants } from 'http2';
+import { OK } from 'http-status-codes';
 import { addAll } from 'rdf-dataset-ext';
 import {
   DefaultStateExtends, Middleware, Next,
@@ -33,7 +33,7 @@ export default (articles: Articles): Middleware<DefaultStateExtends, DatasetCont
           term: articleNamedNode,
         });
         addAll(graph.dataset, article);
-        response.status = constants.HTTP_STATUS_OK;
+        response.status = OK;
       } else {
         throw error;
       }

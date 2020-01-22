@@ -2,6 +2,7 @@ import {
   namedNode,
 } from '@rdfjs/data-model';
 import createHttpError from 'http-errors';
+import { OK } from 'http-status-codes';
 import { Response } from 'koa';
 import { DatasetCore, NamedNode } from 'rdf-js';
 import InMemoryArticles from '../../src/adaptors/in-memory-articles';
@@ -34,7 +35,7 @@ describe('article', (): void => {
 
     const response = await makeRequest(articles, 'path-to/article/one');
 
-    expect(response.status).toBe(200);
+    expect(response.status).toBe(OK);
   });
 
   it('should only attempt article retrieval if next middleware throws not found http error', async (): Promise<void> => {
