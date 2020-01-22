@@ -22,18 +22,18 @@ const makeRequest = async (
 );
 
 describe('add article', (): void => {
-  it.skip('should return a successful response', async (): Promise<void> => {
+  it('should return a successful response', async (): Promise<void> => {
     const articles = new InMemoryArticles();
     const id = blankNode();
     const name = literal('Article');
     const response = await makeRequest(createArticle({ id, name }), undefined, articles);
 
     expect(response.status).toBe(201);
-    expect(response.get('Location')).toBe('http://example.com/articles/one');
     expect(await articles.count()).toBe(1);
 
     const [newId, dataset] = (await all(articles))[0];
 
+    expect(response.get('Location')).toBe(newId.value);
     expect(dataset.has(quad(newId, schema('name'), name))).toBe(true);
   });
 
