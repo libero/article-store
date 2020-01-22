@@ -23,7 +23,7 @@ export default (articles: Articles): Middleware<DefaultStateExtends, DatasetCont
           article = await articles.get(articleNamedNode);
         } catch (getError) {
           if (getError instanceof ArticleNotFound) {
-            throw new createHttpError.NotFound(error.message);
+            throw new createHttpError.NotFound(getError.message);
           }
 
           throw getError;
