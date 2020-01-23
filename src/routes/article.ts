@@ -1,14 +1,12 @@
 import createHttpError from 'http-errors';
 import { OK } from 'http-status-codes';
-import {
-  DefaultStateExtends, Middleware, Next,
-} from 'koa';
+import { Next } from 'koa';
 import url from 'url';
-import { AppContext } from '../app';
+import { AppContext, AppMiddleware } from '../app';
 import { namedNode } from '../data-factory';
 import ArticleNotFound from '../errors/article-not-found';
 
-export default (): Middleware<DefaultStateExtends, AppContext> => (
+export default (): AppMiddleware => (
   async ({
     path, articles, request, response,
   }: AppContext, next: Next): Promise<void> => {
