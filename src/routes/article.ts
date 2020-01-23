@@ -3,12 +3,11 @@ import { OK } from 'http-status-codes';
 import { Next } from 'koa';
 import url from 'url';
 import { AppContext, AppMiddleware } from '../app';
-import { namedNode } from '../data-factory';
 import ArticleNotFound from '../errors/article-not-found';
 
 export default (): AppMiddleware => (
   async ({
-    articles, request, response, path,
+    articles, dataFactory: { namedNode }, request, response, path,
   }: AppContext, next: Next): Promise<void> => {
     try {
       response.dataset = await articles.get(namedNode(url.resolve(request.origin, path)));
