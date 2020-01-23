@@ -12,22 +12,23 @@ export default (): AppMiddleware => (
   }: AppContext, next: Next): Promise<void> => {
     try {
       await next();
+      return;
     } catch (error) {
       if (!(error instanceof createHttpError.NotFound)) {
         throw error;
       }
+    }
 
-      try {
-        response.dataset = await articles.get(namedNode(url.resolve(request.origin, path)));
-      } catch (getError) {
-        if (getError instanceof ArticleNotFound) {
-          throw new createHttpError.NotFound(getError.message);
-        }
-
-        throw getError;
+    try {
+      response.dataset = await articles.get(namedNode(url.resolve(request.origin, path)));
+    } catch (error) {
+      if (error instanceof ArticleNotFound) {
+        throw new createHttpError.NotFound(error.message);
       }
 
-      response.status = OK;
+      throw error;
     }
+
+    response.status = OK;
   }
 );
