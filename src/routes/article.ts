@@ -9,8 +9,10 @@ export default (): AppMiddleware => (
   async ({
     articles, dataFactory: { namedNode }, request, response,
   }: AppContext, next: Next): Promise<void> => {
+    const id = namedNode(url.resolve(request.origin, request.path));
+
     try {
-      response.dataset = await articles.get(namedNode(url.resolve(request.origin, request.path)));
+      response.dataset = await articles.get(id);
     } catch (error) {
       if (error instanceof ArticleNotFound) {
         throw new createHttpError.NotFound(error.message);
