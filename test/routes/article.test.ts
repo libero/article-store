@@ -1,6 +1,7 @@
 import { namedNode } from '@rdfjs/data-model';
 import createHttpError from 'http-errors';
 import { OK } from 'http-status-codes';
+import 'jest-rdf';
 import { Response } from 'koa';
 import InMemoryArticles from '../../src/adaptors/in-memory-articles';
 import Articles from '../../src/articles';
@@ -25,6 +26,17 @@ describe('article', (): void => {
     const response = await makeRequest('path-to/article/one', articles);
 
     expect(response.status).toBe(OK);
+  });
+
+  it('should return the article', async (): Promise<void> => {
+    const id = namedNode('http://example.com/path-to/article/one');
+    const articles = new InMemoryArticles();
+    const article1 = createArticle({ id });
+    await articles.set(id, article1);
+
+    const response = await makeRequest('path-to/article/one', articles);
+
+    expect([...response.dataset]).toEqualRdfQuadArray([...article1]);
   });
 
   it('should throw an error if article is not found', async (): Promise<void> => {
