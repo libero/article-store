@@ -22,7 +22,6 @@ type Options = {
   method?: string;
   path?: string;
   router?: Router;
-  url?: string;
 };
 
 const dummyRouter = {
