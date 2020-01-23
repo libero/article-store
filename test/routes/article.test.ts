@@ -9,19 +9,15 @@ import Articles from '../../src/articles';
 import article from '../../src/routes/article';
 import createContext from '../context';
 import createArticle from '../create-article';
-import runMiddleware, { NextMiddleware } from '../middleware';
+import runMiddleware, { NextMiddleware, throwingNext } from '../middleware';
 import { WithDataset } from '../../src/middleware/dataset';
-
-const dummyNext = async (): Promise<void> => {
-  throw new createHttpError.NotFound();
-};
 
 const makeRequest = async (
   path: string,
   articles?: Articles,
-  next?: NextMiddleware,
+  next: NextMiddleware = throwingNext(new createHttpError.NotFound()),
 ): Promise<WithDataset<Response>> => (
-  runMiddleware(article(), createContext({ articles, path }), typeof next !== 'undefined' ? next : dummyNext)
+  runMiddleware(article(), createContext({ articles, path }), next)
 );
 
 describe('article', (): void => {
@@ -58,10 +54,7 @@ describe('article', (): void => {
   });
 
   it('should throw error raised in next middleware', async (): Promise<void> => {
-    const next = async (): Promise<void> => {
-      throw new createHttpError.BadRequest();
-    };
-    const response = makeRequest('path-to/article/not-found', undefined, next);
+    const response = makeRequest('path-to/article/not-found', undefined, throwingNext(new createHttpError.BadRequest()));
 
     await expect(response).rejects.toBeInstanceOf(createHttpError.BadRequest);
   });
