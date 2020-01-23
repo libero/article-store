@@ -8,10 +8,11 @@ import uniqueString from 'unique-string';
 import url from 'url';
 import { AppContext, AppMiddleware } from '../app';
 import { rdf, schema } from '../namespaces';
+import Routes from './index';
 
 export default (): AppMiddleware => (
   async ({
-    articles, dataFactory: { namedNode, quad }, request, response,
+    articles, dataFactory: { namedNode, quad }, request, response, router,
   }: AppContext, next: Next): Promise<void> => {
     const id = clownface({ dataset: request.dataset }).has(rdf.type, schema.Article).term;
 
@@ -27,7 +28,7 @@ export default (): AppMiddleware => (
       throw new createHttpError.BadRequest(`Article must have at least one ${termToString(schema('name'))}`);
     }
 
-    const newId = namedNode(url.resolve(request.origin, 'articles/'.concat(uniqueString())));
+    const newId = namedNode(url.resolve(request.origin, router.url(Routes.Article, uniqueString())));
 
     [...request.dataset].forEach((originalQuad: Quad): void => {
       let newQuad: Quad;

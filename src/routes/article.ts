@@ -8,17 +8,8 @@ import ArticleNotFound from '../errors/article-not-found';
 
 export default (): AppMiddleware => (
   async ({
-    path, articles, request, response,
+    articles, request, response, path,
   }: AppContext, next: Next): Promise<void> => {
-    try {
-      await next();
-      return;
-    } catch (error) {
-      if (!(error instanceof createHttpError.NotFound)) {
-        throw error;
-      }
-    }
-
     try {
       response.dataset = await articles.get(namedNode(url.resolve(request.origin, path)));
     } catch (error) {
@@ -30,5 +21,7 @@ export default (): AppMiddleware => (
     }
 
     response.status = OK;
+
+    await next();
   }
 );
