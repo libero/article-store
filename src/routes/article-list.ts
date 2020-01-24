@@ -1,9 +1,9 @@
 import clownface, { Clownface } from 'clownface';
-import { constants } from 'http2';
+import { OK } from 'http-status-codes';
 import all from 'it-all';
 import { Next } from 'koa';
 import { addAll } from 'rdf-dataset-ext';
-import { BlankNode, DatasetCore } from 'rdf-js';
+import { DatasetCore, NamedNode } from 'rdf-js';
 import { toRdf } from 'rdf-literal';
 import url from 'url';
 import { AppContext, AppMiddleware } from '../app';
@@ -21,7 +21,7 @@ export default (): AppMiddleware => (
 
     const listPromise = all(articles)
       .then((list): void => {
-        list.forEach(([id, article]: [BlankNode, DatasetCore]): void => {
+        list.forEach(([id, article]: [NamedNode, DatasetCore]): void => {
           graph.addOut(hydra.member, id);
           addAll(graph.dataset, article);
         });
@@ -41,7 +41,7 @@ export default (): AppMiddleware => (
 
     await Promise.all([listPromise, countPromise]);
 
-    response.status = constants.HTTP_STATUS_OK;
+    response.status = OK;
 
     await next();
   }

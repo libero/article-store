@@ -1,10 +1,10 @@
-import { BlankNode } from 'rdf-js';
+import { NamedNode } from 'rdf-js';
 import { termToString } from 'rdf-string';
 
 export default class ArticleNotFound extends Error {
-  readonly id: BlankNode;
+  readonly id: NamedNode;
 
-  constructor(id: BlankNode) {
+  constructor(id: NamedNode) {
     super(`Article ${termToString(id)} could not be found`);
 
     this.id = id;

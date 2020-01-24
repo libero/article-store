@@ -1,5 +1,5 @@
 import clownface, { Clownface } from 'clownface';
-import { constants } from 'http2';
+import { CREATED, OK } from 'http-status-codes';
 import { Next } from 'koa';
 import { NamedNode } from 'rdf-js';
 import { toRdf } from 'rdf-literal';
@@ -86,7 +86,7 @@ export default (): AppMiddleware => (
         add.addOut(hydra.expects, schema.Article);
         add.addOut(hydra.returns, owl.Nothing);
         add.addOut(hydra.possibleStatus, (status: Clownface): void => {
-          status.addOut(hydra.statusCode, constants.HTTP_STATUS_CREATED);
+          status.addOut(hydra.statusCode, CREATED);
           status.addOut(hydra.description, literal('If the article was added successfully', 'en'));
         });
       });
@@ -137,7 +137,7 @@ export default (): AppMiddleware => (
       });
     });
 
-    response.status = constants.HTTP_STATUS_OK;
+    response.status = OK;
 
     await next();
   }
