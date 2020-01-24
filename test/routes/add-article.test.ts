@@ -2,6 +2,7 @@ import {
   blankNode, literal, namedNode, quad,
 } from '@rdfjs/data-model';
 import createHttpError from 'http-errors';
+import { CREATED } from 'http-status-codes';
 import all from 'it-all';
 import { Response } from 'koa';
 import { DatasetCore } from 'rdf-js';
@@ -28,12 +29,12 @@ describe('add article', (): void => {
     const name = literal('Article');
     const response = await makeRequest(createArticle({ id, name }), undefined, articles);
 
-    expect(response.status).toBe(201);
-    expect(response.get('Location')).toBe('http://example.com/path-to/article-list');
+    expect(response.status).toBe(CREATED);
     expect(await articles.count()).toBe(1);
 
     const [newId, dataset] = (await all(articles))[0];
 
+    expect(response.get('Location')).toBe(newId.value);
     expect(dataset.has(quad(newId, schema('name'), name))).toBe(true);
   });
 

@@ -54,6 +54,7 @@ export default ({
       host: 'example.com',
     },
     method,
+    url: path,
   });
 
   const response = Object.create(app.response) as WithDataset<Response>;

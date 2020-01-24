@@ -1,6 +1,6 @@
 import clownface from 'clownface';
 import createHttpError from 'http-errors';
-import { constants } from 'http2';
+import { CREATED } from 'http-status-codes';
 import { Next } from 'koa';
 import { Quad } from 'rdf-js';
 import { termToString } from 'rdf-string';
@@ -28,7 +28,7 @@ export default (): AppMiddleware => (
       throw new createHttpError.BadRequest(`Article must have at least one ${termToString(schema('name'))}`);
     }
 
-    const newId = namedNode(uniqueString());
+    const newId = namedNode(url.resolve(request.origin, router.url(Routes.Article, uniqueString())));
 
     [...request.dataset].forEach((originalQuad: Quad): void => {
       let newQuad: Quad;
@@ -45,8 +45,8 @@ export default (): AppMiddleware => (
 
     await articles.set(newId, request.dataset);
 
-    response.status = constants.HTTP_STATUS_CREATED;
-    response.set('Location', url.resolve(request.origin, router.url(Routes.ArticleList)));
+    response.status = CREATED;
+    response.set('Location', newId.value);
 
     await next();
   }
