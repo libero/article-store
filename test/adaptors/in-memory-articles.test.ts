@@ -37,7 +37,7 @@ describe('in-memory articles', (): void => {
     await articles.set(id, createArticle({ id, name: literal('Original') }));
     await articles.set(id, createArticle({ id, name: literal('Updated') }));
 
-    expect((await articles.get(id)).has(quad(id, schema('name'), literal('Updated')))).toBe(true);
+    expect(await articles.get(id)).toBeRdfDatasetContaining(quad(id, schema('name'), literal('Updated')));
   });
 
   it('throws an error if it is not an article', async (): Promise<void> => {
@@ -63,7 +63,7 @@ describe('in-memory articles', (): void => {
 
     await articles.set(id, article);
 
-    expect([...await articles.get(id)]).toEqualRdfQuadArray([...article]);
+    expect(await articles.get(id)).toBeRdfIsomorphic(article);
   });
 
   it('throws an error if the article is not found', async (): Promise<void> => {
