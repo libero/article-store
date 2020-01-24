@@ -1,6 +1,7 @@
+import { EventEmitter } from 'events';
 import { IBaseProtocol, IMain } from 'pg-promise';
 import {
-  DatasetCore, NamedNode, Quad, Quad_Object as QuadObject, Sink,
+  DatasetCore, NamedNode, Quad, Quad_Object as QuadObject, Sink, Stream,
 } from 'rdf-js';
 import { stringToTerm, termToString } from 'rdf-string';
 import ParserJsonld from '@rdfjs/parser-jsonld';
@@ -19,9 +20,9 @@ export default class PostgresArticles implements Articles {
 
   private dataFactory: ExtendedDataFactory;
 
-  private parser: Sink;
+  private parser: Sink<Stream<Quad>, Stream<Quad>>;
 
-  private serialiser: Sink;
+  private serialiser: Sink<Stream<Quad>, EventEmitter>;
 
   public constructor(database: IBaseProtocol<IMain>, dataFactory: ExtendedDataFactory) {
     this.database = database;

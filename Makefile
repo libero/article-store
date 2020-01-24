@@ -3,7 +3,7 @@
 
 SHELL = /usr/bin/env bash
 
-ifndef TARGET
+ifneq (${TARGET}, prod)
 TARGET = dev
 endif
 
@@ -72,16 +72,8 @@ fix: ## Fix linting issues in the code
 	${DOCKER_COMPOSE} run --rm app npm run lint:fix
 
 test: export TARGET = dev
-test: ## Run all the tests
+test: ## Run the tests
 	${DOCKER_COMPOSE} run --rm app npm run test
-
-unit-test: export TARGET = test
-unit-test: ## Run the unit tests
-	${DOCKER_COMPOSE} run --rm app npm run test:unit
-
-integration-test: export TARGET = dev
-integration-test: ## Run the integration tests
-	${DOCKER_COMPOSE} run --rm app npm run test:integration
 
 run:
 	${DOCKER_COMPOSE} up --abort-on-container-exit --exit-code-from app; ${DOCKER_COMPOSE} down
