@@ -36,7 +36,7 @@ describe('article', (): void => {
 
     const response = await makeRequest('path-to/article/one', articles);
 
-    expect([...response.dataset]).toEqualRdfQuadArray([...article1]);
+    expect(response.dataset).toBeRdfIsomorphic(article1);
   });
 
   it('should throw an error if article is not found', async (): Promise<void> => {

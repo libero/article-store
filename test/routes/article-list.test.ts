@@ -1,5 +1,6 @@
 import { namedNode, quad } from '@rdfjs/data-model';
 import { OK } from 'http-status-codes';
+import 'jest-rdf';
 import { Response } from 'koa';
 import { toRdf } from 'rdf-literal';
 import InMemoryArticles from '../../src/adaptors/in-memory-articles';
@@ -26,11 +27,11 @@ describe('article list', (): void => {
     const { dataset } = await makeRequest();
     const id = namedNode('http://example.com/path-to/article-list');
 
-    expect(dataset.has(quad(id, rdf.type, hydra.Collection))).toBe(true);
-    expect(dataset.match(id, hydra.title).size).toBe(1);
-    expect(dataset.match(id, hydra.manages).size).toBe(1);
-    expect(dataset.match(id, hydra.totalItems, toRdf(0)).size).toBe(1);
-    expect(dataset.match(id, hydra.member).size).toBe(0);
+    expect(dataset).toBeRdfDatasetContaining(quad(id, rdf.type, hydra.Collection));
+    expect(dataset).toBeRdfDatasetMatching({ subject: id, predicate: hydra.title });
+    expect(dataset).toBeRdfDatasetMatching({ subject: id, predicate: hydra.manages });
+    expect(dataset).toBeRdfDatasetMatching({ subject: id, predicate: hydra.totalItems, object: toRdf(0) });
+    expect(dataset).toBeRdfDatasetMatching({ subject: id, predicate: hydra.member }, 0);
   });
 
   it('should return articles in the list', async (): Promise<void> => {
@@ -45,7 +46,7 @@ describe('article list', (): void => {
     const { dataset } = await makeRequest(undefined, articles);
     const id = namedNode('http://example.com/path-to/article-list');
 
-    expect(dataset.match(id, hydra.member).size).toBe(2);
+    expect(dataset).toBeRdfDatasetMatching({ subject: id, predicate: hydra.member }, 2);
   });
 
   it('should call the next middleware', async (): Promise<void> => {

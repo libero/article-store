@@ -1,5 +1,6 @@
 import { namedNode, quad } from '@rdfjs/data-model';
 import { OK } from 'http-status-codes';
+import 'jest-rdf';
 import { Response } from 'koa';
 import { WithDataset } from '../../src/middleware/dataset';
 import { hydra, rdf, schema } from '../../src/namespaces';
@@ -22,9 +23,9 @@ describe('entry-point', (): void => {
     const { dataset } = await makeRequest();
     const id = namedNode('http://example.com/path-to/entry-point');
 
-    expect(dataset.has(quad(id, rdf.type, schema.EntryPoint))).toBe(true);
-    expect(dataset.match(id, schema('name')).size).toBe(1);
-    expect(dataset.match(id, hydra.collection).size).toBe(1);
+    expect(dataset).toBeRdfDatasetContaining(quad(id, rdf.type, schema.EntryPoint));
+    expect(dataset).toBeRdfDatasetMatching({ subject: id, predicate: schema('name') });
+    expect(dataset).toBeRdfDatasetMatching({ subject: id, predicate: hydra.collection });
   });
 
   it('should call the next middleware', async (): Promise<void> => {
