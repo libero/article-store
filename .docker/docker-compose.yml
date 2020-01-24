@@ -36,5 +36,5 @@ services:
     ports:
       - '5432:5432'
     healthcheck:
-      test: ['CMD', 'pg_isread', '--username', "user", '--dbnam', 'article-store']
+      test: ['CMD-SHELL', 'pg_isready', '--username user', '--dbnam=article-store']
       interval: 5s
