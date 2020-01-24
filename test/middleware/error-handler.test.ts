@@ -40,7 +40,7 @@ describe('error-handler middleware', (): void => {
         quad(id, hydra.title, literal('Service Unavailable', 'en')),
       ];
 
-      expect([...response.dataset]).toEqualRdfQuadArray(expected);
+      expect(response.dataset).toBeRdfIsomorphic(expected);
     });
   });
 
@@ -71,7 +71,7 @@ describe('error-handler middleware', (): void => {
         quad(id, hydra.description, literal('Some Error', 'en')),
       ];
 
-      expect([...response.dataset]).toEqualRdfQuadArray(expected);
+      expect(response.dataset).toBeRdfIsomorphic(expected);
     });
   });
 
@@ -79,6 +79,6 @@ describe('error-handler middleware', (): void => {
     const response = await makeRequest();
 
     expect(response.status).toBe(undefined);
-    expect(response.dataset.size).toBe(0);
+    expect(response.dataset).toBeRdfDatasetOfSize(0);
   });
 });

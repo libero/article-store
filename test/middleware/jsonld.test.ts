@@ -63,13 +63,13 @@ describe('JSON-LD middleware', (): void => {
   it('adds a dataset to the request with JSON-LD body', async (): Promise<void> => {
     const { request } = await makeRequest(JSON.stringify(jsonLd), { 'Content-Type': 'application/ld+json' });
 
-    expect([...request.dataset]).toBeRdfIsomorphic(quads);
+    expect(request.dataset).toBeRdfIsomorphic(quads);
   });
 
   it('does nothing if there is a request body that isn\'t JSON-LD', async (): Promise<void> => {
     const { request } = await makeRequest(JSON.stringify(jsonLd), { 'Content-Type': 'application/json' });
 
-    expect(request.dataset.size).toBe(0);
+    expect(request.dataset).toBeRdfDatasetOfSize(0);
   });
 
   it('sets the response JSON-LD body with the dataset', async (): Promise<void> => {
