@@ -76,8 +76,7 @@ export default class PostgresArticles implements Articles {
     await database.none('DROP TABLE IF EXISTS articles');
     await database.none(`CREATE TABLE IF NOT EXISTS articles (
       iri varchar (128) NOT NULL UNIQUE,
-      article text NOT NULL,
-      created time without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL
+      article text NOT NULL
     )`);
   }
 }
