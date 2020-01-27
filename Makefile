@@ -3,7 +3,7 @@
 
 SHELL = /usr/bin/env bash
 
-ifneq (${TARGET}, prod)
+ifndef TARGET
 TARGET = dev
 endif
 
@@ -68,7 +68,7 @@ fix: export TARGET = dev
 fix: ## Fix linting issues in the code
 	${DOCKER_COMPOSE} run --rm app npm run lint:fix
 
-test: export TARGET = dev
+test: export TARGET = test
 test: ## Run the tests
 	${DOCKER_COMPOSE} run --rm app npm run test
 
