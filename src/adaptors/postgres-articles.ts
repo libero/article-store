@@ -1,7 +1,6 @@
-import { EventEmitter } from 'events';
 import { IBaseProtocol, IMain } from 'pg-promise';
 import {
-  DatasetCore, NamedNode, Quad, Quad_Object as QuadObject, Sink, Stream,
+  DatasetCore, NamedNode, Quad, Quad_Object as QuadObject,
 } from 'rdf-js';
 import ParserJsonld from '@rdfjs/parser-jsonld';
 import SerializerJsonld from '@rdfjs/serializer-jsonld-ext';
@@ -20,9 +19,9 @@ export default class PostgresArticles implements Articles {
 
   private dataFactory: ExtendedDataFactory;
 
-  private parser: Sink<Stream<Quad>, Stream<Quad>>;
+  private parser: ParserJsonld;
 
-  private serialiser: Sink<Stream<Quad>, EventEmitter>;
+  private serializer: SerializerJsonld;
 
   public constructor(database: IBaseProtocol<IMain>, dataFactory: ExtendedDataFactory) {
     this.database = database;
@@ -30,7 +29,7 @@ export default class PostgresArticles implements Articles {
     this.parser = new ParserJsonld({
       factory: dataFactory,
     });
-    this.serialiser = new SerializerJsonld();
+    this.serializer = new SerializerJsonld();
   }
 
   async set(id: NamedNode, article: DatasetCore): Promise<void> {
@@ -40,7 +39,7 @@ export default class PostgresArticles implements Articles {
 
     await this.database.none('INSERT INTO articles(iri, article) VALUES ($[iri], $[article]) ON CONFLICT (iri) DO UPDATE SET article = $[article]', {
       iri: id.value,
-      article: JSON.stringify(await pEvent(this.serialiser.import(toStream(article)), 'data')),
+      article: JSON.stringify(await pEvent(this.serializer.import(toStream(article)), 'data')),
     });
   }
 
