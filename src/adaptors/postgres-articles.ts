@@ -61,7 +61,7 @@ export default class PostgresArticles implements Articles {
   }
 
   async contains(id: NamedNode): Promise<boolean> {
-    return this.database.one('SELECT COUNT(*) FROM articles WHERE iri = $[iri]', { iri: id.value }, (data: { count: number }) => +data.count > 0);
+    return this.database.one('SELECT EXISTS(SELECT 1 FROM articles WHERE iri = $[iri]) AS contains', { iri: id.value }, (data: { contains: boolean }) => data.contains);
   }
 
   async count(): Promise<number> {
