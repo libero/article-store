@@ -65,7 +65,7 @@ export default class PostgresArticles implements Articles {
   }
 
   async count(): Promise<number> {
-    return this.database.one('SELECT COUNT(*) FROM articles', [], (data: { count: number }) => +data.count);
+    return this.database.one('SELECT COUNT(*) FROM articles', [], (data: { count: string }) => +data.count);
   }
 
   async* [Symbol.asyncIterator](): AsyncIterator<[NamedNode, DatasetCore]> {
