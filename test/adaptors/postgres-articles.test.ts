@@ -11,17 +11,17 @@ import createArticle from '../create-article';
 import db from '../../src/db';
 import dataFactory from '../../src/data-factory';
 
-let pgp: IMain;
+let postgresPromise: IMain;
 let database: IBaseProtocol<IMain>;
 
 beforeAll(async (): Promise<void> => {
-  pgp = pgPromise();
-  database = pgp(db);
+  postgresPromise = pgPromise();
+  database = postgresPromise(db);
   await PostgresArticles.setupTable(database);
 });
 
 afterAll((): void => {
-  pgp.end();
+  postgresPromise.end();
 });
 
 describe('postgres articles #integration', (): void => {
