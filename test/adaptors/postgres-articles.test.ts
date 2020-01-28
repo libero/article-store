@@ -17,7 +17,6 @@ let database: IBaseProtocol<IMain>;
 beforeAll(async (): Promise<void> => {
   postgresPromise = pgPromise();
   database = postgresPromise(db);
-  await PostgresArticles.setupTable(database);
 });
 
 afterAll((): void => {
@@ -26,7 +25,7 @@ afterAll((): void => {
 
 describe('postgres articles #integration', (): void => {
   beforeEach(async (): Promise<void> => {
-    await database.none('TRUNCATE articles');
+    await PostgresArticles.setupTable(database);
   });
 
   it('can add an article', async (): Promise<void> => {
