@@ -14,6 +14,19 @@ update_configs:
     default_labels:
       - ':recycle: Chore'
 
+  - package_manager: github_actions
+    directory: /
+    update_schedule: daily
+    commit_message:
+      prefix: chore
+      include_scope: true
+    automerged_updates:
+      - match:
+          dependency_type: all
+          update_type: 'semver:minor'
+    default_labels:
+      - ':recycle: Chore'
+
   - package_manager: javascript
     directory: /
     update_schedule: daily
