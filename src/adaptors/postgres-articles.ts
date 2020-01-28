@@ -72,7 +72,7 @@ export default class PostgresArticles implements Articles {
     yield* await this.database.any('SELECT iri, article FROM articles').then((rows) => rows.map(async (row: { iri: string; article: string }) => [namedNode(row.iri), await fromStream(this.dataFactory.dataset(), this.parser.import(toReadableStream(row.article)))])) as [[NamedNode, DatasetCore]];
   }
 
-  static async createTables(database: IBaseProtocol<IMain>): Promise<void> {
+  static async setupTable(database: IBaseProtocol<IMain>): Promise<void> {
     await database.none('DROP TABLE IF EXISTS articles');
     await database.none(`CREATE TABLE IF NOT EXISTS articles (
       iri varchar (128) NOT NULL UNIQUE,

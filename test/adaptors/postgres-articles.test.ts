@@ -17,7 +17,7 @@ let database: IBaseProtocol<IMain>;
 beforeAll(async (): Promise<void> => {
   pgp = pgPromise();
   database = pgp(db);
-  await PostgresArticles.createTables(database);
+  await PostgresArticles.setupTable(database);
 });
 
 afterAll((): void => {
