@@ -12,7 +12,6 @@ import ArticleNotFound from '../errors/article-not-found';
 import NotAnArticle from '../errors/not-an-article';
 import { rdf, schema } from '../namespaces';
 import { ExtendedDataFactory } from '../middleware/dataset';
-import { namedNode } from '../data-factory';
 
 export default class PostgresArticles implements Articles {
   private database: IBaseProtocol<IMain>;
@@ -68,7 +67,7 @@ export default class PostgresArticles implements Articles {
   }
 
   async* [Symbol.asyncIterator](): AsyncIterator<[NamedNode, DatasetCore]> {
-    yield* await this.database.any('SELECT iri, article FROM articles').then((rows) => rows.map(async (row: { iri: string; article: string }) => [namedNode(row.iri), await fromStream(this.dataFactory.dataset(), this.parser.import(toReadableStream(row.article)))])) as [[NamedNode, DatasetCore]];
+    yield* await this.database.any('SELECT iri, article FROM articles').then((rows) => rows.map(async (row: { iri: string; article: string }) => [this.dataFactory.namedNode(row.iri), await fromStream(this.dataFactory.dataset(), this.parser.import(toReadableStream(row.article)))])) as [[NamedNode, DatasetCore]];
   }
 
   static async setupTable(database: IBaseProtocol<IMain>): Promise<void> {
