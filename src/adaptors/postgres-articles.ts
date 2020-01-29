@@ -89,15 +89,16 @@ export default class PostgresArticles implements Articles {
   }
 
   async* [Symbol.asyncIterator](): AsyncIterator<[NamedNode, DatasetCore]> {
-    yield* await this.database.map('SELECT iri, article::text FROM articles', [], this.toTuple, this);
+    yield* await this.database.map('SELECT iri, article::text FROM articles ORDER BY id', [], this.toTuple, this);
   }
 
   static async setupTable(database: IBaseProtocol<IMain>): Promise<void> {
     await database.tx(async (transaction: ITask<IMain>): Promise<void> => {
       await transaction.none('DROP TABLE IF EXISTS articles');
       await transaction.none(`CREATE TABLE articles (
-        iri varchar (128) NOT NULL UNIQUE,
-        article jsonb NOT NULL
+        id SERIAL PRIMARY KEY,
+        iri TEXT NOT NULL UNIQUE,
+        article JSONB NOT NULL
       )`);
     });
   }
