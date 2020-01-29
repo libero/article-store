@@ -2,7 +2,9 @@ import ParserJsonld from '@rdfjs/parser-jsonld';
 import SerializerJsonld from '@rdfjs/serializer-jsonld-ext';
 import { JsonLdObj } from 'jsonld/jsonld-spec';
 import pEvent from 'p-event';
-import { errors, IBaseProtocol, IMain } from 'pg-promise';
+import {
+  errors, IBaseProtocol, IMain, ITask,
+} from 'pg-promise';
 import { fromStream, toStream } from 'rdf-dataset-ext';
 import {
   DatasetCore, DatasetCoreFactory, NamedNode, Quad, Quad_Object as QuadObject,
@@ -91,11 +93,13 @@ export default class PostgresArticles implements Articles {
   }
 
   static async setupTable(database: IBaseProtocol<IMain>): Promise<void> {
-    await database.none('DROP TABLE IF EXISTS articles');
-    await database.none(`CREATE TABLE IF NOT EXISTS articles (
-      iri varchar (128) NOT NULL UNIQUE,
-      article jsonb NOT NULL
-    )`);
+    await database.tx(async (transaction: ITask<IMain>): Promise<void> => {
+      await transaction.none('DROP TABLE IF EXISTS articles');
+      await transaction.none(`CREATE TABLE IF NOT EXISTS articles (
+        iri varchar (128) NOT NULL UNIQUE,
+        article jsonb NOT NULL
+      )`);
+    });
   }
 
   private async toObject(article: DatasetCore): Promise<JsonLdObj> {
