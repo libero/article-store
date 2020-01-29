@@ -5,6 +5,9 @@ SHELL = /usr/bin/env bash
 
 ifneq (${TARGET}, prod)
 TARGET = dev
+INITDB = initdb:dev
+else
+INITDB = initdb
 endif
 
 DOCKER_COMPOSE = docker-compose --file .docker/docker-compose.yml --file .docker/docker-compose.${TARGET}.yml
@@ -91,7 +94,7 @@ integration-test: ## Run the integration tests
 initdb:
 	$(MAKE) db
 	$(MAKE) wait-healthy
-	${DOCKER_COMPOSE} run --rm app npm run initdb
+	${DOCKER_COMPOSE} run --rm app npm run ${INITDB}
 
 run:
 	$(MAKE) initdb

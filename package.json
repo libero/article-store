@@ -67,7 +67,8 @@
   },
   "scripts": {
     "build": "tsc",
-    "initdb": "ts-node ./src/tools/initdb",
+    "initdb": "node ./build/tools/initdb.js",
+    "initdb:dev": "ts-node ./src/tools/initdb",
     "lint": "eslint . --ext .js,.ts",
     "lint:fix": "eslint . --fix --ext .js,.ts",
     "start": "node ./build/index.js",
