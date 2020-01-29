@@ -57,6 +57,7 @@
     "eslint-plugin-jest": "^23.6.0",
     "jest": "^25.1.0",
     "jest-rdf": "^1.5.0",
+    "jest-runner-groups": "^1.1.0",
     "mock-http": "^1.0.2",
     "nodemon": "^2.0.2",
     "parse-link-header": "^1.0.1",
@@ -74,7 +75,7 @@
     "start": "node ./build/index.js",
     "start:dev": "nodemon --exec 'node --require ts-node/register ./src/index.ts' --ext .js,.json,.ts",
     "test": "jest --silent",
-    "test:unit": "jest --silent ./test/unit/",
-    "test:integration": "jest --silent ./test/integration/"
+    "test:integration": "jest --silent --group=integration",
+    "test:unit": "jest --silent --group=-integration"
   }
 }

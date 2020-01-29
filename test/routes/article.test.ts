@@ -3,13 +3,13 @@ import createHttpError from 'http-errors';
 import { OK } from 'http-status-codes';
 import 'jest-rdf';
 import { Response } from 'koa';
-import InMemoryArticles from '../../../src/adaptors/in-memory-articles';
-import Articles from '../../../src/articles';
-import { WithDataset } from '../../../src/middleware/dataset';
-import article from '../../../src/routes/article';
-import createContext from '../../context';
-import createArticle from '../../create-article';
-import runMiddleware, { NextMiddleware } from '../../middleware';
+import InMemoryArticles from '../../src/adaptors/in-memory-articles';
+import Articles from '../../src/articles';
+import { WithDataset } from '../../src/middleware/dataset';
+import article from '../../src/routes/article';
+import createContext from '../context';
+import createArticle from '../create-article';
+import runMiddleware, { NextMiddleware } from '../middleware';
 
 const makeRequest = async (
   path: string, articles?: Articles, next?: NextMiddleware,

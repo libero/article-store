@@ -1,11 +1,11 @@
 import { NOT_FOUND, OK } from 'http-status-codes';
 import parseLinkHeader from 'parse-link-header';
 import request from 'supertest';
-import InMemoryArticles from '../../src/adaptors/in-memory-articles';
-import createApp, { App } from '../../src/app';
-import dataFactory from '../../src/data-factory';
-import createRouter from '../../src/router';
-import Routes from '../../src/routes';
+import InMemoryArticles from '../src/adaptors/in-memory-articles';
+import createApp, { App } from '../src/app';
+import dataFactory from '../src/data-factory';
+import createRouter from '../src/router';
+import Routes from '../src/routes';
 
 const trim = (value: string): string => value.trim();
 const parseHeader = (header: string): Array<string> => header.split(',').map(trim);

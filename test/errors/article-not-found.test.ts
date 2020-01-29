@@ -1,5 +1,5 @@
 import { namedNode } from '@rdfjs/data-model';
-import ArticleNotFound from '../../../src/errors/article-not-found';
+import ArticleNotFound from '../../src/errors/article-not-found';
 
 describe('article not found error', (): void => {
   it('should be an error', async (): Promise<void> => {
