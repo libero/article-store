@@ -39,7 +39,7 @@ export default class PostgresArticles implements Articles {
 
     await this.database.none('INSERT INTO articles(iri, article) VALUES ($[iri], $[article]) ON CONFLICT (iri) DO UPDATE SET article = $[article]', {
       iri: id.value,
-      article,
+      article: (await pEvent(this.serializer.import(toStream(article)), 'data'))[0],
     });
   }
 
