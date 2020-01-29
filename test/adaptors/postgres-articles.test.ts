@@ -23,11 +23,11 @@ afterAll((): void => {
   postgresPromise.end();
 });
 
-describe('postgres articles #integration', (): void => {
-  beforeEach(async (): Promise<void> => {
-    await PostgresArticles.setupTable(database);
-  });
+beforeEach(async (): Promise<void> => {
+  await PostgresArticles.setupTable(database);
+});
 
+describe('postgres articles #integration', (): void => {
   it('can add an article', async (): Promise<void> => {
     const articles = new PostgresArticles(database, dataFactory);
     const id = namedNode('one');
