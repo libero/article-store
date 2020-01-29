@@ -1,3 +1,4 @@
+import { JsonLdObj } from 'jsonld/jsonld-spec';
 import { IBaseProtocol, IMain } from 'pg-promise';
 import {
   DatasetCore, NamedNode, Quad, Quad_Object as QuadObject,
@@ -12,7 +13,6 @@ import ArticleNotFound from '../errors/article-not-found';
 import NotAnArticle from '../errors/not-an-article';
 import { rdf, schema } from '../namespaces';
 import { ExtendedDataFactory } from '../middleware/dataset';
-import { JsonLdObj } from 'jsonld/jsonld-spec';
 
 export default class PostgresArticles implements Articles {
   private database: IBaseProtocol<IMain>;
