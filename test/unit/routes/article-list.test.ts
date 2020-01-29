@@ -3,14 +3,14 @@ import { OK } from 'http-status-codes';
 import 'jest-rdf';
 import { Response } from 'koa';
 import { toRdf } from 'rdf-literal';
-import InMemoryArticles from '../../src/adaptors/in-memory-articles';
-import Articles from '../../src/articles';
-import { WithDataset } from '../../src/middleware/dataset';
-import { hydra, rdf } from '../../src/namespaces';
-import articleList from '../../src/routes/article-list';
-import createContext from '../context';
-import createArticle from '../create-article';
-import runMiddleware, { NextMiddleware } from '../middleware';
+import InMemoryArticles from '../../../src/adaptors/in-memory-articles';
+import Articles from '../../../src/articles';
+import { WithDataset } from '../../../src/middleware/dataset';
+import { hydra, rdf } from '../../../src/namespaces';
+import articleList from '../../../src/routes/article-list';
+import createContext from '../../context';
+import createArticle from '../../create-article';
+import runMiddleware, { NextMiddleware } from '../../middleware';
 
 const makeRequest = async (next?: NextMiddleware, articles?: Articles): Promise<WithDataset<Response>> => (
   runMiddleware(articleList(), createContext({ articles }), next)

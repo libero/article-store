@@ -2,34 +2,15 @@ import { literal, namedNode, quad } from '@rdfjs/data-model';
 import all from 'it-all';
 import 'jest-rdf';
 import { DatasetCore, NamedNode } from 'rdf-js';
-import pgPromise, { IBaseProtocol, IMain } from 'pg-promise';
-import PostgresArticles from '../../src/adaptors/postgres-articles';
-import ArticleNotFound from '../../src/errors/article-not-found';
-import NotAnArticle from '../../src/errors/not-an-article';
-import { schema } from '../../src/namespaces';
-import createArticle from '../create-article';
-import db from '../../src/db';
-import dataFactory from '../../src/data-factory';
+import InMemoryArticles from '../../../src/adaptors/in-memory-articles';
+import ArticleNotFound from '../../../src/errors/article-not-found';
+import NotAnArticle from '../../../src/errors/not-an-article';
+import { schema } from '../../../src/namespaces';
+import createArticle from '../../create-article';
 
-let postgresPromise: IMain;
-let database: IBaseProtocol<IMain>;
-
-beforeAll(async (): Promise<void> => {
-  postgresPromise = pgPromise();
-  database = postgresPromise(db);
-});
-
-afterAll((): void => {
-  postgresPromise.end();
-});
-
-beforeEach(async (): Promise<void> => {
-  await PostgresArticles.setupTable(database);
-});
-
-describe('postgres articles #integration', (): void => {
+describe('in-memory articles', (): void => {
   it('can add an article', async (): Promise<void> => {
-    const articles = new PostgresArticles(database, dataFactory);
+    const articles = new InMemoryArticles();
     const id = namedNode('one');
 
     expect(await articles.contains(id)).toBe(false);
@@ -40,7 +21,7 @@ describe('postgres articles #integration', (): void => {
   });
 
   it('can add an article with multiple types', async (): Promise<void> => {
-    const articles = new PostgresArticles(database, dataFactory);
+    const articles = new InMemoryArticles();
     const id = namedNode('one');
     const article = createArticle({ id, types: [schema.Article, schema.NewsArticle] });
 
@@ -50,7 +31,7 @@ describe('postgres articles #integration', (): void => {
   });
 
   it('can update an article', async (): Promise<void> => {
-    const articles = new PostgresArticles(database, dataFactory);
+    const articles = new InMemoryArticles();
     const id = namedNode('one');
 
     await articles.set(id, createArticle({ id, name: literal('Original') }));
@@ -60,7 +41,7 @@ describe('postgres articles #integration', (): void => {
   });
 
   it('throws an error if it is not an article', async (): Promise<void> => {
-    const articles = new PostgresArticles(database, dataFactory);
+    const articles = new InMemoryArticles();
     const id = namedNode('one');
     const article = createArticle({ id, types: [schema.NewsArticle] });
 
@@ -68,7 +49,7 @@ describe('postgres articles #integration', (): void => {
   });
 
   it('throws an error if it has no type', async (): Promise<void> => {
-    const articles = new PostgresArticles(database, dataFactory);
+    const articles = new InMemoryArticles();
     const id = namedNode('one');
     const article = createArticle({ id, types: [] });
 
@@ -76,7 +57,7 @@ describe('postgres articles #integration', (): void => {
   });
 
   it('can retrieve an article', async (): Promise<void> => {
-    const articles = new PostgresArticles(database, dataFactory);
+    const articles = new InMemoryArticles();
     const id = namedNode('one');
     const article = createArticle({ id });
 
@@ -86,7 +67,7 @@ describe('postgres articles #integration', (): void => {
   });
 
   it('throws an error if the article is not found', async (): Promise<void> => {
-    const articles = new PostgresArticles(database, dataFactory);
+    const articles = new InMemoryArticles();
     const id = namedNode('one');
 
     await expect(articles.get(id)).rejects.toBeInstanceOf(ArticleNotFound);
@@ -94,7 +75,7 @@ describe('postgres articles #integration', (): void => {
   });
 
   it('can remove an article', async (): Promise<void> => {
-    const articles = new PostgresArticles(database, dataFactory);
+    const articles = new InMemoryArticles();
     const id = namedNode('one');
 
     await articles.set(id, createArticle({ id }));
@@ -104,14 +85,14 @@ describe('postgres articles #integration', (): void => {
   });
 
   it('does nothing when trying to remove an article that is not there', async (): Promise<void> => {
-    const articles = new PostgresArticles(database, dataFactory);
+    const articles = new InMemoryArticles();
     const id = namedNode('one');
 
     await expect(articles.remove(id)).resolves.not.toThrow();
   });
 
   it('can count the number of articles', async (): Promise<void> => {
-    const articles = new PostgresArticles(database, dataFactory);
+    const articles = new InMemoryArticles();
 
     expect(await articles.count()).toBe(0);
 
@@ -126,7 +107,7 @@ describe('postgres articles #integration', (): void => {
   });
 
   it('can iterate through the articles', async (): Promise<void> => {
-    const articles = new PostgresArticles(database, dataFactory);
+    const articles = new InMemoryArticles();
 
     const id1 = namedNode('one');
     const id2 = namedNode('two');

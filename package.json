@@ -73,7 +73,7 @@
     "start": "node ./build/index.js",
     "start:dev": "nodemon --exec 'node --require ts-node/register ./src/index.ts' --ext .js,.json,.ts",
     "test": "jest --silent",
-    "test:unit": "jest --silent --testNamePattern '^((?!#integration).)*$'",
-    "test:integration": "jest --silent --testNamePattern '#integration'"
+    "test:unit": "jest --silent ./test/unit/",
+    "test:integration": "jest --silent ./test/integration/"
   }
 }

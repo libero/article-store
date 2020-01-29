@@ -1,8 +1,8 @@
 import dataFactory from '@rdfjs/data-model';
 import { Next } from 'koa';
 import { DataFactory } from 'rdf-js';
-import setDataFactory, { DataFactoryContext } from '../../src/middleware/data-factory';
-import createContext from '../context';
+import setDataFactory, { DataFactoryContext } from '../../../src/middleware/data-factory';
+import createContext from '../../context';
 
 const makeRequest = async (next: Next = jest.fn()): Promise<DataFactoryContext> => {
   const context = createContext();

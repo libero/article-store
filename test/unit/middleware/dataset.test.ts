@@ -1,7 +1,7 @@
 import 'jest-rdf';
 import { Next } from 'koa';
-import dataset, { DatasetContext } from '../../src/middleware/dataset';
-import createContext from '../context';
+import dataset, { DatasetContext } from '../../../src/middleware/dataset';
+import createContext from '../../context';
 
 const makeRequest = async (next: Next = jest.fn()): Promise<DatasetContext> => {
   const context = createContext();

@@ -2,9 +2,9 @@ import Router from '@koa/router';
 import createHttpError from 'http-errors';
 import { OK } from 'http-status-codes';
 import { Context, Next, Response } from 'koa';
-import routing from '../../src/middleware/routing';
-import createContext from '../context';
-import runMiddleware, { NextMiddleware } from '../middleware';
+import routing from '../../../src/middleware/routing';
+import createContext from '../../context';
+import runMiddleware, { NextMiddleware } from '../../middleware';
 
 const createRouter = (): Router => {
   const router = new Router();

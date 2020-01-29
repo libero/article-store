@@ -2,11 +2,11 @@ import { namedNode, quad } from '@rdfjs/data-model';
 import { OK } from 'http-status-codes';
 import 'jest-rdf';
 import { Response } from 'koa';
-import { WithDataset } from '../../src/middleware/dataset';
-import { hydra, rdf } from '../../src/namespaces';
-import apiDocumentation from '../../src/routes/api-documentation';
-import createContext from '../context';
-import runMiddleware, { NextMiddleware } from '../middleware';
+import { WithDataset } from '../../../src/middleware/dataset';
+import { hydra, rdf } from '../../../src/namespaces';
+import apiDocumentation from '../../../src/routes/api-documentation';
+import createContext from '../../context';
+import runMiddleware, { NextMiddleware } from '../../middleware';
 
 const makeRequest = async (next?: NextMiddleware): Promise<WithDataset<Response>> => (
   runMiddleware(apiDocumentation(), createContext(), next)

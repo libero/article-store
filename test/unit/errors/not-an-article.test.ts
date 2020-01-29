@@ -1,6 +1,6 @@
 import { literal } from '@rdfjs/data-model';
-import NotAnArticle from '../../src/errors/not-an-article';
-import { schema } from '../../src/namespaces';
+import NotAnArticle from '../../../src/errors/not-an-article';
+import { schema } from '../../../src/namespaces';
 
 describe('not an article error', (): void => {
   it('should be an error', async (): Promise<void> => {
