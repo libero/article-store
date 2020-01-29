@@ -82,7 +82,7 @@ fix: ## Fix linting issues in the code
 test: export TARGET = dev
 test: ## Run all the tests
 	$(MAKE) start-db
-	${DOCKER_COMPOSE} run --rm app npm run test; echo=$$?; ${DOCKER_COMPOSE} down; exit $$echp
+	${DOCKER_COMPOSE} run --rm app npm run test; exit=$$?; ${DOCKER_COMPOSE} down; exit $$exit
 
 unit-test: export TARGET = dev
 unit-test: ## Run the unit tests
