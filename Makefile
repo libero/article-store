@@ -73,7 +73,7 @@ test: ## Run the tests
 	${DOCKER_COMPOSE} run --rm app npm run test
 
 run:
-	${DOCKER_COMPOSE} up --abort-on-container-exit --exit-code-from app; ${DOCKER_COMPOSE} down
+	${DOCKER_COMPOSE} up --abort-on-container-exit --exit-code-from app; exit=$$?; ${DOCKER_COMPOSE} down; exit $$exit
 
 dev: export TARGET = dev
 dev: ## Build and runs the container for development
