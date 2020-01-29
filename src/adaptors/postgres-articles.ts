@@ -12,6 +12,7 @@ import ArticleNotFound from '../errors/article-not-found';
 import NotAnArticle from '../errors/not-an-article';
 import { rdf, schema } from '../namespaces';
 import { ExtendedDataFactory } from '../middleware/dataset';
+import { JsonLdObj } from 'jsonld/jsonld-spec';
 
 export default class PostgresArticles implements Articles {
   private database: IBaseProtocol<IMain>;
@@ -38,12 +39,12 @@ export default class PostgresArticles implements Articles {
 
     await this.database.none('INSERT INTO articles(iri, article) VALUES ($[iri], $[article]) ON CONFLICT (iri) DO UPDATE SET article = $[article]', {
       iri: id.value,
-      article: JSON.stringify(await pEvent(this.serializer.import(toStream(article)), 'data')),
+      article,
     });
   }
 
   async get(id: NamedNode): Promise<DatasetCore> {
-    const article = await this.database.oneOrNone('SELECT article FROM articles WHERE iri = $[iri]', { iri: id.value }, (data: { article: string } | null) => (
+    const article = await this.database.oneOrNone('SELECT article FROM articles WHERE iri = $[iri]', { iri: id.value }, (data: { article: JsonLdObj } | null) => (
       (data) ? data.article : data
     ));
 
@@ -51,7 +52,7 @@ export default class PostgresArticles implements Articles {
       throw new ArticleNotFound(id);
     }
 
-    return fromStream(this.dataFactory.dataset(), this.parser.import(toReadableStream(article)));
+    return fromStream(this.dataFactory.dataset(), this.parser.import(toReadableStream(JSON.stringify(article))));
   }
 
   async remove(id: NamedNode): Promise<void> {
@@ -67,14 +68,14 @@ export default class PostgresArticles implements Articles {
   }
 
   async* [Symbol.asyncIterator](): AsyncIterator<[NamedNode, DatasetCore]> {
-    yield* await this.database.any('SELECT iri, article FROM articles').then((rows) => rows.map(async (row: { iri: string; article: string }) => [this.dataFactory.namedNode(row.iri), await fromStream(this.dataFactory.dataset(), this.parser.import(toReadableStream(row.article)))])) as [[NamedNode, DatasetCore]];
+    yield* await this.database.any('SELECT iri, article FROM articles').then((rows) => rows.map(async (row: { iri: string; article: JsonLdObj }) => [this.dataFactory.namedNode(row.iri), await fromStream(this.dataFactory.dataset(), this.parser.import(toReadableStream(JSON.stringify(row.article))))])) as [[NamedNode, DatasetCore]];
   }
 
   static async setupTable(database: IBaseProtocol<IMain>): Promise<void> {
     await database.none('DROP TABLE IF EXISTS articles');
     await database.none(`CREATE TABLE IF NOT EXISTS articles (
       iri varchar (128) NOT NULL UNIQUE,
-      article text NOT NULL
+      article jsonb NOT NULL
     )`);
   }
 }
