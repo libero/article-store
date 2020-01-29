@@ -40,6 +40,7 @@ describe('postgres articles', (): void => {
     await articles.set(id, createArticle({ id }));
 
     expect(await articles.contains(id)).toBe(true);
+    expect(1).toEqual(2);
   });
 
   it('can add an article with multiple types', async (): Promise<void> => {
