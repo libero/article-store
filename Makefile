@@ -86,7 +86,7 @@ unit-test: ## Run the unit tests
 integration-test: export TARGET = dev
 integration-test: ## Run the integration tests
 	$(MAKE) initdb
-	${DOCKER_COMPOSE} run --rm app npm run test:integration
+	${DOCKER_COMPOSE} run --rm app npm run test:integration; EXITCODE=$$?; ${DOCKER_COMPOSE} down; exit $$EXITCODE
 
 initdb:
 	$(MAKE) db
