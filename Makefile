@@ -77,8 +77,6 @@ fix: ## Fix linting issues in the code
 
 test: export TARGET = dev
 test: ## Run all the tests
-	$(MAKE) db
-	$(MAKE) wait-healthy
 	$(MAKE) initdb
 	${DOCKER_COMPOSE} run --rm app npm run test; ${DOCKER_COMPOSE} down
 
