@@ -95,7 +95,7 @@ export default class PostgresArticles implements Articles {
   static async setupTable(database: IBaseProtocol<IMain>): Promise<void> {
     await database.tx(async (transaction: ITask<IMain>): Promise<void> => {
       await transaction.none('DROP TABLE IF EXISTS articles');
-      await transaction.none(`CREATE TABLE IF NOT EXISTS articles (
+      await transaction.none(`CREATE TABLE articles (
         iri varchar (128) NOT NULL UNIQUE,
         article jsonb NOT NULL
       )`);
