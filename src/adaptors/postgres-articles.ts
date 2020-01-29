@@ -1,4 +1,3 @@
-import { JsonLdObj } from 'jsonld/jsonld-spec';
 import { IBaseProtocol, IMain } from 'pg-promise';
 import {
   DatasetCore, NamedNode, Quad, Quad_Object as QuadObject,
@@ -44,7 +43,7 @@ export default class PostgresArticles implements Articles {
   }
 
   async get(id: NamedNode): Promise<DatasetCore> {
-    const article = await this.database.oneOrNone('SELECT article FROM articles WHERE iri = $[iri]', { iri: id.value }, (data: { article: JsonLdObj } | null) => (
+    const article = await this.database.oneOrNone('SELECT article::text FROM articles WHERE iri = $[iri]', { iri: id.value }, (data: { article: string } | null) => (
       (data) ? data.article : data
     ));
 
@@ -52,7 +51,7 @@ export default class PostgresArticles implements Articles {
       throw new ArticleNotFound(id);
     }
 
-    return fromStream(this.dataFactory.dataset(), this.parser.import(toReadableStream(JSON.stringify(article))));
+    return fromStream(this.dataFactory.dataset(), this.parser.import(toReadableStream(article)));
   }
 
   async remove(id: NamedNode): Promise<void> {
@@ -68,7 +67,7 @@ export default class PostgresArticles implements Articles {
   }
 
   async* [Symbol.asyncIterator](): AsyncIterator<[NamedNode, DatasetCore]> {
-    yield* await this.database.any('SELECT iri, article FROM articles').then((rows) => rows.map(async (row: { iri: string; article: JsonLdObj }) => [this.dataFactory.namedNode(row.iri), await fromStream(this.dataFactory.dataset(), this.parser.import(toReadableStream(JSON.stringify(row.article))))])) as [[NamedNode, DatasetCore]];
+    yield* await this.database.any('SELECT iri, article::text FROM articles').then((rows) => rows.map(async (row: { iri: string; article: string }) => [this.dataFactory.namedNode(row.iri), await fromStream(this.dataFactory.dataset(), this.parser.import(toReadableStream(row.article)))])) as [[NamedNode, DatasetCore]];
   }
 
   static async setupTable(database: IBaseProtocol<IMain>): Promise<void> {
