@@ -28,8 +28,6 @@ build: ## Build the containers
 	${DOCKER_COMPOSE} build
 
 start: ## Start the containers
-	$(MAKE) db
-	$(MAKE) wait-healthy
 	$(MAKE) initdb
 	${DOCKER_COMPOSE} up --detach
 
@@ -38,9 +36,6 @@ stop: ## Stop the containers
 
 db: ## Start the database container
 	${DOCKER_COMPOSE} up --detach db
-
-initdb: ## Setup database tables
-	${DOCKER_COMPOSE} run --rm app npm run initdb
 
 wait-healthy: ## Wait for the containers to be healthy
 	@services=($$(${DOCKER_COMPOSE} ps --quiet)); \
@@ -90,26 +85,24 @@ unit-test: ## Run the unit tests
 
 integration-test: export TARGET = dev
 integration-test: ## Run the integration tests
-	$(MAKE) db
-	$(MAKE) wait-healthy
 	$(MAKE) initdb
 	${DOCKER_COMPOSE} run --rm app npm run test:integration
 
+initdb:
+	$(MAKE) db
+	$(MAKE) wait-healthy
+	${DOCKER_COMPOSE} run --rm app npm run initdb
+
 run:
+	$(MAKE) initdb
 	${DOCKER_COMPOSE} up --abort-on-container-exit --exit-code-from app; ${DOCKER_COMPOSE} down
 
 dev: export TARGET = dev
 dev: ## Build and runs the container for development
 	$(MAKE) --jobs=4 install build stop
-	$(MAKE) db
-	$(MAKE) wait-healthy
-	$(MAKE) initdb
 	$(MAKE) run
 
 prod: export TARGET = prod
 prod: ## Builds and runs the container for production
 	$(MAKE) --jobs=2 build stop
-	$(MAKE) db
-	$(MAKE) wait-healthy
-	$(MAKE) initdb
 	$(MAKE) run
