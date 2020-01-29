@@ -31,14 +31,18 @@ build: ## Build the containers
 	${DOCKER_COMPOSE} build
 
 start: ## Start the containers
-	$(MAKE) initdb
+	$(MAKE) init-db
 	${DOCKER_COMPOSE} up --detach
+
+start-db:
+	${DOCKER_COMPOSE} up --detach db
+
+init-db:
+	$(MAKE) start-db
+	${DOCKER_COMPOSE} run --rm app npm run ${INITDB}
 
 stop: ## Stop the containers
 	${DOCKER_COMPOSE} down
-
-db: ## Start the database container
-	${DOCKER_COMPOSE} up --detach db
 
 wait-healthy: ## Wait for the containers to be healthy
 	@services=($$(${DOCKER_COMPOSE} ps --quiet)); \
@@ -77,7 +81,7 @@ fix: ## Fix linting issues in the code
 
 test: export TARGET = dev
 test: ## Run all the tests
-	$(MAKE) initdb
+	$(MAKE) start-db
 	${DOCKER_COMPOSE} run --rm app npm run test; ${DOCKER_COMPOSE} down
 
 unit-test: export TARGET = dev
@@ -86,16 +90,11 @@ unit-test: ## Run the unit tests
 
 integration-test: export TARGET = dev
 integration-test: ## Run the integration tests
-	$(MAKE) initdb
+	$(MAKE) start-db
 	${DOCKER_COMPOSE} run --rm app npm run test:integration; ${DOCKER_COMPOSE} down
 
-initdb:
-	$(MAKE) db
-	$(MAKE) wait-healthy
-	${DOCKER_COMPOSE} run --rm app npm run ${INITDB}
-
 run:
-	$(MAKE) initdb
+	$(MAKE) init-db
 	${DOCKER_COMPOSE} up --abort-on-container-exit --exit-code-from app; ${DOCKER_COMPOSE} down
 
 dev: export TARGET = dev
