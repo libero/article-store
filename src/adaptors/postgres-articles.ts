@@ -1,18 +1,16 @@
+import { JsonLdObj } from 'jsonld/jsonld-spec';
 import { IBaseProtocol, IMain } from 'pg-promise';
 import {
   DatasetCore, NamedNode, Quad, Quad_Object as QuadObject,
 } from 'rdf-js';
 import ParserJsonld from '@rdfjs/parser-jsonld';
-import SerializerJsonld from '@rdfjs/serializer-jsonld-ext';
-import pEvent from 'p-event';
-import { fromStream, toStream } from 'rdf-dataset-ext';
+import { fromStream } from 'rdf-dataset-ext';
 import toReadableStream from 'to-readable-stream';
 import Articles from '../articles';
 import ArticleNotFound from '../errors/article-not-found';
 import NotAnArticle from '../errors/not-an-article';
 import { rdf, schema } from '../namespaces';
 import { ExtendedDataFactory } from '../middleware/dataset';
-import { JsonLdObj } from 'jsonld/jsonld-spec';
 
 export default class PostgresArticles implements Articles {
   private database: IBaseProtocol<IMain>;
@@ -21,15 +19,12 @@ export default class PostgresArticles implements Articles {
 
   private parser: ParserJsonld;
 
-  private serializer: SerializerJsonld;
-
   public constructor(database: IBaseProtocol<IMain>, dataFactory: ExtendedDataFactory) {
     this.database = database;
     this.dataFactory = dataFactory;
     this.parser = new ParserJsonld({
       factory: dataFactory,
     });
-    this.serializer = new SerializerJsonld();
   }
 
   async set(id: NamedNode, article: DatasetCore): Promise<void> {
