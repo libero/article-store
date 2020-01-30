@@ -113,8 +113,8 @@ export default class PostgresArticles implements Articles {
 
   private async toTuple({ iri, article }: { iri: string; article: string }): Promise<[NamedNode, DatasetCore]> {
     return [
-      stringToTerm(iri),
+      stringToTerm(iri) as NamedNode,
       await this.toDataset(article),
-    ] as [NamedNode, DatasetCore];
+    ];
   }
 }
