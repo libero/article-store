@@ -1,15 +1,15 @@
 import { literal, namedNode, quad } from '@rdfjs/data-model';
 import all from 'it-all';
 import 'jest-rdf';
-import { DatasetCore, NamedNode } from 'rdf-js';
 import pgPromise, { IBaseProtocol, IMain } from 'pg-promise';
+import { DatasetCore, NamedNode } from 'rdf-js';
 import PostgresArticles from '../../src/adaptors/postgres-articles';
+import dataFactory from '../../src/data-factory';
+import db from '../../src/db';
 import ArticleNotFound from '../../src/errors/article-not-found';
 import NotAnArticle from '../../src/errors/not-an-article';
 import { schema } from '../../src/namespaces';
 import createArticle from '../create-article';
-import db from '../../src/db';
-import dataFactory from '../../src/data-factory';
 
 let postgresPromise: IMain;
 let database: IBaseProtocol<IMain>;
