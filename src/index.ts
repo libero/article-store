@@ -1,10 +1,12 @@
-import InMemoryArticles from './adaptors/in-memory-articles';
+import pgPromise from 'pg-promise';
 import createApp from './app';
 import dataFactory from './data-factory';
 import createRouter from './router';
+import PostgresArticles from './adaptors/postgres-articles';
 import Routes from './routes';
+import db from './db';
 
-const articles = new InMemoryArticles();
+const articles = new PostgresArticles(pgPromise()(db), dataFactory);
 const router = createRouter();
 const apiDocumentationPath = router.url(Routes.ApiDocumentation);
 
