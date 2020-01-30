@@ -1,8 +1,8 @@
-import {
-  blankNode, literal, namedNode, quad,
-} from '@rdfjs/data-model';
+import { namedNode } from '@rdfjs/data-model';
 import createHttpError from 'http-errors';
+import { CREATED } from 'http-status-codes';
 import all from 'it-all';
+import 'jest-rdf';
 import { Response } from 'koa';
 import { DatasetCore } from 'rdf-js';
 import InMemoryArticles from '../../src/adaptors/in-memory-articles';
@@ -24,17 +24,16 @@ const makeRequest = async (
 describe('add article', (): void => {
   it('should return a successful response', async (): Promise<void> => {
     const articles = new InMemoryArticles();
-    const id = blankNode();
-    const name = literal('Article');
-    const response = await makeRequest(createArticle({ id, name }), undefined, articles);
+    const article = createArticle();
+    const response = await makeRequest(article, undefined, articles);
 
-    expect(response.status).toBe(201);
-    expect(response.get('Location')).toBe('http://example.com/path-to/article-list');
+    expect(response.status).toBe(CREATED);
     expect(await articles.count()).toBe(1);
 
     const [newId, dataset] = (await all(articles))[0];
 
-    expect(dataset.has(quad(newId, schema('name'), name))).toBe(true);
+    expect(response.get('Location')).toBe(newId.value);
+    expect(dataset).toBeRdfIsomorphic(article);
   });
 
   it('should throw an error if it is not a schema:Article', async (): Promise<void> => {

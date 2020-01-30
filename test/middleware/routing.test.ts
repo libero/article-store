@@ -1,5 +1,6 @@
 import Router from '@koa/router';
 import createHttpError from 'http-errors';
+import { OK } from 'http-status-codes';
 import { Context, Next, Response } from 'koa';
 import routing from '../../src/middleware/routing';
 import createContext from '../context';
@@ -9,7 +10,7 @@ const createRouter = (): Router => {
   const router = new Router();
 
   router.delete('/', async ({ response }: Context, next: Next): Promise<void> => {
-    response.status = 200;
+    response.status = OK;
 
     await next();
   });
@@ -28,7 +29,7 @@ describe('routing middleware', (): void => {
   it('should match the method and path', async (): Promise<void> => {
     const response = await makeRequest('DELETE', '/');
 
-    expect(response.status).toBe(200);
+    expect(response.status).toBe(OK);
   });
 
   describe('should throw an error', (): void => {

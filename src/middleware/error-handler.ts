@@ -1,4 +1,4 @@
-import createError, { HttpError, UnknownError } from 'http-errors';
+import createHttpError, { HttpError } from 'http-errors';
 import {
   DefaultStateExtends, ExtendableContext, Middleware, Next,
 } from 'koa';
@@ -32,16 +32,12 @@ const handleHttpError = (
   response.dataset = dataset(quads);
 };
 
-const toHttpError = (error: UnknownError): HttpError => (
-  error instanceof HttpError ? error : createError(error)
-);
-
 export default (): Middleware<DefaultStateExtends, DatasetContext<ExtendableContext>> => (
   async (context: DatasetContext<ExtendableContext>, next: Next): Promise<void> => {
     try {
       await next();
     } catch (error) {
-      handleHttpError(toHttpError(error), context);
+      handleHttpError(createHttpError(error), context);
 
       context.app.emit('error', error, context);
     }

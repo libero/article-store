@@ -1,19 +1,18 @@
 import clownface from 'clownface';
 import createHttpError from 'http-errors';
-import { constants } from 'http2';
+import { CREATED } from 'http-status-codes';
 import { Next } from 'koa';
 import { Quad } from 'rdf-js';
 import { termToString } from 'rdf-string';
 import uniqueString from 'unique-string';
 import url from 'url';
 import { AppContext, AppMiddleware } from '../app';
-import NotAnArticle from '../errors/not-an-article';
 import { rdf, schema } from '../namespaces';
 import Routes from './index';
 
 export default (): AppMiddleware => (
   async ({
-    articles, dataFactory: { blankNode, quad }, request, response, router,
+    articles, dataFactory: { namedNode, quad }, request, response, router,
   }: AppContext, next: Next): Promise<void> => {
     const id = clownface({ dataset: request.dataset }).has(rdf.type, schema.Article).term;
 
@@ -29,7 +28,7 @@ export default (): AppMiddleware => (
       throw new createHttpError.BadRequest(`Article must have at least one ${termToString(schema('name'))}`);
     }
 
-    const newId = blankNode(uniqueString());
+    const newId = namedNode(url.resolve(request.origin, router.url(Routes.Article, uniqueString())));
 
     [...request.dataset].forEach((originalQuad: Quad): void => {
       let newQuad: Quad;
@@ -44,18 +43,10 @@ export default (): AppMiddleware => (
       request.dataset.delete(originalQuad).add(newQuad);
     });
 
-    try {
-      await articles.set(newId, request.dataset);
-    } catch (error) {
-      if (error instanceof NotAnArticle) {
-        throw new createHttpError.BadRequest(error.message);
-      }
+    await articles.set(newId, request.dataset);
 
-      throw error;
-    }
-
-    response.status = constants.HTTP_STATUS_CREATED;
-    response.set('Location', url.resolve(request.origin, router.url(Routes.ArticleList)));
+    response.status = CREATED;
+    response.set('Location', newId.value);
 
     await next();
   }

@@ -1,6 +1,7 @@
 import { literal, namedNode, quad } from '@rdfjs/data-model';
 import namespace from '@rdfjs/namespace';
 import { parse as parseContentType } from 'content-type';
+import { CREATED, NO_CONTENT, OK } from 'http-status-codes';
 import 'jest-rdf';
 import { Context as JsonLdContext } from 'jsonld/jsonld-spec';
 import { addAll } from 'rdf-dataset-ext';
@@ -62,13 +63,13 @@ describe('JSON-LD middleware', (): void => {
   it('adds a dataset to the request with JSON-LD body', async (): Promise<void> => {
     const { request } = await makeRequest(JSON.stringify(jsonLd), { 'Content-Type': 'application/ld+json' });
 
-    expect([...request.dataset]).toBeRdfIsomorphic(quads);
+    expect(request.dataset).toBeRdfIsomorphic(quads);
   });
 
   it('does nothing if there is a request body that isn\'t JSON-LD', async (): Promise<void> => {
     const { request } = await makeRequest(JSON.stringify(jsonLd), { 'Content-Type': 'application/json' });
 
-    expect(request.dataset.size).toBe(0);
+    expect(request.dataset).toBeRdfDatasetOfSize(0);
   });
 
   it('sets the response JSON-LD body with the dataset', async (): Promise<void> => {
@@ -89,19 +90,19 @@ describe('JSON-LD middleware', (): void => {
     expect(contentType.type).toBe('application/ld+json');
     expect(contentType.parameters).toMatchObject({ profile: 'http://www.w3.org/ns/json-ld#compacted' });
     expect(response.body).toMatchObject(expected);
-    expect(response.status).toBe(200);
+    expect(response.status).toBe(OK);
   });
 
   it('sets the response status code as 200 OK if there is a dataset', async (): Promise<void> => {
     const { response } = await makeRequest(undefined, undefined, next(undefined, quads));
 
-    expect(response.status).toBe(200);
+    expect(response.status).toBe(OK);
   });
 
   it('does not override the response status code', async (): Promise<void> => {
-    const { response } = await makeRequest(undefined, undefined, next(undefined, quads, undefined, 201));
+    const { response } = await makeRequest(undefined, undefined, next(undefined, quads, undefined, CREATED));
 
-    expect(response.status).toBe(201);
+    expect(response.status).toBe(CREATED);
   });
 
   it('sets the response JSON-LD body with the dataset using a context', async (): Promise<void> => {
@@ -141,10 +142,10 @@ describe('JSON-LD middleware', (): void => {
   });
 
   it('does nothing to the response if the status code is 204 No Content', async (): Promise<void> => {
-    const { response } = await makeRequest(undefined, undefined, next(undefined, quads, undefined, 204));
+    const { response } = await makeRequest(undefined, undefined, next(undefined, quads, undefined, NO_CONTENT));
 
     expect(response.headers).not.toHaveProperty('content-type');
     expect(response.body).toBe(undefined);
-    expect(response.status).toBe(204);
+    expect(response.status).toBe(NO_CONTENT);
   });
 });
