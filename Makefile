@@ -1,10 +1,13 @@
 .DEFAULT_GOAL = help
-.PHONY: help install gitmodules build start stop wait-healthy sh exec logs watch lint fix test run dev prod
+.PHONY: help install gitmodules build start start-db init-db stop wait-healthy sh exec logs watch lint fix test unit-test integration-test run dev prod
 
 SHELL = /usr/bin/env bash
 
 ifneq (${TARGET}, prod)
 TARGET = dev
+INITDB = initdb:dev
+else
+INITDB = initdb
 endif
 
 DOCKER_COMPOSE = docker-compose --file .docker/docker-compose.yml --file .docker/docker-compose.${TARGET}.yml
@@ -28,7 +31,15 @@ build: ## Build the containers
 	${DOCKER_COMPOSE} build
 
 start: ## Start the containers
+	$(MAKE) init-db
 	${DOCKER_COMPOSE} up --detach
+
+start-db:
+	${DOCKER_COMPOSE} up --detach db
+
+init-db:
+	$(MAKE) start-db
+	${DOCKER_COMPOSE} run --rm app npm run ${INITDB}
 
 stop: ## Stop the containers
 	${DOCKER_COMPOSE} down
@@ -69,15 +80,26 @@ fix: ## Fix linting issues in the code
 	${DOCKER_COMPOSE} run --rm app npm run lint:fix
 
 test: export TARGET = dev
-test: ## Run the tests
-	${DOCKER_COMPOSE} run --rm app npm run test
+test: ## Run all the tests
+	$(MAKE) start-db
+	${DOCKER_COMPOSE} run --rm app npm run test; exit=$$?; ${DOCKER_COMPOSE} down; exit $$exit
+
+unit-test: export TARGET = dev
+unit-test: ## Run the unit tests
+	${DOCKER_COMPOSE} run --rm app npm run test:unit
+
+integration-test: export TARGET = dev
+integration-test: ## Run the integration tests
+	$(MAKE) start-db
+	${DOCKER_COMPOSE} run --rm app npm run test:integration; exit=$$?; ${DOCKER_COMPOSE} down; exit $$exit
 
 mutation-test: export TARGET = dev
 mutation-test: ## Run the mutation tests
 	${DOCKER_COMPOSE} run --rm app npm run test:mutation
 
 run:
-	${DOCKER_COMPOSE} up --abort-on-container-exit --exit-code-from app; ${DOCKER_COMPOSE} down
+	$(MAKE) init-db
+	${DOCKER_COMPOSE} up --abort-on-container-exit --exit-code-from app; exit=$$?; ${DOCKER_COMPOSE} down; exit $$exit
 
 dev: export TARGET = dev
 dev: ## Build and runs the container for development
