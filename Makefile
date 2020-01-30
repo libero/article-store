@@ -95,7 +95,7 @@ integration-test: ## Run the integration tests
 
 run:
 	$(MAKE) init-db
-	${DOCKER_COMPOSE} up --abort-on-container-exit --exit-code-from app; ${DOCKER_COMPOSE} down
+	${DOCKER_COMPOSE} up --abort-on-container-exit --exit-code-from app; exit=$$?; ${DOCKER_COMPOSE} down; exit $$exit
 
 dev: export TARGET = dev
 dev: ## Build and runs the container for development
