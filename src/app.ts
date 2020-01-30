@@ -14,9 +14,11 @@ import namespaces from './namespaces';
 
 export type AppState = DefaultState;
 
-export type AppContext = RouterContext<AppState, DatasetContext<{
+export type AppServiceContext = DatasetContext<{
   articles: Articles;
-}>>;
+}>;
+
+export type AppContext = RouterContext<AppState, AppServiceContext>;
 
 export type AppMiddleware = Middleware<AppState, AppContext>;
 
@@ -24,7 +26,7 @@ export type App = Koa<AppState, AppContext>
 
 export default (
   articles: Articles,
-  router: Router<AppState, AppContext>,
+  router: Router<AppState, AppServiceContext>,
   apiDocumentationPath: string,
   dataFactory: ExtendedDataFactory,
 ): App => {
@@ -36,7 +38,7 @@ export default (
   app.use(logger());
   app.use(emptyResponse());
   app.use(cors({
-    exposeHeaders: ['Link'],
+    exposeHeaders: ['Link', 'Location'],
   }));
   app.use(setDataFactory(dataFactory));
   app.use(addDatasets());

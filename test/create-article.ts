@@ -8,7 +8,7 @@ import { rdf, schema } from '../src/namespaces';
 
 type Options = {
   id?: QuadSubject;
-  name?: Literal;
+  name?: Literal | null;
   types?: Array<NamedNode>;
 }
 

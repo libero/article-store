@@ -1,7 +1,7 @@
 import ParserJsonld from '@rdfjs/parser-jsonld';
 import SerializerJsonld from '@rdfjs/serializer-jsonld-ext';
 import { format as formatContentType } from 'content-type';
-import { constants } from 'http2';
+import { NO_CONTENT } from 'http-status-codes';
 import { Context } from 'jsonld/jsonld-spec';
 import {
   DefaultStateExtends, Middleware, Next, Response,
@@ -10,9 +10,7 @@ import pEvent from 'p-event';
 import { fromStream, toStream } from 'rdf-dataset-ext';
 import { DatasetContext } from './dataset';
 
-const responseHasContent = (response: Response): boolean => (
-  response.body || response.status === constants.HTTP_STATUS_NO_CONTENT
-);
+const responseHasContent = (response: Response): boolean => response.body || response.status === NO_CONTENT;
 
 export default (context: Context = {}): Middleware<DefaultStateExtends, DatasetContext> => {
   const contentType = {

@@ -4,6 +4,12 @@ services:
   app:
     build:
       context: ../
+    environment:
+      DATABASE_NAME: article-store
+      DATABASE_USER: user
+      DATABASE_PASSWORD: secret
+      DATABASE_HOST: db
+      DATABASE_PORT: 5432
     ports:
       - '8080:8080'
   console:
@@ -19,3 +25,14 @@ services:
       timeout: 1s
     depends_on:
       - app
+  db:
+    image: postgres:11.5-alpine
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: secret
+      POSTGRES_DB: article-store
+    ports:
+      - '5432:5432'
+    healthcheck:
+      test: pg_isready --username user --dbnam article-store || exit 1
+      interval: 5s

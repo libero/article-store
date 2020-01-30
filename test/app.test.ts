@@ -1,3 +1,4 @@
+import { NOT_FOUND, OK } from 'http-status-codes';
 import parseLinkHeader from 'parse-link-header';
 import request from 'supertest';
 import InMemoryArticles from '../src/adaptors/in-memory-articles';
@@ -20,13 +21,13 @@ describe('the application', (): void => {
   it('should respond with 200 OK on the root', async (): Promise<void> => {
     const response = await request(app.callback()).get('/');
 
-    expect(response.status).toEqual(200);
+    expect(response.status).toBe(OK);
   });
 
   it('should respond with 404 Not Found on an unknown path', async (): Promise<void> => {
     const response = await request(app.callback()).get('/does-not-exist');
 
-    expect(response.status).toEqual(404);
+    expect(response.status).toBe(NOT_FOUND);
   });
 
   it('should support cross-origin requests', async (): Promise<void> => {
@@ -34,7 +35,7 @@ describe('the application', (): void => {
 
     expect(response.get('Access-Control-Allow-Origin')).toBe('http://example.com');
     expect(parseHeader(response.get('Vary'))).toContain('Origin');
-    expect(parseHeader(response.get('Access-Control-Expose-Headers'))).toContain('Link');
+    expect(parseHeader(response.get('Access-Control-Expose-Headers'))).toEqual(expect.arrayContaining(['Link', 'Location']));
   });
 
   it('should have an API documentation link', async (): Promise<void> => {
