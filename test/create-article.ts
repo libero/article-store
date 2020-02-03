@@ -10,7 +10,7 @@ type Options = {
   id?: QuadSubject;
   name?: Literal | null;
   types?: Array<NamedNode>;
-}
+};
 
 export default ({
   id = blankNode(),
