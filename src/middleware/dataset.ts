@@ -15,7 +15,7 @@ export type DatasetContext<Context extends DefaultContextExtends = DefaultContex
   ExtendedDataFactory<Q>>;
 
 export default (): Middleware<DefaultStateExtends, DataFactoryContext<ExtendableContext,
-  ExtendedDataFactory<BaseQuad>>> => (
+ExtendedDataFactory<BaseQuad>>> => (
   async (context: DataFactoryContext<ExtendableContext, ExtendedDataFactory<BaseQuad>>, next: Next): Promise<void> => {
     Object.assign(context.request, { dataset: context.dataFactory.dataset() });
     Object.assign(context.response, { dataset: context.dataFactory.dataset() });
