@@ -2,7 +2,7 @@
   "private": true,
   "dependencies": {
     "@koa/cors": "^3.0.0",
-    "@koa/router": "^8.0.6",
+    "@koa/router": "^8.0.7",
     "@rdfjs/data-model": "^1.1.2",
     "@rdfjs/namespace": "^1.1.0",
     "@rdfjs/parser-jsonld": "^1.2.0",
