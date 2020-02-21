@@ -1,4 +1,4 @@
-import { DatasetCore, NamedNode } from 'rdf-js';
+import type { DatasetCore, NamedNode } from 'rdf-js';
 
 interface Articles extends AsyncIterable<[NamedNode, DatasetCore]> {
   set(id: NamedNode, article: DatasetCore): Promise<void>;
