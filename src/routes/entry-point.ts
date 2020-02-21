@@ -1,9 +1,9 @@
 import clownface, { Clownface } from 'clownface';
 import { OK } from 'http-status-codes';
-import { Next } from 'koa';
-import { NamedNode } from 'rdf-js';
+import type { Next } from 'koa';
+import type { NamedNode } from 'rdf-js';
 import url from 'url';
-import { AppContext, AppMiddleware } from '../app';
+import type { AppContext, AppMiddleware } from '../app';
 import { hydra, rdf, schema } from '../namespaces';
 import Routes from './index';
 

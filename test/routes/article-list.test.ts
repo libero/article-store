@@ -1,11 +1,11 @@
 import { namedNode, quad } from '@rdfjs/data-model';
 import { OK } from 'http-status-codes';
 import 'jest-rdf';
-import { Response } from 'koa';
+import type { Response } from 'koa';
 import { toRdf } from 'rdf-literal';
 import InMemoryArticles from '../../src/adaptors/in-memory-articles';
-import Articles from '../../src/articles';
-import { WithDataset } from '../../src/middleware/dataset';
+import type Articles from '../../src/articles';
+import type { WithDataset } from '../../src/middleware/dataset';
 import { hydra, rdf } from '../../src/namespaces';
 import articleList from '../../src/routes/article-list';
 import createContext from '../context';

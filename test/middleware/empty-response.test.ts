@@ -1,4 +1,4 @@
-import { Context, Response } from 'koa';
+import type { Context, Response } from 'koa';
 import emptyResponse from '../../src/middleware/empty-response';
 import createContext from '../context';
 import runMiddleware, { NextMiddleware } from '../middleware';

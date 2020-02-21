@@ -1,8 +1,8 @@
 import createHttpError from 'http-errors';
 import { OK } from 'http-status-codes';
-import { Next } from 'koa';
+import type { Next } from 'koa';
 import url from 'url';
-import { AppContext, AppMiddleware } from '../app';
+import type { AppContext, AppMiddleware } from '../app';
 import ArticleNotFound from '../errors/article-not-found';
 
 export default (): AppMiddleware => (

@@ -1,10 +1,10 @@
 import clownface, { Clownface } from 'clownface';
 import { CREATED, OK } from 'http-status-codes';
-import { Next } from 'koa';
-import { NamedNode } from 'rdf-js';
+import type { Next } from 'koa';
+import type { NamedNode } from 'rdf-js';
 import { toRdf } from 'rdf-literal';
 import url from 'url';
-import { AppContext, AppMiddleware } from '../app';
+import type { AppContext, AppMiddleware } from '../app';
 import {
   hydra, owl, rdf, schema,
 } from '../namespaces';

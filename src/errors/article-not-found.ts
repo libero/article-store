@@ -1,4 +1,4 @@
-import { NamedNode } from 'rdf-js';
+import type { NamedNode } from 'rdf-js';
 import { termToString } from 'rdf-string';
 
 export default class ArticleNotFound extends Error {

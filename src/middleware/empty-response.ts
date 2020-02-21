@@ -1,4 +1,4 @@
-import {
+import type {
   DefaultStateExtends, ExtendableContext, Middleware, Next, Response,
 } from 'koa';
 

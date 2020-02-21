@@ -1,4 +1,5 @@
-import Router, { Middleware, RouterParamContext } from '@koa/router';
+import type Router from '@koa/router';
+import type { Middleware, RouterParamContext } from '@koa/router';
 import createHttpError from 'http-errors';
 import { DefaultContextExtends, DefaultStateExtends, Next } from 'koa';
 import compose from 'koa-compose';

@@ -1,20 +1,20 @@
 import ParserJsonld from '@rdfjs/parser-jsonld';
 import SerializerJsonld from '@rdfjs/serializer-jsonld-ext';
-import { JsonLdObj } from 'jsonld/jsonld-spec';
+import type { JsonLdObj } from 'jsonld/jsonld-spec';
 import pEvent from 'p-event';
 import {
   errors, IBaseProtocol, IMain, ITask,
 } from 'pg-promise';
 import { fromStream, toStream } from 'rdf-dataset-ext';
-import {
+import type {
   DatasetCore, DatasetCoreFactory, NamedNode, Quad, Quad_Object as QuadObject,
 } from 'rdf-js';
 import { stringToTerm, termToString } from 'rdf-string';
 import toReadableStream from 'to-readable-stream';
-import Articles from '../articles';
+import type Articles from '../articles';
 import ArticleNotFound from '../errors/article-not-found';
 import NotAnArticle from '../errors/not-an-article';
-import { ExtendedDataFactory } from '../middleware/dataset';
+import type { ExtendedDataFactory } from '../middleware/dataset';
 import { rdf, schema } from '../namespaces';
 
 const { QueryResultError, queryResultErrorCode: { noData } } = errors;

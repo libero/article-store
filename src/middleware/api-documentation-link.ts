@@ -1,5 +1,5 @@
 import formatLinkHeader from 'format-link-header';
-import {
+import type {
   DefaultStateExtends, ExtendableContext, Middleware, Next,
 } from 'koa';
 import url from 'url';

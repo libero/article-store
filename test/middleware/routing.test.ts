@@ -1,7 +1,7 @@
 import Router from '@koa/router';
 import createHttpError from 'http-errors';
 import { OK } from 'http-status-codes';
-import { Context, Next, Response } from 'koa';
+import type { Context, Next, Response } from 'koa';
 import routing from '../../src/middleware/routing';
 import createContext from '../context';
 import runMiddleware, { NextMiddleware } from '../middleware';

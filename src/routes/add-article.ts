@@ -1,12 +1,12 @@
 import clownface from 'clownface';
 import createHttpError from 'http-errors';
 import { CREATED } from 'http-status-codes';
-import { Next } from 'koa';
-import { Quad } from 'rdf-js';
+import type { Next } from 'koa';
+import type { Quad } from 'rdf-js';
 import { termToString } from 'rdf-string';
 import uniqueString from 'unique-string';
 import url from 'url';
-import { AppContext, AppMiddleware } from '../app';
+import type { AppContext, AppMiddleware } from '../app';
 import { rdf, schema } from '../namespaces';
 import Routes from './index';
 

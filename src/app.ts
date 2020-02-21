@@ -2,7 +2,7 @@ import cors from '@koa/cors';
 import Router, { RouterContext } from '@koa/router';
 import Koa, { DefaultState, Middleware } from 'koa';
 import logger from 'koa-logger';
-import Articles from './articles';
+import type Articles from './articles';
 import apiDocumentationLink from './middleware/api-documentation-link';
 import setDataFactory from './middleware/data-factory';
 import addDatasets, { DatasetContext, ExtendedDataFactory } from './middleware/dataset';

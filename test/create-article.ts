@@ -1,4 +1,4 @@
-import {
+import type {
   DatasetCore, Literal, NamedNode, Quad_Subject as QuadSubject,
 } from 'rdf-js';
 import {

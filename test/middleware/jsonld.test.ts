@@ -3,14 +3,14 @@ import namespace from '@rdfjs/namespace';
 import { parse as parseContentType } from 'content-type';
 import { CREATED, NO_CONTENT, OK } from 'http-status-codes';
 import 'jest-rdf';
-import { Context as JsonLdContext } from 'jsonld/jsonld-spec';
+import type { Context as JsonLdContext } from 'jsonld/jsonld-spec';
 import { addAll } from 'rdf-dataset-ext';
-import { Quad } from 'rdf-js';
-import { AppContext } from '../../src/app';
+import type { Quad } from 'rdf-js';
+import type { AppContext } from '../../src/app';
 import jsonld from '../../src/middleware/jsonld';
 import { rdf, schema } from '../../src/namespaces';
 import createContext, { Headers } from '../context';
-import { NextMiddleware } from '../middleware';
+import type { NextMiddleware } from '../middleware';
 
 const makeRequest = async (
   body?: string, headers?: Headers, next: NextMiddleware = jest.fn(), jsonLdContext: JsonLdContext = {},

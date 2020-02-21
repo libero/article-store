@@ -2,7 +2,7 @@ import { literal, namedNode, quad } from '@rdfjs/data-model';
 import all from 'it-all';
 import 'jest-rdf';
 import pgPromise, { IBaseProtocol, IMain } from 'pg-promise';
-import { DatasetCore, NamedNode } from 'rdf-js';
+import type { DatasetCore, NamedNode } from 'rdf-js';
 import PostgresArticles from '../../src/adaptors/postgres-articles';
 import dataFactory from '../../src/data-factory';
 import db from '../../src/db';

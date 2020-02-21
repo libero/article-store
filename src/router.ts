@@ -1,5 +1,5 @@
 import Router from '@koa/router';
-import { AppServiceContext, AppState } from './app';
+import type { AppServiceContext, AppState } from './app';
 import Routes from './routes';
 import addArticle from './routes/add-article';
 import apiDocumentation from './routes/api-documentation';

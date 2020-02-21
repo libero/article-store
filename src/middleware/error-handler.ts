@@ -1,9 +1,9 @@
 import createHttpError, { HttpError } from 'http-errors';
-import {
+import type {
   DefaultStateExtends, ExtendableContext, Middleware, Next,
 } from 'koa';
 import { hydra, rdf } from '../namespaces';
-import { DatasetContext } from './dataset';
+import type { DatasetContext } from './dataset';
 
 const handleHttpError = (
   error: HttpError,

@@ -1,6 +1,6 @@
 import dataFactory from '@rdfjs/data-model';
-import { Next } from 'koa';
-import { DataFactory } from 'rdf-js';
+import type { Next } from 'koa';
+import type { DataFactory } from 'rdf-js';
 import setDataFactory, { DataFactoryContext } from '../../src/middleware/data-factory';
 import createContext from '../context';
 
