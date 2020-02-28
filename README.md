@@ -53,20 +53,19 @@ Port `8080` is exposed.
 
 <summary>Docker Compose example</summary>
 
-version: '3.4'
-
+```yaml
 services:
   app:
-    build:
-      context: ../
+    image: liberoadmin/article-store:latest
     environment:
       DATABASE_NAME: article-store
       DATABASE_USER: user
       DATABASE_PASSWORD: secret
-      DATABASE_HOST: db
+      DATABASE_HOST: example.com
       DATABASE_PORT: 5432
     ports:
       - '8080:8080'
+```
 
 </details>
 
