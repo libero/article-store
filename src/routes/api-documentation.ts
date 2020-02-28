@@ -1,3 +1,6 @@
+import {
+  hydra, owl, rdf, schema,
+} from '@tpluscode/rdf-ns-builders';
 import clownface, { Clownface } from 'clownface';
 import { CREATED, OK } from 'http-status-codes';
 import { Next } from 'koa';
@@ -5,9 +8,6 @@ import { NamedNode } from 'rdf-js';
 import { toRdf } from 'rdf-literal';
 import url from 'url';
 import { AppContext, AppMiddleware } from '../app';
-import {
-  hydra, owl, rdf, schema,
-} from '../namespaces';
 import Routes from './index';
 
 export default (): AppMiddleware => (
@@ -40,7 +40,7 @@ export default (): AppMiddleware => (
       entryPoint.addOut(hydra.supportedProperty, (name: Clownface): void => {
         name.addOut(rdf.type, hydra.SupportedProperty);
         name.addOut(hydra.title, literal('Name', 'en'));
-        name.addOut(hydra.property, schema('name'), (property: Clownface): void => {
+        name.addOut(hydra.property, schema.name, (property: Clownface): void => {
           property.addOut(rdf.type, rdf.Property);
         });
         name.addOut(hydra.required, true);
@@ -56,7 +56,7 @@ export default (): AppMiddleware => (
       article.addOut(hydra.supportedProperty, (name: Clownface): void => {
         name.addOut(rdf.type, hydra.SupportedProperty);
         name.addOut(hydra.title, literal('Name', 'en'));
-        name.addOut(hydra.property, schema('name'), (property: Clownface): void => {
+        name.addOut(hydra.property, schema.name, (property: Clownface): void => {
           property.addOut(rdf.type, rdf.Property);
         });
         name.addOut(hydra.required, true);

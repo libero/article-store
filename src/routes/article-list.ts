@@ -1,3 +1,4 @@
+import { hydra, rdf, schema } from '@tpluscode/rdf-ns-builders';
 import clownface, { Clownface } from 'clownface';
 import { OK } from 'http-status-codes';
 import all from 'it-all';
@@ -7,7 +8,6 @@ import { DatasetCore, NamedNode } from 'rdf-js';
 import { toRdf } from 'rdf-literal';
 import url from 'url';
 import { AppContext, AppMiddleware } from '../app';
-import { hydra, rdf, schema } from '../namespaces';
 import Routes from './index';
 
 export default (): AppMiddleware => (

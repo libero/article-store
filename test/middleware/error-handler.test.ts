@@ -3,9 +3,9 @@ import createHttpError from 'http-errors';
 import { INTERNAL_SERVER_ERROR, SERVICE_UNAVAILABLE } from 'http-status-codes';
 import 'jest-rdf';
 import { Response } from 'koa';
+import { hydra, rdf } from '@tpluscode/rdf-ns-builders';
 import { WithDataset } from '../../src/middleware/dataset';
 import errorHandler from '../../src/middleware/error-handler';
-import { hydra, rdf } from '../../src/namespaces';
 import createContext, { ErrorListener } from '../context';
 import runMiddleware, { NextMiddleware, throwingNext } from '../middleware';
 

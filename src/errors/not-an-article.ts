@@ -1,6 +1,6 @@
+import { schema } from '@tpluscode/rdf-ns-builders';
 import { Quad_Object as QuadObject } from 'rdf-js';
 import { termToString } from 'rdf-string';
-import { schema } from '../namespaces';
 
 export default class NotAnArticle extends Error {
   readonly types: Array<QuadObject>;

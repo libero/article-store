@@ -6,9 +6,9 @@ import 'jest-rdf';
 import { Context as JsonLdContext } from 'jsonld/jsonld-spec';
 import { addAll } from 'rdf-dataset-ext';
 import { Quad } from 'rdf-js';
+import { rdf, schema } from '@tpluscode/rdf-ns-builders';
 import { AppContext } from '../../src/app';
 import jsonld from '../../src/middleware/jsonld';
-import { rdf, schema } from '../../src/namespaces';
 import createContext, { Headers } from '../context';
 import { NextMiddleware } from '../middleware';
 
@@ -44,7 +44,7 @@ const dc = namespace('http://purl.org/dc/elements/1.1/');
 const id = namedNode('http://example.com/object');
 const quads = [
   quad(id, rdf.type, schema.Article),
-  quad(id, schema('name'), literal('English Name', 'en')),
+  quad(id, schema.name, literal('English Name', 'en')),
   quad(id, dc.title, literal('English Title', 'en')),
   quad(id, dc.title, literal('French Title', 'fr')),
 ];

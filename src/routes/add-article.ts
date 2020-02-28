@@ -1,3 +1,4 @@
+import { rdf, schema } from '@tpluscode/rdf-ns-builders';
 import clownface from 'clownface';
 import createHttpError from 'http-errors';
 import { CREATED } from 'http-status-codes';
@@ -7,7 +8,6 @@ import { termToString } from 'rdf-string';
 import uniqueString from 'unique-string';
 import url from 'url';
 import { AppContext, AppMiddleware } from '../app';
-import { rdf, schema } from '../namespaces';
 import Routes from './index';
 
 export default (): AppMiddleware => (
@@ -24,8 +24,8 @@ export default (): AppMiddleware => (
       throw new createHttpError.BadRequest(`Article must have a blank node identifier (${termToString(id)} given)`);
     }
 
-    if (request.dataset.match(id, schema('name')).size === 0) {
-      throw new createHttpError.BadRequest(`Article must have at least one ${termToString(schema('name'))}`);
+    if (request.dataset.match(id, schema.name).size === 0) {
+      throw new createHttpError.BadRequest(`Article must have at least one ${termToString(schema.name)}`);
     }
 
     const newId = namedNode(url.resolve(request.origin, router.url(Routes.Article, uniqueString())));

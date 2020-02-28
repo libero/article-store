@@ -2,10 +2,10 @@ import { literal, namedNode, quad } from '@rdfjs/data-model';
 import all from 'it-all';
 import 'jest-rdf';
 import { DatasetCore, NamedNode } from 'rdf-js';
+import { schema } from '@tpluscode/rdf-ns-builders';
 import InMemoryArticles from '../../src/adaptors/in-memory-articles';
 import ArticleNotFound from '../../src/errors/article-not-found';
 import NotAnArticle from '../../src/errors/not-an-article';
-import { schema } from '../../src/namespaces';
 import createArticle from '../create-article';
 
 describe('in-memory articles', (): void => {
@@ -37,7 +37,7 @@ describe('in-memory articles', (): void => {
     await articles.set(id, createArticle({ id, name: literal('Original') }));
     await articles.set(id, createArticle({ id, name: literal('Updated') }));
 
-    expect(await articles.get(id)).toBeRdfDatasetContaining(quad(id, schema('name'), literal('Updated')));
+    expect(await articles.get(id)).toBeRdfDatasetContaining(quad(id, schema.name, literal('Updated')));
   });
 
   it('throws an error if it is not an article', async (): Promise<void> => {
