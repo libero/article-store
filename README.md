@@ -14,6 +14,9 @@
 <a href="https://github.com/libero/article-store/actions?query=branch%3Amaster+workflow%3ACI">
   <img src="https://img.shields.io/github/workflow/status/libero/article-store/CI/master?style=flat-square&logo=github" alt="Build status">
 </a>
+<a href="https://github.com/libero/publisher/issues?q=is%3Aissue+is%3Aopen+label%3Aarticle-store">
+  <img src="https://img.shields.io/github/issues/libero/publisher/article-store?label=issues&logo=github&style=flat-square" alt="Issues">
+</a>
 <a href="https://hub.docker.com/r/liberoadmin/article-store">
   <img src="https://img.shields.io/docker/pulls/liberoadmin/article-store?style=flat-square&logo=docker&logoColor=white" alt="Docker pulls">
 </a>
