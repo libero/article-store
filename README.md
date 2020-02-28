@@ -21,7 +21,7 @@
   <img src="https://img.shields.io/docker/pulls/liberoadmin/article-store?style=flat-square&logo=docker&logoColor=white" alt="Docker pulls">
 </a>
 <a href="LICENSE.md">
-  <img src="https://img.shields.io/github/license/libero/article-store?style=flat-square" alt="License">
+  <img src="https://img.shields.io/github/license/libero/article-store?style=flat-square&cacheSeconds=86400" alt="License">
 </a>
 <a href="https://libero.pub/join-slack">
   <img src="https://img.shields.io/badge/slack-libero--community-green?style=flat-square&logo=slack" alt="Slack">
