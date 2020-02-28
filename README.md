@@ -49,8 +49,8 @@ It's written in [TypeScript](https://www.typescriptlang.org/), uses the [Koa fra
 
 </details>
 
-Installation
-------------
+📙 Installation
+---------------
 
 The app is published on Docker Hub as [`liberoadmin/article-store`](https://hub.docker.com/r/liberoadmin/article-store).
 
@@ -94,8 +94,8 @@ services:
 
 </details>
 
-Local usage
------------
+⚒️ Local usage
+--------------
 
 <details>
 
@@ -145,14 +145,14 @@ And to automatically fix, where possible:
 make fix
 ```
 
-Getting help
-------------
+💁 Getting help
+---------------
 
 - Report a bug or request a feature on [GitHub](https://github.com/libero/publisher/issues/new/choose).
 - Ask a question on the [Libero Community Slack](https://libero.pub/join-slack).
 - Read the [code of conduct](https://libero.pub/code-of-conduct).
 
-License
--------
+📜 License
+----------
 
 This software is released under the [MIT license](LICENSE.md).
