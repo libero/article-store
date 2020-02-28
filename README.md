@@ -89,19 +89,36 @@ To build and run the app for development, execute:
 make dev
 ```
 
+You can now access the entry point at <http://localhost:8080>, or view the console at <http://localhost:8081>.
+
+### Running the tests
+
+To run all of the tests, execute:
+
 ```shell
 make test
 ```
 
-```shell
-make unit-test
-```
+The tests can also be run in separate suites:
 
 ```shell
+make unit-test
 make integration-test
 ```
 
-You can now access the entry point at <http://localhost:8080>, or view the console at <http://localhost:8081>.
+### Linting
+
+The code can be linted by executing:
+
+```shell
+make lint
+```
+
+And to automatically fix, where possible:
+
+```shell
+make fix
+```
 
 Getting help
 ------------
