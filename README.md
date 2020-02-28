@@ -1,6 +1,6 @@
 <h1 align="center">
   <a href="https://libero.pub/">
-    <img src="https://cdn.elifesciences.org/libero/logo/libero-logo-96px.svg" alt="Libero">
+    <img src="https://cdn.elifesciences.org/libero/logo/libero-logo-96px.svg" height="64px" alt="Libero">
   </a>
   <br>
   Article Store
