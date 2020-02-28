@@ -26,10 +26,7 @@
 
 </div>
 
----
-
-About
------
+<br>
 
 This app provides a hypermedia API for storing articles ().
 
