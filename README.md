@@ -1,11 +1,33 @@
-[![Libero](https://cdn.elifesciences.org/libero/logo/libero-logo-96px.svg)](https://libero.pub/)
+<a href="https://libero.pub/">
+  <img src="https://cdn.elifesciences.org/libero/logo/libero-logo-96px.svg" alt="Libero" align="center">
+</a>
 
-Article Store
-=============
+<h1 align="center">Article Store</h1>
 
-[![Build status](https://img.shields.io/github/workflow/status/libero/article-store/CI/master?style=flat-square&logo=github)](https://github.com/libero/article-store/actions?query=branch%3Amaster+workflow%3ACI)
-[![Docker pulls](https://img.shields.io/docker/pulls/liberoadmin/article-store?style=flat-square&logo=docker&logoColor=white)](https://hub.docker.com/r/liberoadmin/article-store)
-[![License](https://img.shields.io/github/license/libero/article-store?style=flat-square)](LICENSE.md)
+<div align="center">
+
+<a href="">
+  <img src="https://img.shields.io/badge/stability-experimental-orange.svg?style=flat-square" alt="Stability">
+</a>
+<a href="https://github.com/libero/article-store/actions?query=branch%3Amaster+workflow%3ACI">
+  <img src="https://img.shields.io/github/workflow/status/libero/article-store/CI/master?style=flat-square&logo=github" alt="Build status">
+</a>
+<a href="https://hub.docker.com/r/liberoadmin/article-store">
+  <img src="https://img.shields.io/docker/pulls/liberoadmin/article-store?style=flat-square&logo=docker&logoColor=white" alt="Docker pulls">
+</a>
+<a href="LICENSE.md">
+  <img src="https://img.shields.io/github/license/libero/article-store?style=flat-square" alt="License">
+</a>
+<a href="https://libero.pub/join-slack">
+  <img src="https://img.shields.io/badge/slack-chat-green?style=flat-square&logo=slack" alt="Slack">
+</a>
+
+</div>
+
+---
+
+About
+-----
 
 This app provides a hypermedia API for storing articles ().
 
