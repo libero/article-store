@@ -8,9 +8,6 @@
 
 <div align="center">
 
-<a href="">
-  <img src="https://img.shields.io/badge/stability-experimental-orange.svg?style=flat-square" alt="Stability">
-</a>
 <a href="https://github.com/libero/article-store/actions?query=branch%3Amaster+workflow%3ACI">
   <img src="https://img.shields.io/github/workflow/status/libero/article-store/CI/master?style=flat-square&logo=github" alt="Build status">
 </a>
