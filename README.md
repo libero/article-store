@@ -21,7 +21,7 @@
   <img src="https://img.shields.io/github/license/libero/article-store?style=flat-square" alt="License">
 </a>
 <a href="https://libero.pub/join-slack">
-  <img src="https://img.shields.io/badge/slack-chat-green?style=flat-square&logo=slack" alt="Slack">
+  <img src="https://img.shields.io/badge/slack-libero--community-green?style=flat-square&logo=slack" alt="Slack">
 </a>
 
 </div>
