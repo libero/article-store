@@ -1,8 +1,10 @@
-<a href="https://libero.pub/">
-  <img src="https://cdn.elifesciences.org/libero/logo/libero-logo-96px.svg" alt="Libero" align="center">
-</a>
-
-<h1 align="center">Article Store</h1>
+<h1 align="center">
+  <a href="https://libero.pub/">
+    <img src="https://cdn.elifesciences.org/libero/logo/libero-logo-96px.svg" alt="Libero">
+  </a>
+  <br>
+  Article Store
+</h1>
 
 <div align="center">
 
