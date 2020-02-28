@@ -3,9 +3,9 @@
 Article Store
 =============
 
-[![Build Status](https://img.shields.io/github/workflow/status/libero/article-store/CI/master)](https://github.com/libero/article-store/actions?query=branch%3Amaster+workflow%3ACI)
-[![GitHub](https://img.shields.io/github/license/libero/article-store)](LICENSE.md)
-[![Docker pulls](https://img.shields.io/docker/pulls/liberoadmin/article-store)](https://hub.docker.com/r/liberoadmin/article-store)
+[![Build status](https://img.shields.io/github/workflow/status/libero/article-store/CI/master?style=flat-square&logo=github)](https://github.com/libero/article-store/actions?query=branch%3Amaster+workflow%3ACI)
+[![Docker pulls](https://img.shields.io/docker/pulls/liberoadmin/article-store?style=flat-square&logo=docker&logoColor=white)](https://hub.docker.com/r/liberoadmin/article-store)
+[![License](https://img.shields.io/github/license/libero/article-store?style=flat-square)](LICENSE.md)
 
 This app provides a hypermedia API for storing articles ().
 
