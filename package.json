@@ -6,7 +6,7 @@
     "@rdfjs/data-model": "^1.1.2",
     "@rdfjs/parser-jsonld": "^1.2.0",
     "@rdfjs/serializer-jsonld-ext": "^2.0.0",
-    "@tpluscode/rdf-ns-builders": "0.0.4",
+    "@tpluscode/rdf-ns-builders": "^0.1.0",
     "clownface": "^0.12.1",
     "content-type": "^1.0.4",
     "format-link-header": "^3.0.0",
