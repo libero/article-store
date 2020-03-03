@@ -9,16 +9,20 @@
 <div align="center">
 
 <a href="https://github.com/libero/article-store/actions?query=branch%3Amaster+workflow%3ACI">
-  <img src="https://img.shields.io/github/workflow/status/libero/article-store/CI/master?style=flat-square&logo=github" alt="Build status">
+  <img src="https://img.shields.io/github/workflow/status/libero/article-store/CI/master?style=flat-square&logo=github"
+    alt="Build status">
 </a>
 <a href="https://github.com/libero/publisher/issues?q=is%3Aissue+is%3Aopen+label%3Aarticle-store">
-  <img src="https://img.shields.io/github/issues/libero/publisher/article-store?label=issues&logo=github&style=flat-square" alt="Issues">
+  <img src="https://img.shields.io/github/issues/libero/publisher/article-store?label=issues&logo=github&style=flat-square"
+    alt="Issues">
 </a>
 <a href="https://hub.docker.com/r/liberoadmin/article-store&cacheSeconds=3600">
-  <img src="https://img.shields.io/docker/pulls/liberoadmin/article-store?style=flat-square&logo=docker&logoColor=white" alt="Docker pulls">
+  <img src="https://img.shields.io/docker/pulls/liberoadmin/article-store?style=flat-square&logo=docker&logoColor=white"
+    alt="Docker pulls">
 </a>
 <a href="LICENSE.md">
-  <img src="https://img.shields.io/github/license/libero/article-store?style=flat-square&cacheSeconds=86400" alt="License">
+  <img src="https://img.shields.io/github/license/libero/article-store?style=flat-square&cacheSeconds=86400"
+    alt="License">
 </a>
 <a href="https://libero.pub/join-slack">
   <img src="https://img.shields.io/badge/slack-libero--community-green?style=flat-square&logo=slack" alt="Slack">
@@ -32,9 +36,11 @@ This app provides a hypermedia API for storing articles ().
 
 An article is an RDF graph, where the root node is a  [`http://schema.org/Article`](https://schema.org/Article).
 
-It uses the [Hydra vocabulary](http://www.hydra-cg.com/spec/latest/core/), and follows the [Libero API](https://libero.pub/api) standard.
+It uses the [Hydra vocabulary](http://www.hydra-cg.com/spec/latest/core/), and follows the
+[Libero API](https://libero.pub/api) standard.
 
-It's written in [TypeScript](https://www.typescriptlang.org/), uses the [Koa framework](https://koajs.com/), and various [RDF/JS libraries](https://rdf.js.org/).
+It's written in [TypeScript](https://www.typescriptlang.org/), uses the [Koa framework](https://koajs.com/), and various
+[RDF/JS libraries](https://rdf.js.org/).
 
 <details>
 
@@ -54,7 +60,8 @@ It's written in [TypeScript](https://www.typescriptlang.org/), uses the [Koa fra
 
 The app is published on Docker Hub as [`liberoadmin/article-store`](https://hub.docker.com/r/liberoadmin/article-store).
 
-As it is still under heavy development, there are not yet tagged releases. However, an image is available for every commit.
+As it is still under heavy development, there are not yet tagged releases. However, an image is available for every
+commit.
 
 <details>
 
@@ -68,7 +75,7 @@ It requires the following environment variables when run:
 | `DATABASE_NAME`     | Name of the database                  |
 | `DATABASE_PASSWORD` | Password for the user                 |
 | `DATABASE_PORT`     | PostgreSQL port, e.g. 5432            |
-| `DATABASE_USER`     | PostgreSQL Username                   |
+| `DATABASE_USER`     | PostgreSQL username                   |
 
 Port `8080` is exposed.
 
@@ -104,7 +111,7 @@ services:
 - [Docker](https://www.docker.com/)
 - [GNU Bash](https://www.gnu.org/software/bash/)
 - [GNU Make](https://www.gnu.org/software/make/)
-- [Node.js](https://nodejs.org/) (for development)
+- [Node.js](https://nodejs.org/)
 
 </details>
 
@@ -116,9 +123,24 @@ make dev
 
 You can now access the entry point at <http://localhost:8080>, or view the console at <http://localhost:8081>.
 
+<details>
+
+<summary>Building containers</summary>
+
+Code is attached to the containers as volumes so most updates are visible without a need to rebuild the container.
+However, changes to NPM dependencies, for example, require a rebuild. So you may need to execute
+
+```shell
+make build
+```
+
+before running further commands.
+
+</details>
+
 ### Running the tests
 
-To run all of the tests, execute:
+The app is tested using [Jest](https://jestjs.io/). It can be run by executing: 
 
 ```shell
 make test
@@ -131,15 +153,17 @@ make unit-test
 make integration-test
 ```
 
+Integration tests are separated using the `@group integration` annotation, and can access a PostgreSQL instance. 
+
 ### Linting
 
-The code can be linted by executing:
+The app is linted using [ESLint](https://eslint.org/). It can be run by executing:
 
 ```shell
 make lint
 ```
 
-And to automatically fix, where possible:
+Problems can be automatically fix, where possible, by executing:
 
 ```shell
 make fix
