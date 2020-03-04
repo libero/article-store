@@ -83,7 +83,7 @@ commit.
      liberoadmin/article-store:latest
    ```
 
-4. Access the Article Store entry point at <http://localhost:8080>:
+4. Access the Article Store entry point:
 
    ```shell
    curl --verbose localhost:8080
@@ -111,7 +111,7 @@ This variable is optional and is the password of the PostgreSQL user (default is
 
 #### `DATABASE_PORT`
 
-This variable is optional and is PostgreSQL port (default `5432`).
+This variable is optional and is the PostgreSQL port (default `5432`).
 
 Local usage
 -----------
