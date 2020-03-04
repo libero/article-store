@@ -1,36 +1,13 @@
-<h1 align="center">
-  <a href="https://libero.pub/">
-    <img src="https://cdn.elifesciences.org/libero/logo/libero-logo-96px.svg" height="64px" alt="Libero">
-  </a>
-  <br>
-  Article Store
-</h1>
+[![Libero][Libero logo]][Libero]  
+  
+Article Store
+=============
 
-<div align="center">
-
-<a href="https://github.com/libero/article-store/actions?query=branch%3Amaster+workflow%3ACI">
-  <img src="https://img.shields.io/github/workflow/status/libero/article-store/CI/master?style=flat-square&logo=github"
-    alt="Build status">
-</a>
-<a href="https://github.com/libero/publisher/issues?q=is%3Aissue+is%3Aopen+label%3Aarticle-store">
-  <img src="https://img.shields.io/github/issues/libero/publisher/article-store?label=issues&logo=github&style=flat-square"
-    alt="Issues">
-</a>
-<a href="https://hub.docker.com/r/liberoadmin/article-store&cacheSeconds=3600">
-  <img src="https://img.shields.io/docker/pulls/liberoadmin/article-store?style=flat-square&logo=docker&logoColor=white"
-    alt="Docker pulls">
-</a>
-<a href="LICENSE.md">
-  <img src="https://img.shields.io/github/license/libero/article-store?style=flat-square&cacheSeconds=86400"
-    alt="License">
-</a>
-<a href="https://libero.pub/join-slack">
-  <img src="https://img.shields.io/badge/slack-libero--community-green?style=flat-square&logo=slack" alt="Slack">
-</a>
-
-</div>
-
-<br><br>
+[![Build status][Build badge]][Build]
+[![Open issues][Open issues badge]][Open issues]
+[![Docker pulls][Docker pulls badge]][Docker image]
+[![License][License badge]][License]
+[![Slack][Slack badge]][Libero Community Slack]
 
 This app provides a hypermedia API for storing articles ().
 
@@ -178,10 +155,14 @@ make fix
 📜 License
 ----------
 
-This software is released under the [MIT license][license].
+This software is released under the [MIT license][license]. Copyright © 2019 [eLife Sciences Publications, Ltd][eLife].
 
+[Build]: https://github.com/libero/article-store/actions?query=branch%3Amaster+workflow%3ACI
+[Build badge]: https://img.shields.io/github/workflow/status/libero/article-store/CI/master?style=flat-square&logo=github
 [Docker]: https://www.docker.com/
 [Docker image]: https://hub.docker.com/r/liberoadmin/article-store
+[Docker pulls badge]: https://img.shields.io/docker/pulls/liberoadmin/article-store?style=flat-square&logo=docker&logoColor=white&cacheSeconds=3600
+[eLife]: https://elifesciences.org/
 [ESLint]: https://eslint.org/
 [Code of conduct]: https://libero.pub/code-of-conduct
 [GNU Bash]: https://www.gnu.org/software/bash/
@@ -189,15 +170,21 @@ This software is released under the [MIT license][license].
 [Hydra vocabulary]: http://www.hydra-cg.com/spec/latest/core/
 [Jest]: https://jestjs.io/
 [Koa]: https://koajs.com/
+[Libero]: https://libero.pub/
 [Libero API Specification]: https://libero.pub/api
 [Libero Community Slack]: https://libero.pub/join-slack
+[Libero logo]: https://cdn.elifesciences.org/libero/logo/libero-logo-96px.svg
 [License]: LICENSE.md
+[License badge]: https://img.shields.io/github/license/libero/article-store?style=flat-square&cacheSeconds=86400
 [New issue]: https://github.com/libero/publisher/issues/new/choose
 [Node.js]: https://nodejs.org/
+[Open issues]: https://github.com/libero/publisher/issues?q=is%3Aissue+is%3Aopen+label%3Aarticle-store
+[Open issues badge]: https://img.shields.io/github/issues/libero/publisher/article-store?label=issues&logo=github&style=flat-square
 [RDF 1.1 Primer]: https://www.w3.org/TR/rdf11-primer/
 [RDF/JS]: https://rdf.js.org/
 [RDF/JS data model]: https://rdf.js.org/data-model-spec/
 [RDF/JS dataset]: https://rdf.js.org/dataset-spec/
+[Slack badge]: https://img.shields.io/badge/slack-libero--community-green?style=flat-square&logo=slack
 [TypeScript]: https://www.typescriptlang.org/
 
 [schema:Article]: https://schema.org/Article
