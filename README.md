@@ -49,43 +49,69 @@ The app is published on Docker Hub as [`liberoadmin/article-store`][Docker image
 As it is still under heavy development, there are not yet tagged releases. However, an image is available for every
 commit.
 
-<details>
+### Running an Article Store
 
-<summary>Configuration</summary>
+1. Start a PostgreSQL container by executing:
 
-It requires the following environment variables when run:
+   ```shell
+   docker run -d --name article-store-database \
+     -e "POSTGRES_DB=article-store" \
+     -e "POSTGRES_USER=user" \
+     postgres:11.5-alpine
+   ```
 
-| Name                | Description                           |
-|---------------------|---------------------------------------|
-| `DATABASE_HOST`     | PostgreSQL hostname, e.g. example.com |
-| `DATABASE_NAME`     | Name of the database                  |
-| `DATABASE_PASSWORD` | Password for the user                 |
-| `DATABASE_PORT`     | PostgreSQL port, e.g. 5432            |
-| `DATABASE_USER`     | PostgreSQL username                   |
+2. Run the database creation with an ephemeral Article Store container:
 
-Port `8080` is exposed.
+   ```shell
+   docker run --rm \
+     --link article-store-database \
+     -e "DATABASE_HOST=article-store-database" \
+     -e "DATABASE_NAME=article-store" \
+     -e "DATABASE_USER=user" \
+     liberoadmin/article-store:latest npm run initdb
+   ```
 
-</details>
+3. Run an Article Store container and link it to the database container:
 
-<details>
+   ```shell
+   docker run \
+     --link article-store-database \
+     -e "DATABASE_HOST=article-store-database" \
+     -e "DATABASE_NAME=article-store" \
+     -e "DATABASE_USER=user" \
+     -p 8080:8080 \
+     liberoadmin/article-store:latest
+   ```
 
-<summary>Docker Compose example</summary>
+4. Access the Article Store entry point at <http://localhost:8080>:
 
-```yaml
-services:
-  app:
-    image: liberoadmin/article-store:latest
-    environment:
-      DATABASE_NAME: article-store
-      DATABASE_USER: user
-      DATABASE_PASSWORD: secret
-      DATABASE_HOST: example.com
-      DATABASE_PORT: 5432
-    ports:
-      - '8080:8080'
-```
+   ```shell
+   curl --verbose localhost:8080
+   ```
 
-</details>
+### Configuration
+
+The following environment variables can be set:
+
+#### `DATABASE_HOST`
+
+This variable is mandatory is the PostgreSQL hostname.
+
+#### `DATABASE_NAME`
+
+This variable is mandatory and is the name of the PostgreSQL database.
+
+#### `DATABASE_USER`
+
+This variable is mandatory and is the name of the PostgreSQL user.
+
+#### `DATABASE_PASSWORD`
+
+This variable is optional and is the password of the PostgreSQL user (default is blank).
+
+#### `DATABASE_PORT`
+
+This variable is optional and is PostgreSQL port (default `5432`).
 
 Local usage
 -----------
