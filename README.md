@@ -31,8 +31,18 @@ It's written in [TypeScript], uses the [Koa framework][Koa], and various
 
 </details>
 
-📙 Installation
----------------
+Table of contents
+-----------------
+
+1. [Installation](#installation)
+2. [Local usage](#local-usage)
+3. [Getting help](#getting-help)
+4. [License](#license)
+
+---
+
+Installation
+------------
 
 The app is published on Docker Hub as [`liberoadmin/article-store`][Docker image].
 
@@ -77,8 +87,8 @@ services:
 
 </details>
 
-⚒️ Local usage
---------------
+Local usage
+-----------
 
 <details>
 
@@ -145,15 +155,15 @@ Problems can be automatically fix, where possible, by executing:
 make fix
 ```
 
-💁 Getting help
----------------
+Getting help
+------------
 
 - Report a bug or request a feature on [GitHub][new issue].
 - Ask a question on the [Libero Community Slack].
 - Read the [code of conduct].
 
-📜 License
-----------
+License
+-------
 
 This software is released under the [MIT license][license]. Copyright © 2019 [eLife Sciences Publications, Ltd][eLife].
 
