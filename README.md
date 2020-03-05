@@ -47,7 +47,7 @@ Table of contents
 
 1. [Installation](#installation)
    1. [Running an Article Store](#running-an-article-store)
-      1. [Using Docker](#using-the-docker-cli)
+      1. [Using the Docker CLI](#using-the-docker-cli)
       2. [Using Docker Compose](#using-docker-compose)
    2. [Configuration](#configuration)
 2. [Development](#development)
