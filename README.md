@@ -232,7 +232,7 @@ This software is released under the [MIT license][license]. Copyright © 2019 [e
 [GNU Bash]: https://www.gnu.org/software/bash/
 [GNU Make]: https://www.gnu.org/software/make/
 [HATEOAS]: https://en.wikipedia.org/wiki/HATEOAS
-[Hydra vocabulary]: http://www.hydra-cg.com/spec/latest/core/
+[Hydra vocabulary]: https://www.hydra-cg.com/spec/latest/core/
 [Jest]: https://jestjs.io/
 [JSON-LD]: https://json-ld.org/
 [Koa]: https://koajs.com/
