@@ -9,10 +9,10 @@ Article Store
 [![License][License badge]][License]
 [![Slack][Slack badge]][Libero Community Slack]
 
-This app provides a HTTP API for creating, maintaining and reading articles.
+This app provides an HTTP API for creating, maintaining and reading articles.
 
 An article is an [RDF graph], where the root node is a [`http://schema.org/Article`][schema:Article]. It can be
-represented in [JSON-LD] like: 
+represented in [JSON-LD] as: 
 
 ```json
 {
@@ -195,7 +195,7 @@ The app is linted using [ESLint]. It can be run by executing:
 make lint
 ```
 
-Problems can be automatically fix, where possible, by executing:
+Problems can be automatically fixed, where possible, by executing:
 
 ```shell
 make fix
