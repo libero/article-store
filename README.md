@@ -11,8 +11,8 @@ Article Store
 
 This app provides an HTTP API for creating, maintaining and reading articles.
 
-An article is an [RDF graph], where the root node is a [`http://schema.org/Article`][schema:Article]. It can be
-represented in [JSON-LD] as: 
+An article is an [RDF graph], where the root node is a [`http://schema.org/Article`][schema:Article]. We can encode an
+article in [JSON-LD]: 
 
 ```json
 {
@@ -27,7 +27,7 @@ The API uses the [Hydra vocabulary] as its [hypermedia format][HATEOAS], and fol
 
 It's written in [TypeScript], uses the [Koa framework][Koa], and various [RDF/JS libraries][RDF/JS].
 
-Articles are persisted in a [PostgreSQL] database.
+The app persists articles in a [PostgreSQL] database.
 
 <details>
 
@@ -54,7 +54,7 @@ Table of contents
 Installation
 ------------
 
-The app is published on Docker Hub as [`liberoadmin/article-store`][Docker image].
+You can find the app on Docker Hub: [`liberoadmin/article-store`][Docker image].
 
 As it is still under heavy development, there are not yet tagged releases. However, an image is available for every
 commit.
@@ -172,24 +172,24 @@ before running further commands.
 
 ### Running the tests
 
-The app is tested using [Jest]. It can be run by executing: 
+We use [Jest] to test the app. You can run it by executing: 
 
 ```shell
 make test
 ```
 
-The tests can also be run in separate suites:
+You can also run the tests in separate suites:
 
 ```shell
 make unit-test
 make integration-test
 ```
 
-Integration tests are separated using the `@group integration` annotation, and can access a PostgreSQL instance. 
+Integration tests have a `@group integration` annotation, and can access a PostgreSQL instance. 
 
 ### Linting
 
-The app is linted using [ESLint]. It can be run by executing:
+We lint the app with [ESLint]. You can run it by:
 
 ```shell
 make lint
@@ -217,7 +217,7 @@ Getting help
 License
 -------
 
-This software is released under the [MIT license][license]. Copyright © 2019 [eLife Sciences Publications, Ltd][eLife].
+We released this software under the [MIT license][license]. Copyright © 2019 [eLife Sciences Publications, Ltd][eLife].
 
 [Build]: https://github.com/libero/article-store/actions?query=branch%3Amaster+workflow%3ACI
 [Build badge]: https://flat.badgen.net/github/checks/libero/article-store?label=build&icon=github
