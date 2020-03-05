@@ -98,6 +98,55 @@ As it is still under heavy development, there are not yet tagged releases. An im
    curl --verbose localhost:8080
    ```
 
+#### Using [Docker Compose]
+
+1. Create a file called `docker-compose.yml`:
+
+   ```yaml
+   version: '3.4'
+
+   services:
+
+     db:
+       image: postgres:11.5-alpine
+       environment:
+         POSTGRES_DB: article-store
+         POSTGRES_USER: user
+    
+     initdb:
+       image: liberoadmin/article-store:latest
+       command: >
+         /bin/sh -c '
+           while ! nc -z db 5432 ; do sleep 1 ; done
+           npm run initdb
+         '
+       environment:
+         DATABASE_HOST: db
+         DATABASE_NAME: article-store
+         DATABASE_USER: user
+    
+     app:
+       image: liberoadmin/article-store:latest
+       environment:
+         DATABASE_HOST: db
+         DATABASE_NAME: article-store
+         DATABASE_USER: user
+       ports:
+         - '8080:8080'
+   ```
+
+2. Bring up the containers
+
+   ```shell
+   docker-compose up
+   ```
+
+3. Access the Article Store entry point:
+
+   ```shell
+   curl --verbose localhost:8080
+   ```
+
 ### Configuration
 
 The following environment variables can be set:

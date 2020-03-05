@@ -1,0 +1,30 @@
+version: '3.4'
+
+services:
+
+  db:
+    image: postgres:11.5-alpine
+    environment:
+      POSTGRES_DB: article-store
+      POSTGRES_USER: user
+
+  initdb:
+    image: liberoadmin/article-store:latest
+    command: >
+      /bin/sh -c '
+        while ! nc -z db 5432 ; do sleep 1 ; done
+        npm run initdb
+      '
+    environment:
+      DATABASE_HOST: db
+      DATABASE_NAME: article-store
+      DATABASE_USER: user
+
+  app:
+    image: liberoadmin/article-store:latest
+    environment:
+      DATABASE_HOST: db
+      DATABASE_NAME: article-store
+      DATABASE_USER: user
+    ports:
+      - '8080:8080'
