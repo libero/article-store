@@ -47,8 +47,9 @@ Table of contents
 
 1. [Installation](#installation)
 2. [Development](#development)
-3. [Getting help](#getting-help)
-4. [License](#license)
+3. [Contributing](#contributing)
+4. [Getting help](#getting-help)
+5. [License](#license)
 
 Installation
 ------------
@@ -200,6 +201,12 @@ Problems can be automatically fix, where possible, by executing:
 make fix
 ```
 
+Contributing
+------------
+
+Pull requests and other contributions are more than welcome. Please take a look at the [contributing guidelines] for
+further details.
+
 Getting help
 ------------
 
@@ -214,6 +221,7 @@ This software is released under the [MIT license][license]. Copyright © 2019 [e
 
 [Build]: https://github.com/libero/article-store/actions?query=branch%3Amaster+workflow%3ACI
 [Build badge]: https://flat.badgen.net/github/checks/libero/article-store?label=build&icon=github
+[Contributing guidelines]: https://github.com/libero/community/blob/master/CONTRIBUTING.md
 [Docker]: https://www.docker.com/
 [Docker Compose]: https://docs.docker.com/compose/
 [Docker image]: https://hub.docker.com/r/liberoadmin/article-store
