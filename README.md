@@ -17,13 +17,10 @@ It can be represented in [JSON-LD] like:
 
 ```json
 {
-  "@context": {
-    "@vocab": "http://schema.org/"
-  },
+  "@context": "http://schema.org/",
   "@id": "http://example.com/my-article-store/articles/1234567890",
   "@type": "Article",
-  "name": "My article",
-  [...]
+  "name": "My article"
 }
 ```
 
