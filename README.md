@@ -23,7 +23,7 @@ article in [JSON-LD]:
 }
 ```
 
-The API uses the [Hydra vocabulary] as its [hypermedia format][HATEOAS], and follows the [Libero API specification].
+The API uses the [Hydra vocabulary] as its [hypermedia format][HATEOAS]. It also follows the [Libero API specification].
 
 It's written in [TypeScript], uses the [Koa framework][Koa], and various [RDF/JS libraries][RDF/JS].
 
@@ -56,8 +56,7 @@ Installation
 
 You can find the app on Docker Hub: [`liberoadmin/article-store`][Docker image].
 
-As it is still under heavy development, there are not yet tagged releases. However, an image is available for every
-commit.
+As it is still under heavy development, there are not yet tagged releases. An image is available for every commit.
 
 ### Running an Article Store
 
@@ -195,7 +194,7 @@ We lint the app with [ESLint]. You can run it by:
 make lint
 ```
 
-Problems can be automatically fixed, where possible, by executing:
+You can fix problems, where possible, by executing:
 
 ```shell
 make fix
