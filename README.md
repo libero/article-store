@@ -9,9 +9,9 @@ Article Store
 [![License][License badge]][License]
 [![Slack][Slack badge]][Libero Community Slack]
 
-This app provides a hypermedia API for storing articles ().
+This app provides a HTTP API for creating, maintaining and reading articles.
 
-An article is an RDF graph, where the root node is a [`http://schema.org/Article`][schema:Article].
+An article is an [RDF graph][RDF 1.1 Primer], where the root node is a [`http://schema.org/Article`][schema:Article].
 
 It uses the [Hydra vocabulary], and follows the [Libero API specification].
 
@@ -35,7 +35,7 @@ Table of contents
 -----------------
 
 1. [Installation](#installation)
-2. [Local usage](#local-usage)
+2. [Development](#development)
 3. [Getting help](#getting-help)
 4. [License](#license)
 
@@ -113,7 +113,7 @@ This variable is optional and is the password of the PostgreSQL user (default is
 
 This variable is optional and is the PostgreSQL port (default `5432`).
 
-Local usage
+Development
 -----------
 
 <details>
@@ -124,6 +124,20 @@ Local usage
 - [GNU Bash]
 - [GNU Make]
 - [Node.js]
+
+</details>
+
+The project contains a [Makefile] which uses [Docker Compose] for development and testing.
+
+<details>
+
+<summary>All commands</summary>
+
+You can find the possible commands by executing:
+
+```shell
+make help
+```
 
 </details>
 
@@ -196,6 +210,7 @@ This software is released under the [MIT license][license]. Copyright © 2019 [e
 [Build]: https://github.com/libero/article-store/actions?query=branch%3Amaster+workflow%3ACI
 [Build badge]: https://img.shields.io/github/workflow/status/libero/article-store/CI/master?style=flat-square&logo=github
 [Docker]: https://www.docker.com/
+[Docker Compose]: https://docs.docker.com/compose/
 [Docker image]: https://hub.docker.com/r/liberoadmin/article-store
 [Docker pulls badge]: https://img.shields.io/docker/pulls/liberoadmin/article-store?style=flat-square&logo=docker&logoColor=white&cacheSeconds=3600
 [eLife]: https://elifesciences.org/
@@ -212,6 +227,7 @@ This software is released under the [MIT license][license]. Copyright © 2019 [e
 [Libero logo]: https://cdn.elifesciences.org/libero/logo/libero-logo-96px.svg
 [License]: LICENSE.md
 [License badge]: https://img.shields.io/github/license/libero/article-store?style=flat-square&cacheSeconds=86400
+[Makefile]: Makefile
 [New issue]: https://github.com/libero/publisher/issues/new/choose
 [Node.js]: https://nodejs.org/
 [Open issues]: https://github.com/libero/publisher/issues?q=is%3Aissue+is%3Aopen+label%3Aarticle-store
