@@ -104,7 +104,7 @@ As it is still under heavy development, there are not yet tagged releases. An im
 4. Access the Article Store entry point:
 
    ```shell
-   curl --verbose localhost:8080
+   curl --include http://localhost:8080/
    ```
 
 #### Using [Docker Compose]
@@ -153,7 +153,7 @@ As it is still under heavy development, there are not yet tagged releases. An im
 3. Access the Article Store entry point:
 
    ```shell
-   curl --verbose localhost:8080
+   curl --include http://localhost:8080/
    ```
 
 ### Configuration
