@@ -11,7 +11,21 @@ Article Store
 
 This app provides a HTTP API for creating, maintaining and reading articles.
 
-An article is an [RDF graph][RDF 1.1 Primer], where the root node is a [`http://schema.org/Article`][schema:Article].
+An article is an [RDF graph], where the root node is a [`http://schema.org/Article`][schema:Article].
+
+It can be represented in [JSON-LD] like: 
+
+```json
+{
+  "@context": {
+    "@vocab": "http://schema.org/"
+  },
+  "@id": "http://example.com/my-article-store/articles/1234567890",
+  "@type": "Article",
+  "name": "My article",
+  [...]
+}
+```
 
 It uses the [Hydra vocabulary], and follows the [Libero API specification].
 
@@ -216,6 +230,7 @@ This software is released under the [MIT license][license]. Copyright © 2019 [e
 [GNU Make]: https://www.gnu.org/software/make/
 [Hydra vocabulary]: http://www.hydra-cg.com/spec/latest/core/
 [Jest]: https://jestjs.io/
+[JSON-LD]: https://json-ld.org/
 [Koa]: https://koajs.com/
 [Libero]: https://libero.pub/
 [Libero API Specification]: https://libero.pub/api
@@ -229,6 +244,7 @@ This software is released under the [MIT license][license]. Copyright © 2019 [e
 [Open issues]: https://github.com/libero/publisher/issues?q=is%3Aissue+is%3Aopen+label%3Aarticle-store
 [Open issues badge]: https://flat.badgen.net/github/label-issues/libero/publisher/article-store/open?icon=github&label=open%20issues&color=pink
 [RDF 1.1 Primer]: https://www.w3.org/TR/rdf11-primer/
+[RDF graph]: https://www.w3.org/TR/rdf11-concepts/#section-rdf-graph
 [RDF/JS]: https://rdf.js.org/
 [RDF/JS data model]: https://rdf.js.org/data-model-spec/
 [RDF/JS dataset]: https://rdf.js.org/dataset-spec/
