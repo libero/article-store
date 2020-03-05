@@ -46,7 +46,14 @@ Table of contents
 -----------------
 
 1. [Installation](#installation)
+   1. [Running an Article Store](#running-an-article-store)
+      1. [Using Docker](#using-the-docker-cli)
+      2. [Using Docker Compose](#using-docker-compose)
+   2. [Configuration](#configuration)
 2. [Development](#development)
+   1. [Running the app](#running-the-app)
+   2. [Running the tests](#running-the-tests)
+   3. [Linting](#linting)
 3. [Contributing](#contributing)
 4. [Getting help](#getting-help)
 5. [License](#license)
@@ -59,6 +66,8 @@ You can find the app on Docker Hub: [`liberoadmin/article-store`][Docker image].
 As it is still under heavy development, there are not yet tagged releases. An image is available for every commit.
 
 ### Running an Article Store
+
+#### Using the [Docker CLI]
 
 1. Start a PostgreSQL container by executing:
 
@@ -271,6 +280,7 @@ We released this software under the [MIT license][license]. Copyright © 2019 [e
 [Build badge]: https://flat.badgen.net/github/checks/libero/article-store?label=build&icon=github
 [Contributing guidelines]: https://github.com/libero/community/blob/master/CONTRIBUTING.md
 [Docker]: https://www.docker.com/
+[Docker CLI]: https://docs.docker.com/engine/reference/commandline/cli/
 [Docker Compose]: https://docs.docker.com/compose/
 [Docker image]: https://hub.docker.com/r/liberoadmin/article-store
 [Docker pulls badge]: https://flat.badgen.net/docker/pulls/liberoadmin/article-store?icon=docker
