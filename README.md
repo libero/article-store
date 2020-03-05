@@ -204,11 +204,11 @@ License
 This software is released under the [MIT license][license]. Copyright © 2019 [eLife Sciences Publications, Ltd][eLife].
 
 [Build]: https://github.com/libero/article-store/actions?query=branch%3Amaster+workflow%3ACI
-[Build badge]: https://img.shields.io/github/workflow/status/libero/article-store/CI/master?style=flat-square&logo=github
+[Build badge]: https://flat.badgen.net/github/checks/libero/article-store?label=build&icon=github
 [Docker]: https://www.docker.com/
 [Docker Compose]: https://docs.docker.com/compose/
 [Docker image]: https://hub.docker.com/r/liberoadmin/article-store
-[Docker pulls badge]: https://img.shields.io/docker/pulls/liberoadmin/article-store?style=flat-square&logo=docker&logoColor=white&cacheSeconds=3600
+[Docker pulls badge]: https://flat.badgen.net/docker/pulls/liberoadmin/article-store?icon=docker
 [eLife]: https://elifesciences.org/
 [ESLint]: https://eslint.org/
 [Code of conduct]: https://libero.pub/code-of-conduct
@@ -222,17 +222,17 @@ This software is released under the [MIT license][license]. Copyright © 2019 [e
 [Libero Community Slack]: https://libero.pub/join-slack
 [Libero logo]: https://cdn.elifesciences.org/libero/logo/libero-logo-96px.svg
 [License]: LICENSE.md
-[License badge]: https://img.shields.io/github/license/libero/article-store?style=flat-square&cacheSeconds=86400
+[License badge]: https://flat.badgen.net/badge/license/MIT/blue
 [Makefile]: Makefile
 [New issue]: https://github.com/libero/publisher/issues/new/choose
 [Node.js]: https://nodejs.org/
 [Open issues]: https://github.com/libero/publisher/issues?q=is%3Aissue+is%3Aopen+label%3Aarticle-store
-[Open issues badge]: https://img.shields.io/github/issues/libero/publisher/article-store?label=issues&logo=github&style=flat-square
+[Open issues badge]: https://flat.badgen.net/github/label-issues/libero/publisher/article-store/open?icon=github&label=open%20issues&color=pink
 [RDF 1.1 Primer]: https://www.w3.org/TR/rdf11-primer/
 [RDF/JS]: https://rdf.js.org/
 [RDF/JS data model]: https://rdf.js.org/data-model-spec/
 [RDF/JS dataset]: https://rdf.js.org/dataset-spec/
-[Slack badge]: https://img.shields.io/badge/slack-libero--community-green?style=flat-square&logo=slack
+[Slack badge]: https://flat.badgen.net/badge/icon/libero-community?icon=slack&label=slack&color=orange
 [TypeScript]: https://www.typescriptlang.org/
 
 [schema:Article]: https://schema.org/Article
