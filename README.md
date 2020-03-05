@@ -11,9 +11,8 @@ Article Store
 
 This app provides a HTTP API for creating, maintaining and reading articles.
 
-An article is an [RDF graph], where the root node is a [`http://schema.org/Article`][schema:Article].
-
-It can be represented in [JSON-LD] like: 
+An article is an [RDF graph], where the root node is a [`http://schema.org/Article`][schema:Article]. It can be
+represented in [JSON-LD] like: 
 
 ```json
 {
@@ -24,10 +23,11 @@ It can be represented in [JSON-LD] like:
 }
 ```
 
-It uses the [Hydra vocabulary], and follows the [Libero API specification].
+The API uses the [Hydra vocabulary] as its [hypermedia format][HATEOAS], and follows the [Libero API specification].
 
-It's written in [TypeScript], uses the [Koa framework][Koa], and various
-[RDF/JS libraries][RDF/JS].
+It's written in [TypeScript], uses the [Koa framework][Koa], and various [RDF/JS libraries][RDF/JS].
+
+Articles are persisted in a [PostgreSQL] database.
 
 <details>
 
@@ -49,8 +49,6 @@ Table of contents
 2. [Development](#development)
 3. [Getting help](#getting-help)
 4. [License](#license)
-
----
 
 Installation
 ------------
@@ -225,6 +223,7 @@ This software is released under the [MIT license][license]. Copyright © 2019 [e
 [Code of conduct]: https://libero.pub/code-of-conduct
 [GNU Bash]: https://www.gnu.org/software/bash/
 [GNU Make]: https://www.gnu.org/software/make/
+[HATEOAS]: https://en.wikipedia.org/wiki/HATEOAS
 [Hydra vocabulary]: http://www.hydra-cg.com/spec/latest/core/
 [Jest]: https://jestjs.io/
 [JSON-LD]: https://json-ld.org/
@@ -240,12 +239,12 @@ This software is released under the [MIT license][license]. Copyright © 2019 [e
 [Node.js]: https://nodejs.org/
 [Open issues]: https://github.com/libero/publisher/issues?q=is%3Aissue+is%3Aopen+label%3Aarticle-store
 [Open issues badge]: https://flat.badgen.net/github/label-issues/libero/publisher/article-store/open?icon=github&label=open%20issues&color=pink
+[PostgreSQL]: https://www.postgresql.org/
 [RDF 1.1 Primer]: https://www.w3.org/TR/rdf11-primer/
 [RDF graph]: https://www.w3.org/TR/rdf11-concepts/#section-rdf-graph
 [RDF/JS]: https://rdf.js.org/
 [RDF/JS data model]: https://rdf.js.org/data-model-spec/
 [RDF/JS dataset]: https://rdf.js.org/dataset-spec/
+[schema:Article]: https://schema.org/Article
 [Slack badge]: https://flat.badgen.net/badge/icon/libero-community?icon=slack&label=slack&color=orange
 [TypeScript]: https://www.typescriptlang.org/
-
-[schema:Article]: https://schema.org/Article
