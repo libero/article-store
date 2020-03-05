@@ -129,17 +129,13 @@ Development
 
 The project contains a [Makefile] which uses [Docker Compose] for development and testing.
 
-<details>
-
-<summary>All commands</summary>
-
 You can find the possible commands by executing:
 
 ```shell
 make help
 ```
 
-</details>
+### Running the app
 
 To build and run the app for development, execute:
 
