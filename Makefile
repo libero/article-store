@@ -80,7 +80,7 @@ fix: ## Fix linting issues in the code
 	${DOCKER_COMPOSE} run --rm app npm run lint:fix
 
 test: export TARGET = dev
-test: ## Run all the tests
+test: ## Run all the Jest tests
 	$(MAKE) start-db
 	${DOCKER_COMPOSE} run --rm app npm run test; exit=$$?; ${DOCKER_COMPOSE} down; exit $$exit
 
@@ -92,6 +92,14 @@ integration-test: export TARGET = dev
 integration-test: ## Run the integration tests
 	$(MAKE) start-db
 	${DOCKER_COMPOSE} run --rm app npm run test:integration; exit=$$?; ${DOCKER_COMPOSE} down; exit $$exit
+
+api-validate: ## Run the API analysis
+	$(MAKE) start wait-healthy
+	docker run --rm --network host hydrofoil/hydra-analyser:0.2.0 http://localhost:8080/; exit=$$?; ${DOCKER_COMPOSE} down; exit $$exit
+
+api-test: ## Run the API tests
+	$(MAKE) start wait-healthy
+	docker run --rm --init --network host --mount "type=bind,source=$(CURDIR)/test/hypertest/,destination=/tests" hydrofoil/hypertest:_0.4.1 --baseUri http://localhost:8080/; exit=$$?; ${DOCKER_COMPOSE} down; exit $$exit
 
 run:
 	$(MAKE) init-db

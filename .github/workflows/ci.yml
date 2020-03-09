@@ -59,8 +59,8 @@ jobs:
           - make integration-test
           - TARGET=dev .github/smoke-test.sh
           - TARGET=prod .github/smoke-test.sh
-          - .github/analyse.sh
-          - .github/hypertest.sh
+          - TARGET=prod make api-validate
+          - TARGET=prod make api-test
         include:
           - target: prod
             test: TARGET=prod .github/smoke-test.sh

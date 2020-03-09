@@ -53,7 +53,8 @@ Table of contents
 2. [Development](#development)
    1. [Running the app](#running-the-app)
    2. [Running the tests](#running-the-tests)
-   3. [Linting](#linting)
+   3. [API testing](#api-testing)
+   4. [Linting](#linting)
 3. [Contributing](#contributing)
 4. [Getting help](#getting-help)
 5. [License](#license)
@@ -244,6 +245,20 @@ make integration-test
 
 Integration tests have a `@group integration` annotation, and can access a PostgreSQL instance. 
 
+### API testing
+
+You can validate the API using the [Hydra validator]:
+
+```shell
+make api-validate
+```
+
+And test it using [Hypertest]:
+
+```shell
+make api-test
+```
+
 ### Linting
 
 We lint the app with [ESLint]. You can run it by:
@@ -290,7 +305,9 @@ We released this software under the [MIT license][license]. Copyright © 2019 [e
 [GNU Bash]: https://www.gnu.org/software/bash/
 [GNU Make]: https://www.gnu.org/software/make/
 [HATEOAS]: https://en.wikipedia.org/wiki/HATEOAS
+[Hydra validator]: https://analyse.hypermedia.app/
 [Hydra vocabulary]: https://www.hydra-cg.com/spec/latest/core/
+[Hypertest]: https://testing.hypermedia.app/
 [Jest]: https://jestjs.io/
 [JSON-LD]: https://json-ld.org/
 [Koa]: https://koajs.com/
