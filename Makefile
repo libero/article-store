@@ -99,7 +99,7 @@ api-validate: ## Run the API analysis
 
 api-test: ## Run the API tests
 	$(MAKE) start wait-healthy
-	docker run --rm --init --network host --mount "type=bind,source=$(CURDIR)/test/hypertest/,destination=/tests" hydrofoil/hypertest:_0.4.1 --baseUri http://localhost:8080/; exit=$$?; ${DOCKER_COMPOSE} down; exit $$exit
+	docker run --rm --init --network host --mount "type=bind,source=$(CURDIR)/test/hypertest/,destination=/tests" hydrofoil/hypertest:_0.4.1 --baseUri http://localhost:8080/; exit=$$?; $(DOCKER_COMPOSE) logs; ${DOCKER_COMPOSE} down; exit $$exit
 
 run:
 	$(MAKE) init-db
