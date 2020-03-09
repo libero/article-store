@@ -9,7 +9,7 @@ import InMemoryArticles from '../../src/adaptors/in-memory-articles';
 import Articles from '../../src/articles';
 import { schema } from '../../src/namespaces';
 import addArticle from '../../src/routes/add-article';
-import createContext from '../context';
+import { createAppContext } from '../context';
 import createArticle from '../create-article';
 import runMiddleware, { NextMiddleware } from '../middleware';
 
@@ -18,7 +18,7 @@ const makeRequest = async (
   next?: NextMiddleware,
   articles: Articles = new InMemoryArticles(),
 ): Promise<Response> => (
-  runMiddleware(addArticle(), createContext({ articles, dataset }), next)
+  runMiddleware(addArticle(), createAppContext({ articles, dataset }), next)
 );
 
 describe('add article', (): void => {

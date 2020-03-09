@@ -5,11 +5,11 @@ import { Response } from 'koa';
 import { WithDataset } from '../../src/middleware/dataset';
 import { hydra, rdf } from '../../src/namespaces';
 import apiDocumentation from '../../src/routes/api-documentation';
-import createContext from '../context';
+import { createAppContext } from '../context';
 import runMiddleware, { NextMiddleware } from '../middleware';
 
 const makeRequest = async (next?: NextMiddleware): Promise<WithDataset<Response>> => (
-  runMiddleware(apiDocumentation(), createContext(), next)
+  runMiddleware(apiDocumentation(), createAppContext(), next)
 );
 
 describe('API documentation', (): void => {

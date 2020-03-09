@@ -1,9 +1,9 @@
-import { Context, Response } from 'koa';
+import { ExtendableContext, Response } from 'koa';
 import emptyResponse from '../../src/middleware/empty-response';
-import createContext from '../context';
+import { createContext } from '../context';
 import runMiddleware, { NextMiddleware } from '../middleware';
 
-const makeRequest = async (next?: NextMiddleware): Promise<Response> => (
+const makeRequest = async (next?: NextMiddleware<ExtendableContext>): Promise<Response> => (
   runMiddleware(emptyResponse(), createContext(), next)
 );
 
@@ -15,7 +15,7 @@ describe('Empty response middleware', (): void => {
   });
 
   it('removes redundant headers if no body has been set', async (): Promise<void> => {
-    const next = async ({ response }: Context): Promise<void> => {
+    const next = async ({ response }: ExtendableContext): Promise<void> => {
       response.set('Content-Length', '100');
       response.set('Content-Type', 'content/type');
     };
@@ -27,7 +27,7 @@ describe('Empty response middleware', (): void => {
   });
 
   it('does nothing if there is a body', async (): Promise<void> => {
-    const next = async ({ response }: Context): Promise<void> => {
+    const next = async ({ response }: ExtendableContext): Promise<void> => {
       response.body = 'body content';
     };
 
