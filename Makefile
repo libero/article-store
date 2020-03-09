@@ -12,6 +12,8 @@ endif
 
 DOCKER_COMPOSE = docker-compose --file .docker/docker-compose.yml --file .docker/docker-compose.${TARGET}.yml
 
+EXIT = exit=$$?; $(MAKE) stop; exit $$exit
+
 export IMAGE_TAG
 export TARGET
 
@@ -82,7 +84,7 @@ fix: ## Fix linting issues in the code
 test: export TARGET = dev
 test: ## Run all the tests
 	$(MAKE) start-db
-	${DOCKER_COMPOSE} run --rm app npm run test; exit=$$?; ${DOCKER_COMPOSE} down; exit $$exit
+	${DOCKER_COMPOSE} run --rm app npm run test; ${EXIT}
 
 unit-test: export TARGET = dev
 unit-test: ## Run the unit tests
@@ -91,11 +93,11 @@ unit-test: ## Run the unit tests
 integration-test: export TARGET = dev
 integration-test: ## Run the integration tests
 	$(MAKE) start-db
-	${DOCKER_COMPOSE} run --rm app npm run test:integration; exit=$$?; ${DOCKER_COMPOSE} down; exit $$exit
+	${DOCKER_COMPOSE} run --rm app npm run test:integration; ${EXIT}
 
 run:
 	$(MAKE) init-db
-	${DOCKER_COMPOSE} up --abort-on-container-exit --exit-code-from app; exit=$$?; ${DOCKER_COMPOSE} down; exit $$exit
+	${DOCKER_COMPOSE} up --abort-on-container-exit --exit-code-from app; ${EXIT}
 
 dev: export TARGET = dev
 dev: ## Build and runs the container for development
