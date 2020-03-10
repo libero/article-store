@@ -104,7 +104,6 @@ api-validate: ## Run the API analysis
 	$(MAKE) start wait-healthy
 	docker run --rm --network host hydrofoil/hydra-analyser:0.2.0 http://localhost:8080/; ${STOP}
 
-api-test:
 api-test: ## Run the API tests
 	$(MAKE) start wait-healthy
 	docker run --rm --init --network host --mount "type=bind,source=$(CURDIR)/test/hypertest/,destination=/tests" hydrofoil/hypertest:_0.4.1 --baseUri http://localhost:8080/; ${STOP_WITH_LOGS}
