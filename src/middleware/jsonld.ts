@@ -2,12 +2,12 @@ import ParserJsonld from '@rdfjs/parser-jsonld';
 import SerializerJsonld from '@rdfjs/serializer-jsonld-ext';
 import { format as formatContentType } from 'content-type';
 import { NO_CONTENT } from 'http-status-codes';
-import { Context } from 'jsonld/jsonld-spec';
-import { Next, Response } from 'koa';
-import { Middleware } from 'koa-compose';
+import type { Context } from 'jsonld/jsonld-spec';
+import type { Next, Response } from 'koa';
+import type { Middleware } from 'koa-compose';
 import pEvent from 'p-event';
 import { fromStream, toStream } from 'rdf-dataset-ext';
-import { DatasetContext } from './dataset';
+import type { DatasetContext } from './dataset';
 
 const responseHasContent = (response: Response): boolean => response.body || response.status === NO_CONTENT;
 

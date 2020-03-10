@@ -1,4 +1,4 @@
-import { Quad_Object as QuadObject } from 'rdf-js';
+import type { Quad_Object as QuadObject } from 'rdf-js';
 import { termToString } from 'rdf-string';
 import { schema } from '../namespaces';
 

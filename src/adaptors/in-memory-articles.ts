@@ -1,7 +1,7 @@
-import {
+import type {
   DatasetCore, NamedNode, Quad, Quad_Object as QuadObject,
 } from 'rdf-js';
-import Articles from '../articles';
+import type Articles from '../articles';
 import ArticleNotFound from '../errors/article-not-found';
 import NotAnArticle from '../errors/not-an-article';
 import { rdf, schema } from '../namespaces';

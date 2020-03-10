@@ -1,12 +1,12 @@
 import clownface, { Clownface } from 'clownface';
 import { OK } from 'http-status-codes';
 import all from 'it-all';
-import { Next } from 'koa';
+import type { Next } from 'koa';
 import { addAll } from 'rdf-dataset-ext';
-import { DatasetCore, NamedNode } from 'rdf-js';
+import type { DatasetCore, NamedNode } from 'rdf-js';
 import { toRdf } from 'rdf-literal';
 import url from 'url';
-import { AppContext, AppMiddleware } from '../app';
+import type { AppContext, AppMiddleware } from '../app';
 import { hydra, rdf, schema } from '../namespaces';
 import Routes from './index';
 

@@ -1,5 +1,5 @@
-import { ExtendableContext, Next, Response } from 'koa';
-import { Middleware } from 'koa-compose';
+import type { ExtendableContext, Next, Response } from 'koa';
+import type { Middleware } from 'koa-compose';
 
 const makeResponseEmpty = (response: Response): void => {
   response.body = '';

@@ -1,7 +1,7 @@
 import { literal, namedNode, quad } from '@rdfjs/data-model';
 import all from 'it-all';
 import 'jest-rdf';
-import { DatasetCore, NamedNode } from 'rdf-js';
+import type { DatasetCore, NamedNode } from 'rdf-js';
 import InMemoryArticles from '../../src/adaptors/in-memory-articles';
 import ArticleNotFound from '../../src/errors/article-not-found';
 import NotAnArticle from '../../src/errors/not-an-article';

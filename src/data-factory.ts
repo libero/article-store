@@ -1,7 +1,7 @@
 import dataFactory from '@rdfjs/data-model';
 import createDataset from 'rdf-dataset-indexed';
-import { DatasetCore, Quad } from 'rdf-js';
-import { ExtendedDataFactory } from './middleware/dataset';
+import type { DatasetCore, Quad } from 'rdf-js';
+import type { ExtendedDataFactory } from './middleware/dataset';
 
 const extendedDataFactory: ExtendedDataFactory = {
   ...dataFactory,

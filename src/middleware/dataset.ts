@@ -1,11 +1,11 @@
-import {
+import type {
   DefaultContextExtends, ExtendableContext, Next, Request, Response,
 } from 'koa';
-import { Middleware } from 'koa-compose';
-import {
+import type { Middleware } from 'koa-compose';
+import type {
   BaseQuad, DataFactory, DatasetCore, DatasetCoreFactory, Quad,
 } from 'rdf-js';
-import { DataFactoryContext } from './data-factory';
+import type { DataFactoryContext } from './data-factory';
 
 export type WithDataset<T extends Request | Response, Q extends BaseQuad = Quad> = T & { dataset: DatasetCore<Q> };
 

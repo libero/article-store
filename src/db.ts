@@ -1,4 +1,4 @@
-import { ConnectionConfig } from 'pg';
+import type { ConnectionConfig } from 'pg';
 
 const config: Readonly<ConnectionConfig> = {
   user: process.env.DATABASE_USER,

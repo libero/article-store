@@ -1,5 +1,5 @@
 import 'jest-rdf';
-import { Next } from 'koa';
+import type { Next } from 'koa';
 import dataset, { DatasetContext } from '../../src/middleware/dataset';
 import createContext from '../context';
 

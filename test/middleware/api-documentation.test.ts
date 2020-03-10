@@ -1,4 +1,4 @@
-import { Response } from 'koa';
+import type { Response } from 'koa';
 import parseLinkHeader from 'parse-link-header';
 import apiDocumentation from '../../src/middleware/api-documentation-link';
 import createContext from '../context';

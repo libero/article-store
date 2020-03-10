@@ -1,7 +1,7 @@
-import { UnknownError } from 'http-errors';
-import { ExtendableContext } from 'koa';
-import { Middleware } from 'koa-compose';
-import { AppContext } from '../src/app';
+import type { UnknownError } from 'http-errors';
+import type { ExtendableContext } from 'koa';
+import type { Middleware } from 'koa-compose';
+import type { AppContext } from '../src/app';
 
 export type NextMiddleware<CustomT extends ExtendableContext = AppContext> =
   (context: CustomT) => Promise<void>;

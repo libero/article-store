@@ -1,8 +1,8 @@
 import cors from '@koa/cors';
-import Router, { RouterContext } from '@koa/router';
+import type Router from '@koa/router';
 import Koa, { DefaultState, Middleware } from 'koa';
 import logger from 'koa-logger';
-import Articles from './articles';
+import type Articles from './articles';
 import apiDocumentationLink from './middleware/api-documentation-link';
 import setDataFactory from './middleware/data-factory';
 import addDatasets, { DatasetContext, ExtendedDataFactory } from './middleware/dataset';
@@ -18,7 +18,7 @@ export type AppServiceContext = DatasetContext<{
   articles: Articles;
 }>;
 
-export type AppContext = RouterContext<AppState, AppServiceContext>;
+export type AppContext = Router.RouterContext<AppState, AppServiceContext>;
 
 export type AppMiddleware = Middleware<AppState, AppContext>;
 

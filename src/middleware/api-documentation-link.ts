@@ -1,6 +1,6 @@
 import formatLinkHeader from 'format-link-header';
-import { ExtendableContext, Next } from 'koa';
-import { Middleware } from 'koa-compose';
+import type { ExtendableContext, Next } from 'koa';
+import type { Middleware } from 'koa-compose';
 import url from 'url';
 
 export default (path: string): Middleware<ExtendableContext> => (

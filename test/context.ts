@@ -1,13 +1,13 @@
-import Router from '@koa/router';
-import { UnknownError } from 'http-errors';
+import type Router from '@koa/router';
+import type { UnknownError } from 'http-errors';
 import Koa, { Context, Request, Response } from 'koa';
 import { Request as IncomingMessage, Response as ServerResponse } from 'mock-http';
-import { DatasetCore } from 'rdf-js';
+import type { DatasetCore } from 'rdf-js';
 import InMemoryArticles from '../src/adaptors/in-memory-articles';
-import { AppContext } from '../src/app';
-import Articles from '../src/articles';
+import type { AppContext } from '../src/app';
+import type Articles from '../src/articles';
 import dataFactory, { dataset } from '../src/data-factory';
-import { WithDataset } from '../src/middleware/dataset';
+import type { WithDataset } from '../src/middleware/dataset';
 
 export type ErrorListener = (error: UnknownError, context: Context) => void;
 
