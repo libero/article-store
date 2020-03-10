@@ -1,10 +1,9 @@
 import formatLinkHeader from 'format-link-header';
-import type {
-  DefaultStateExtends, ExtendableContext, Middleware, Next,
-} from 'koa';
+import type { ExtendableContext, Next } from 'koa';
+import type { Middleware } from 'koa-compose';
 import url from 'url';
 
-export default (path: string): Middleware<DefaultStateExtends, ExtendableContext> => (
+export default (path: string): Middleware<ExtendableContext> => (
   async ({ request, response }: ExtendableContext, next: Next): Promise<void> => {
     await next();
 
