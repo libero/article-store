@@ -1,5 +1,6 @@
 import ParserJsonld from '@rdfjs/parser-jsonld';
 import SerializerJsonld from '@rdfjs/serializer-jsonld-ext';
+import { rdf, schema } from '@tpluscode/rdf-ns-builders';
 import { JsonLdObj } from 'jsonld/jsonld-spec';
 import pEvent from 'p-event';
 import {
@@ -15,7 +16,6 @@ import Articles from '../articles';
 import ArticleNotFound from '../errors/article-not-found';
 import NotAnArticle from '../errors/not-an-article';
 import { ExtendedDataFactory } from '../middleware/dataset';
-import { rdf, schema } from '../namespaces';
 
 const { QueryResultError, queryResultErrorCode: { noData } } = errors;
 

@@ -1,10 +1,10 @@
+import { rdf, schema } from '@tpluscode/rdf-ns-builders';
 import {
   DatasetCore, NamedNode, Quad, Quad_Object as QuadObject,
 } from 'rdf-js';
 import Articles from '../articles';
 import ArticleNotFound from '../errors/article-not-found';
 import NotAnArticle from '../errors/not-an-article';
-import { rdf, schema } from '../namespaces';
 
 export default class InMemoryArticles implements Articles {
   private articles: { [id: string]: [NamedNode, DatasetCore] } = {};

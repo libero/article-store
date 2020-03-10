@@ -1,5 +1,8 @@
 import cors from '@koa/cors';
 import Router, { RouterContext } from '@koa/router';
+import {
+  hydra, owl, rdf, schema,
+} from '@tpluscode/rdf-ns-builders';
 import Koa, { DefaultState, Middleware } from 'koa';
 import logger from 'koa-logger';
 import Articles from './articles';
@@ -10,7 +13,6 @@ import emptyResponse from './middleware/empty-response';
 import errorHandler from './middleware/error-handler';
 import jsonld from './middleware/jsonld';
 import routing from './middleware/routing';
-import namespaces from './namespaces';
 
 export type AppState = DefaultState;
 
@@ -44,7 +46,10 @@ export default (
   app.use(addDatasets());
   app.use(jsonld({
     '@language': 'en',
-    ...namespaces,
+    hydra: hydra().value,
+    owl: owl().value,
+    rdf: rdf().value,
+    schema: schema().value,
   }));
   app.use(apiDocumentationLink(apiDocumentationPath));
   app.use(errorHandler());

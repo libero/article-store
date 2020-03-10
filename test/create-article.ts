@@ -1,10 +1,10 @@
 import {
   DatasetCore, Literal, NamedNode, Quad_Subject as QuadSubject,
 } from 'rdf-js';
+import { rdf, schema } from '@tpluscode/rdf-ns-builders';
 import {
   blankNode, dataset, literal, quad,
 } from '../src/data-factory';
-import { rdf, schema } from '../src/namespaces';
 
 type Options = {
   id?: QuadSubject;
@@ -24,7 +24,7 @@ export default ({
   });
 
   if (name) {
-    article.add(quad(id, schema('name'), name));
+    article.add(quad(id, schema.name, name));
   }
 
   return article;

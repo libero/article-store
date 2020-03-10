@@ -1,7 +1,7 @@
+import { hydra, rdf } from '@tpluscode/rdf-ns-builders';
 import createHttpError, { HttpError } from 'http-errors';
 import { ExtendableContext, Next } from 'koa';
 import { Middleware } from 'koa-compose';
-import { hydra, rdf } from '../namespaces';
 import { DatasetContext } from './dataset';
 
 const handleHttpError = (

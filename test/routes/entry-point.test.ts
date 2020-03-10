@@ -2,8 +2,8 @@ import { namedNode, quad } from '@rdfjs/data-model';
 import { OK } from 'http-status-codes';
 import 'jest-rdf';
 import { Response } from 'koa';
+import { hydra, rdf, schema } from '@tpluscode/rdf-ns-builders';
 import { WithDataset } from '../../src/middleware/dataset';
-import { hydra, rdf, schema } from '../../src/namespaces';
 import entryPoint from '../../src/routes/entry-point';
 import createContext from '../context';
 import runMiddleware, { NextMiddleware } from '../middleware';
@@ -24,7 +24,7 @@ describe('entry-point', (): void => {
     const id = namedNode('http://example.com/path-to/entry-point');
 
     expect(dataset).toBeRdfDatasetContaining(quad(id, rdf.type, schema.EntryPoint));
-    expect(dataset).toBeRdfDatasetMatching({ subject: id, predicate: schema('name') });
+    expect(dataset).toBeRdfDatasetMatching({ subject: id, predicate: schema.name });
     expect(dataset).toBeRdfDatasetMatching({ subject: id, predicate: hydra.collection });
   });
 

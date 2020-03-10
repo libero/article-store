@@ -3,12 +3,12 @@ import all from 'it-all';
 import 'jest-rdf';
 import pgPromise, { IBaseProtocol, IMain } from 'pg-promise';
 import { DatasetCore, NamedNode } from 'rdf-js';
+import { schema } from '@tpluscode/rdf-ns-builders';
 import PostgresArticles from '../../src/adaptors/postgres-articles';
 import dataFactory from '../../src/data-factory';
 import db from '../../src/db';
 import ArticleNotFound from '../../src/errors/article-not-found';
 import NotAnArticle from '../../src/errors/not-an-article';
-import { schema } from '../../src/namespaces';
 import createArticle from '../create-article';
 
 let postgresPromise: IMain;
@@ -59,7 +59,7 @@ describe('postgres articles', (): void => {
     await articles.set(id, createArticle({ id, name: literal('Original') }));
     await articles.set(id, createArticle({ id, name: literal('Updated') }));
 
-    expect(await articles.get(id)).toBeRdfDatasetContaining(quad(id, schema('name'), literal('Updated')));
+    expect(await articles.get(id)).toBeRdfDatasetContaining(quad(id, schema.name, literal('Updated')));
   });
 
   it('throws an error if it is not an article', async (): Promise<void> => {
