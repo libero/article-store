@@ -1,5 +1,5 @@
 .DEFAULT_GOAL = help
-.PHONY: help install gitmodules build start start-db init-db stop wait-healthy sh exec logs watch lint fix test unit-test integration-test run dev prod
+.PHONY: help install gitmodules build start start-db init-db stop wait-healthy sh exec logs watch lint fix test unit-test integration-test api-validate api-test run dev prod
 
 SHELL = /usr/bin/env bash
 
@@ -11,6 +11,13 @@ INITDB = initdb
 endif
 
 DOCKER_COMPOSE = docker-compose --file .docker/docker-compose.yml --file .docker/docker-compose.${TARGET}.yml
+
+ifeq (${HYDRA_CONSOLE}, true)
+DOCKER_COMPOSE := ${DOCKER_COMPOSE} --file .docker/docker-compose.console.yml
+endif
+
+STOP = exit=$$?; $(MAKE) stop; exit $$exit
+STOP_WITH_LOGS = exit=$$?; $(MAKE) logs; $(MAKE) stop; exit $$exit
 
 export IMAGE_TAG
 export TARGET
@@ -80,9 +87,9 @@ fix: ## Fix linting issues in the code
 	${DOCKER_COMPOSE} run --rm app npm run lint:fix
 
 test: export TARGET = dev
-test: ## Run all the tests
+test: ## Run all the Jest tests
 	$(MAKE) start-db
-	${DOCKER_COMPOSE} run --rm app npm run test; exit=$$?; ${DOCKER_COMPOSE} down; exit $$exit
+	${DOCKER_COMPOSE} run --rm app npm run test; ${STOP}
 
 unit-test: export TARGET = dev
 unit-test: ## Run the unit tests
@@ -91,14 +98,23 @@ unit-test: ## Run the unit tests
 integration-test: export TARGET = dev
 integration-test: ## Run the integration tests
 	$(MAKE) start-db
-	${DOCKER_COMPOSE} run --rm app npm run test:integration; exit=$$?; ${DOCKER_COMPOSE} down; exit $$exit
+	${DOCKER_COMPOSE} run --rm app npm run test:integration; ${STOP}
+
+api-validate: ## Run the API analysis
+	$(MAKE) start wait-healthy
+	docker run --rm --network host hydrofoil/hydra-analyser:0.2.0 http://localhost:8080/; ${STOP}
+
+api-test: ## Run the API tests
+	$(MAKE) start wait-healthy
+	docker run --rm --init --network host --mount "type=bind,source=$(CURDIR)/test/hypertest/,destination=/tests" hydrofoil/hypertest:_0.4.1 --baseUri http://localhost:8080/; ${STOP_WITH_LOGS}
 
 run:
 	$(MAKE) init-db
-	${DOCKER_COMPOSE} up --abort-on-container-exit --exit-code-from app; exit=$$?; ${DOCKER_COMPOSE} down; exit $$exit
+	${DOCKER_COMPOSE} up --abort-on-container-exit --exit-code-from app; ${STOP}
 
 dev: export TARGET = dev
-dev: ## Build and runs the container for development
+dev: export HYDRA_CONSOLE = true
+dev: ## Build and runs the container and Hydra console for development
 	$(MAKE) --jobs=4 install build stop
 	$(MAKE) run
 
