@@ -1,8 +1,7 @@
 import { hydra, rdf } from '@tpluscode/rdf-ns-builders';
 import createHttpError, { HttpError } from 'http-errors';
-import {
-  DefaultStateExtends, ExtendableContext, Middleware, Next,
-} from 'koa';
+import { ExtendableContext, Next } from 'koa';
+import { Middleware } from 'koa-compose';
 import { DatasetContext } from './dataset';
 
 const handleHttpError = (
@@ -32,7 +31,7 @@ const handleHttpError = (
   response.dataset = dataset(quads);
 };
 
-export default (): Middleware<DefaultStateExtends, DatasetContext<ExtendableContext>> => (
+export default (): Middleware<DatasetContext<ExtendableContext>> => (
   async (context: DatasetContext<ExtendableContext>, next: Next): Promise<void> => {
     try {
       await next();
