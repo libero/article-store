@@ -16,6 +16,8 @@ ifeq (${HYDRA_CONSOLE}, true)
 DOCKER_COMPOSE := ${DOCKER_COMPOSE} --file .docker/docker-compose.console.yml
 endif
 
+STOP = exit=$$?; $(MAKE) stop; exit $$exit
+
 export IMAGE_TAG
 export TARGET
 
@@ -86,7 +88,7 @@ fix: ## Fix linting issues in the code
 test: export TARGET = dev
 test: ## Run all the tests
 	$(MAKE) start-db
-	${DOCKER_COMPOSE} run --rm app npm run test; exit=$$?; ${DOCKER_COMPOSE} down; exit $$exit
+	${DOCKER_COMPOSE} run --rm app npm run test; ${STOP}
 
 unit-test: export TARGET = dev
 unit-test: ## Run the unit tests
@@ -95,11 +97,11 @@ unit-test: ## Run the unit tests
 integration-test: export TARGET = dev
 integration-test: ## Run the integration tests
 	$(MAKE) start-db
-	${DOCKER_COMPOSE} run --rm app npm run test:integration; exit=$$?; ${DOCKER_COMPOSE} down; exit $$exit
+	${DOCKER_COMPOSE} run --rm app npm run test:integration; ${STOP}
 
 run:
 	$(MAKE) init-db
-	${DOCKER_COMPOSE} up --abort-on-container-exit --exit-code-from app; exit=$$?; ${DOCKER_COMPOSE} down; exit $$exit
+	${DOCKER_COMPOSE} up --abort-on-container-exit --exit-code-from app; ${STOP}
 
 dev: export TARGET = dev
 dev: export HYDRA_CONSOLE = true
