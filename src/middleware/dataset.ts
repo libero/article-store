@@ -1,6 +1,7 @@
 import {
-  DefaultContextExtends, DefaultStateExtends, ExtendableContext, Middleware, Next, Request, Response,
+  DefaultContextExtends, ExtendableContext, Next, Request, Response,
 } from 'koa';
+import { Middleware } from 'koa-compose';
 import {
   BaseQuad, DataFactory, DatasetCore, DatasetCoreFactory, Quad,
 } from 'rdf-js';
@@ -14,8 +15,7 @@ export type DatasetContext<Context extends DefaultContextExtends = DefaultContex
   DataFactoryContext<Context & { request: WithDataset<Request, Q>; response: WithDataset<Response, Q> },
   ExtendedDataFactory<Q>>;
 
-export default (): Middleware<DefaultStateExtends, DataFactoryContext<ExtendableContext,
-  ExtendedDataFactory<BaseQuad>>> => (
+export default (): Middleware<DataFactoryContext<ExtendableContext, ExtendedDataFactory<BaseQuad>>> => (
   async (context: DataFactoryContext<ExtendableContext, ExtendedDataFactory<BaseQuad>>, next: Next): Promise<void> => {
     Object.assign(context.request, { dataset: context.dataFactory.dataset() });
     Object.assign(context.response, { dataset: context.dataFactory.dataset() });
