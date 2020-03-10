@@ -1,0 +1,14 @@
+version: '3.4'
+
+services:
+  console:
+    image: tpluscode/hypermedia-app:version-0.12.2
+    environment:
+      API_ENTRYPOINTS: '{ "http://localhost:8080/": "Article Store" }'
+      BASE_URL: http://localhost:8080/
+    ports:
+      - '8081:8000'
+    healthcheck:
+      test: wget --quiet --tries=1 --spider http://localhost:8000/ || exit 1
+      interval: 5s
+      timeout: 1s
