@@ -1,5 +1,5 @@
 .DEFAULT_GOAL = help
-.PHONY: help install gitmodules build start start-db init-db stop wait-healthy sh exec logs watch lint fix test unit-test integration-test run dev prod
+.PHONY: help install gitmodules build start start-db init-db stop wait-healthy sh exec logs watch lint fix test unit-test integration-test api-validate api-test run dev prod
 
 SHELL = /usr/bin/env bash
 
@@ -17,6 +17,7 @@ DOCKER_COMPOSE := ${DOCKER_COMPOSE} --file .docker/docker-compose.console.yml
 endif
 
 STOP = exit=$$?; $(MAKE) stop; exit $$exit
+STOP_WITH_LOGS = exit=$$?; $(MAKE) logs; $(MAKE) stop; exit $$exit
 
 export IMAGE_TAG
 export TARGET
@@ -86,7 +87,7 @@ fix: ## Fix linting issues in the code
 	${DOCKER_COMPOSE} run --rm app npm run lint:fix
 
 test: export TARGET = dev
-test: ## Run all the tests
+test: ## Run all the Jest tests
 	$(MAKE) start-db
 	${DOCKER_COMPOSE} run --rm app npm run test; ${STOP}
 
@@ -98,6 +99,14 @@ integration-test: export TARGET = dev
 integration-test: ## Run the integration tests
 	$(MAKE) start-db
 	${DOCKER_COMPOSE} run --rm app npm run test:integration; ${STOP}
+
+api-validate: ## Run the API analysis
+	$(MAKE) start wait-healthy
+	docker run --rm --network host hydrofoil/hydra-analyser:0.2.0 http://localhost:8080/; ${STOP}
+
+api-test: ## Run the API tests
+	$(MAKE) start wait-healthy
+	docker run --rm --init --network host --mount "type=bind,source=$(CURDIR)/test/hypertest/,destination=/tests" hydrofoil/hypertest:_0.4.1 --baseUri http://localhost:8080/; ${STOP_WITH_LOGS}
 
 run:
 	$(MAKE) init-db
