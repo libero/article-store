@@ -12,6 +12,10 @@ endif
 
 DOCKER_COMPOSE = docker-compose --file .docker/docker-compose.yml --file .docker/docker-compose.${TARGET}.yml
 
+ifeq (${HYDRA_CONSOLE}, true)
+DOCKER_COMPOSE := ${DOCKER_COMPOSE} --file .docker/docker-compose.console.yml
+endif
+
 STOP = exit=$$?; $(MAKE) stop; exit $$exit
 
 export IMAGE_TAG
@@ -100,7 +104,8 @@ run:
 	${DOCKER_COMPOSE} up --abort-on-container-exit --exit-code-from app; ${STOP}
 
 dev: export TARGET = dev
-dev: ## Build and runs the container for development
+dev: export HYDRA_CONSOLE = true
+dev: ## Build and runs the container and Hydra console for development
 	$(MAKE) --jobs=4 install build stop
 	$(MAKE) run
 
