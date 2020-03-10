@@ -47,6 +47,18 @@ export default (): AppMiddleware => (
         name.addOut(hydra.readable, true);
         name.addOut(hydra.writeable, toRdf(false));
       });
+
+      entryPoint.addOut(hydra.supportedProperty, (collection: Clownface): void => {
+        collection.addOut(rdf.type, hydra.SupportedProperty);
+        collection.addOut(hydra.title, literal('Collection', 'en'));
+        collection.addOut(hydra.property, hydra.collection, (property: Clownface): void => {
+          property.addOut(rdf.type, rdf.Property);
+          property.addOut(rdf.type, hydra.Link);
+        });
+        collection.addOut(hydra.required, true);
+        collection.addOut(hydra.readable, true);
+        collection.addOut(hydra.writeable, toRdf(false));
+      });
     });
 
     graph.addOut(hydra.supportedClass, schema.Article, (article: Clownface): void => {
