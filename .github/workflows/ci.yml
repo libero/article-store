@@ -68,6 +68,7 @@ jobs:
             test: TARGET=prod make api-validate
           - target: prod
             test: TARGET=prod make api-test
+
     steps:
       - uses: actions/checkout@v1
         with:
