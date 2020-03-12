@@ -1,5 +1,4 @@
 {
-  "coverageAnalysis": "off",
   "files": [
     "src/**/*.ts",
     "test/**/*.ts"
@@ -9,7 +8,6 @@
     "!src/tools/**/*"
   ],
   "mutator": "typescript",
-  "packageManager": "npm",
   "reporters": [
     "clear-text",
     "progress"
@@ -17,6 +15,5 @@
   "testRunner": "jest",
   "thresholds": {
     "break": 100
-  },
-  "tsconfigFile": "tsconfig.json"
+  }
 }
