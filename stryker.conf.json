@@ -5,7 +5,8 @@
     "test/**/*.ts"
   ],
   "mutate": [
-    "src/**/*.ts"
+    "src/**/*.ts",
+    "!src/tools/**/*"
   ],
   "mutator": "typescript",
   "packageManager": "npm",
