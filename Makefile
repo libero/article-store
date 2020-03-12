@@ -110,7 +110,8 @@ api-test: ## Run the API tests
 
 mutation-test: export TARGET = dev
 mutation-test: ## Run the mutation tests
-	${DOCKER_COMPOSE} run --rm app npm run test:mutation
+	$(MAKE) start-db
+	${DOCKER_COMPOSE} run --rm app npm run test:mutation; ${STOP}
 
 run:
 	$(MAKE) init-db
