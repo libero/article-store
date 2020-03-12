@@ -15,5 +15,8 @@
     "progress"
   ],
   "testRunner": "jest",
+  "thresholds": {
+    "break": 100
+  },
   "tsconfigFile": "tsconfig.json"
 }
