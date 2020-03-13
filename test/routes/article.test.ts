@@ -1,5 +1,5 @@
 import { namedNode } from '@rdfjs/data-model';
-import createHttpError from 'http-errors';
+import createHttpError, { UnknownError } from 'http-errors';
 import { OK } from 'http-status-codes';
 import 'jest-rdf';
 import { Response } from 'koa';
@@ -7,6 +7,7 @@ import InMemoryArticles from '../../src/adaptors/in-memory-articles';
 import Articles from '../../src/articles';
 import { WithDataset } from '../../src/middleware/dataset';
 import article from '../../src/routes/article';
+import brokenObject from '../broken-object';
 import createContext from '../context';
 import createArticle from '../create-article';
 import runMiddleware, { NextMiddleware } from '../middleware';
@@ -16,6 +17,8 @@ const makeRequest = async (
 ): Promise<WithDataset<Response>> => (
   runMiddleware(article(), createContext({ articles, path }), next)
 );
+
+const errors: Array<UnknownError> = ['error', new Error('Some Error')];
 
 describe('article', (): void => {
   it('should return a successful response', async (): Promise<void> => {
@@ -44,6 +47,12 @@ describe('article', (): void => {
 
     await expect(response).rejects.toBeInstanceOf(createHttpError.NotFound);
     await expect(response).rejects.toHaveProperty('message', 'Article http://example.com/path-to/article/not-found could not be found');
+  });
+
+  it.each(errors)('should rethrow a %p error', async (error: UnknownError): Promise<void> => {
+    const response = makeRequest('path-to/article/not-found', brokenObject<Articles>(error));
+
+    await expect(response).rejects.toStrictEqual(error);
   });
 
   it('should call the next middleware', async (): Promise<void> => {
