@@ -41,7 +41,7 @@
     "@types/koa__router": "^8.0.2",
     "@types/node": "^12.12.30",
     "@types/parse-link-header": "^1.0.0",
-    "@types/pg": "^7.14.2",
+    "@types/pg": "^7.14.3",
     "@types/rdf-dataset-ext": "^1.0.0",
     "@types/rdf-dataset-indexed": "^0.4.3",
     "@types/rdf-js": "^2.0.11",
