@@ -1,13 +1,13 @@
 import { namedNode } from '@rdfjs/data-model';
 import createHttpError, { UnknownError } from 'http-errors';
 import { OK } from 'http-status-codes';
+import { any, mock } from 'jest-mock-extended';
 import 'jest-rdf';
 import { Response } from 'koa';
 import InMemoryArticles from '../../src/adaptors/in-memory-articles';
 import Articles from '../../src/articles';
 import { WithDataset } from '../../src/middleware/dataset';
 import article from '../../src/routes/article';
-import brokenObject from '../broken-object';
 import createContext from '../context';
 import createArticle from '../create-article';
 import runMiddleware, { NextMiddleware } from '../middleware';
@@ -50,7 +50,10 @@ describe('article', (): void => {
   });
 
   it.each(errors)('should rethrow a %p error', async (error: UnknownError): Promise<void> => {
-    const response = makeRequest('path-to/article/not-found', brokenObject<Articles>(error));
+    const articles = mock<Articles>();
+    articles.get.calledWith(any()).mockRejectedValue(error);
+
+    const response = makeRequest('path-to/article/not-found', articles);
 
     await expect(response).rejects.toStrictEqual(error);
   });
