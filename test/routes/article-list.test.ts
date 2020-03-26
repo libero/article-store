@@ -1,4 +1,4 @@
-import { namedNode, quad } from '@rdfjs/data-model';
+import { literal, namedNode, quad } from '@rdfjs/data-model';
 import { OK } from 'http-status-codes';
 import 'jest-rdf';
 import { Response } from 'koa';
@@ -6,7 +6,7 @@ import { toRdf } from 'rdf-literal';
 import InMemoryArticles from '../../src/adaptors/in-memory-articles';
 import Articles from '../../src/articles';
 import { WithDataset } from '../../src/middleware/dataset';
-import { hydra, rdf } from '../../src/namespaces';
+import { hydra, rdf, schema } from '../../src/namespaces';
 import articleList from '../../src/routes/article-list';
 import createContext from '../context';
 import createArticle from '../create-article';
@@ -23,14 +23,35 @@ describe('article list', (): void => {
     expect(response.status).toBe(OK);
   });
 
+  it('should return a collection', async (): Promise<void> => {
+    const { dataset } = await makeRequest();
+    const id = namedNode('http://example.com/path-to/article-list');
+
+    expect(dataset).toBeRdfDatasetContaining(
+      quad(id, rdf.type, hydra.Collection),
+      quad(id, hydra.title, literal('List of articles', 'en')),
+    );
+  });
+
+  it('should contain articles', async (): Promise<void> => {
+    const { dataset } = await makeRequest();
+    const id = namedNode('http://example.com/path-to/article-list');
+
+    expect(dataset).toBeRdfDatasetMatching({ subject: id, predicate: hydra.manages });
+
+    const [{ object: manages }] = dataset.match(id, hydra.manages);
+
+    expect(dataset).toBeRdfDatasetContaining(
+      quad(manages, hydra.property, rdf.type),
+      quad(manages, hydra.object, schema.Article),
+    );
+  });
+
   it('should return an empty list', async (): Promise<void> => {
     const { dataset } = await makeRequest();
     const id = namedNode('http://example.com/path-to/article-list');
 
-    expect(dataset).toBeRdfDatasetContaining(quad(id, rdf.type, hydra.Collection));
-    expect(dataset).toBeRdfDatasetMatching({ subject: id, predicate: hydra.title });
-    expect(dataset).toBeRdfDatasetMatching({ subject: id, predicate: hydra.manages });
-    expect(dataset).toBeRdfDatasetMatching({ subject: id, predicate: hydra.totalItems, object: toRdf(0) });
+    expect(dataset).toBeRdfDatasetContaining(quad(id, hydra.totalItems, toRdf(0)));
     expect(dataset).toBeRdfDatasetMatching({ subject: id, predicate: hydra.member }, 0);
   });
 
@@ -47,6 +68,10 @@ describe('article list', (): void => {
     const id = namedNode('http://example.com/path-to/article-list');
 
     expect(dataset).toBeRdfDatasetMatching({ subject: id, predicate: hydra.member }, 2);
+    expect(dataset).toBeRdfDatasetContaining(
+      quad(id, hydra.member, id1),
+      quad(id, hydra.member, id2),
+    );
   });
 
   it('should call the next middleware', async (): Promise<void> => {
