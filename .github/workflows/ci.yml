@@ -57,6 +57,7 @@ jobs:
           - make lint
           - make unit-test
           - make integration-test
+          - make mutation-test
           - TARGET=dev .github/smoke-test.sh
           - TARGET=prod .github/smoke-test.sh
           - TARGET=prod make api-validate

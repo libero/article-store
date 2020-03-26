@@ -1,0 +1,19 @@
+{
+  "files": [
+    "src/**/*.ts",
+    "test/**/*.ts"
+  ],
+  "mutate": [
+    "src/**/*.ts",
+    "!src/tools/**/*"
+  ],
+  "mutator": "typescript",
+  "reporters": [
+    "clear-text",
+    "progress"
+  ],
+  "testRunner": "jest",
+  "thresholds": {
+    "break": 100
+  }
+}

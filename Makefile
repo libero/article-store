@@ -108,6 +108,11 @@ api-test: ## Run the API tests
 	$(MAKE) start wait-healthy
 	docker run --rm --init --network host --mount "type=bind,source=$(CURDIR)/test/hypertest/,destination=/tests" hydrofoil/hypertest:_0.4.1 --baseUri http://localhost:8080/; ${STOP_WITH_LOGS}
 
+mutation-test: export TARGET = dev
+mutation-test: ## Run the mutation tests
+	$(MAKE) start-db
+	${DOCKER_COMPOSE} run --rm app npm run test:mutation; ${STOP}
+
 run:
 	$(MAKE) init-db
 	${DOCKER_COMPOSE} up --abort-on-container-exit --exit-code-from app; ${STOP}

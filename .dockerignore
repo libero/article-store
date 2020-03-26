@@ -1,6 +1,7 @@
 /.dependabot/
 /.github/
 /.scripts/
+/.stryker-tmp/
 /build/
 /Makefile
 /node_modules/
