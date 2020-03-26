@@ -4,18 +4,22 @@ import { parse as parseContentType } from 'content-type';
 import { CREATED, NO_CONTENT, OK } from 'http-status-codes';
 import 'jest-rdf';
 import { Context as JsonLdContext } from 'jsonld/jsonld-spec';
+import { ExtendableContext } from 'koa';
 import { addAll } from 'rdf-dataset-ext';
 import { Quad } from 'rdf-js';
-import { AppContext } from '../../src/app';
+import { DatasetContext } from '../../src/middleware/dataset';
 import jsonld from '../../src/middleware/jsonld';
 import { rdf, schema } from '../../src/namespaces';
-import createContext, { Headers } from '../context';
+import { createDatasetContext, Headers } from '../context';
 import { NextMiddleware } from '../middleware';
 
 const makeRequest = async (
-  body?: string, headers?: Headers, next: NextMiddleware = jest.fn(), jsonLdContext: JsonLdContext = {},
-): Promise<AppContext> => {
-  const context = createContext({ body, headers, method: body ? 'POST' : 'GET' });
+  body?: string,
+  headers?: Headers,
+  next: NextMiddleware<DatasetContext<ExtendableContext>> = jest.fn(),
+  jsonLdContext: JsonLdContext = {},
+): Promise<DatasetContext<ExtendableContext>> => {
+  const context = createDatasetContext<DatasetContext<ExtendableContext>>({ body, headers, method: body ? 'POST' : 'GET' });
 
   await jsonld(jsonLdContext)(context, (): Promise<void> => next(context));
 
@@ -23,7 +27,7 @@ const makeRequest = async (
 };
 
 const next = (body?: unknown, quads?: Array<Quad>, type?: string, status?: number) => (
-  async ({ response }: AppContext): Promise<void> => {
+  async ({ response }: DatasetContext<ExtendableContext>): Promise<void> => {
     if (body) {
       response.body = body;
     }

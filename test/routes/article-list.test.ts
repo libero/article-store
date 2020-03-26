@@ -8,12 +8,12 @@ import Articles from '../../src/articles';
 import { WithDataset } from '../../src/middleware/dataset';
 import { hydra, rdf, schema } from '../../src/namespaces';
 import articleList from '../../src/routes/article-list';
-import createContext from '../context';
+import { createAppContext } from '../context';
 import createArticle from '../create-article';
 import runMiddleware, { NextMiddleware } from '../middleware';
 
 const makeRequest = async (next?: NextMiddleware, articles?: Articles): Promise<WithDataset<Response>> => (
-  runMiddleware(articleList(), createContext({ articles }), next)
+  runMiddleware(articleList(), createAppContext({ articles }), next)
 );
 
 describe('article list', (): void => {
