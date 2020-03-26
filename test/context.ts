@@ -26,16 +26,16 @@ type ContextOptions = {
 
 type DataFactoryContextOptions<Factory extends DataFactory<BaseQuad> = DataFactory> = ContextOptions & {
   dataFactory: Factory;
-}
+};
 
 type DatasetContextOptions = ContextOptions & {
   dataset?: DatasetCore;
-}
+};
 
 type RouterContextOptions<State extends DefaultStateExtends = DefaultStateExtends,
-  Context extends DefaultContextExtends = DefaultContextExtends> = ContextOptions & {
+Context extends DefaultContextExtends = DefaultContextExtends> = ContextOptions & {
   router: Router<State, Context>;
-}
+};
 
 type AppOptions = DatasetContextOptions & {
   articles?: Articles;

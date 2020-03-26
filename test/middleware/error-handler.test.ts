@@ -10,7 +10,7 @@ import { createDatasetContext, ErrorListener } from '../context';
 import runMiddleware, { NextMiddleware, throwingNext } from '../middleware';
 
 const makeRequest = async (next?: NextMiddleware<ExtendableContext>, errorListener?: ErrorListener):
-  Promise<WithDataset<Response>> => (
+Promise<WithDataset<Response>> => (
   runMiddleware(errorHandler(), createDatasetContext({ errorListener }), next)
 );
 
