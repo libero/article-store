@@ -1,6 +1,7 @@
 import { namedNode } from '@rdfjs/data-model';
-import createHttpError from 'http-errors';
+import createHttpError, { UnknownError } from 'http-errors';
 import { OK } from 'http-status-codes';
+import { any, mock } from 'jest-mock-extended';
 import 'jest-rdf';
 import { Response } from 'koa';
 import InMemoryArticles from '../../src/adaptors/in-memory-articles';
@@ -16,6 +17,8 @@ const makeRequest = async (
 ): Promise<WithDataset<Response>> => (
   runMiddleware(article(), createAppContext({ articles, path }), next)
 );
+
+const errors: Array<UnknownError> = ['error', new Error('Some Error')];
 
 describe('article', (): void => {
   it('should return a successful response', async (): Promise<void> => {
@@ -44,6 +47,15 @@ describe('article', (): void => {
 
     await expect(response).rejects.toBeInstanceOf(createHttpError.NotFound);
     await expect(response).rejects.toHaveProperty('message', 'Article http://example.com/path-to/article/not-found could not be found');
+  });
+
+  it.each(errors)('should rethrow a %p error', async (error: UnknownError): Promise<void> => {
+    const articles = mock<Articles>();
+    articles.get.calledWith(any()).mockRejectedValue(error);
+
+    const response = makeRequest('path-to/article/not-found', articles);
+
+    await expect(response).rejects.toStrictEqual(error);
   });
 
   it('should call the next middleware', async (): Promise<void> => {
