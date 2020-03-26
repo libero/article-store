@@ -1,9 +1,9 @@
-import Router from '@koa/router';
+import Router, { RouterContext } from '@koa/router';
 import createHttpError from 'http-errors';
 import { OK } from 'http-status-codes';
 import { Context, Next, Response } from 'koa';
 import routing from '../../src/middleware/routing';
-import createContext from '../context';
+import { createRouterContext } from '../context';
 import runMiddleware, { NextMiddleware } from '../middleware';
 
 const createRouter = (): Router => {
@@ -18,9 +18,9 @@ const createRouter = (): Router => {
   return router;
 };
 
-const makeRequest = async (method: string, path: string, next?: NextMiddleware): Promise<Response> => {
+const makeRequest = async (method: string, path: string, next?: NextMiddleware<RouterContext>): Promise<Response> => {
   const router = createRouter();
-  const context = createContext({ method, path, router });
+  const context = createRouterContext({ method, path, router });
 
   return runMiddleware(routing(context.router), context, next);
 };

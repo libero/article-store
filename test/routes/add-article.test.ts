@@ -1,4 +1,4 @@
-import { namedNode } from '@rdfjs/data-model';
+import { blankNode, namedNode, quad } from '@rdfjs/data-model';
 import createHttpError from 'http-errors';
 import { CREATED } from 'http-status-codes';
 import all from 'it-all';
@@ -9,7 +9,7 @@ import InMemoryArticles from '../../src/adaptors/in-memory-articles';
 import Articles from '../../src/articles';
 import { schema } from '../../src/namespaces';
 import addArticle from '../../src/routes/add-article';
-import createContext from '../context';
+import { createAppContext } from '../context';
 import createArticle from '../create-article';
 import runMiddleware, { NextMiddleware } from '../middleware';
 
@@ -18,7 +18,7 @@ const makeRequest = async (
   next?: NextMiddleware,
   articles: Articles = new InMemoryArticles(),
 ): Promise<Response> => (
-  runMiddleware(addArticle(), createContext({ articles, dataset }), next)
+  runMiddleware(addArticle(), createAppContext({ articles, dataset }), next)
 );
 
 describe('add article', (): void => {
@@ -30,10 +30,32 @@ describe('add article', (): void => {
     expect(response.status).toBe(CREATED);
     expect(await articles.count()).toBe(1);
 
-    const [newId, dataset] = (await all(articles))[0];
+    const [[newId]] = (await all(articles));
 
     expect(response.get('Location')).toBe(newId.value);
-    expect(dataset).toBeRdfIsomorphic(article);
+  });
+
+  it('should updates the IDs', async (): Promise<void> => {
+    const articles = new InMemoryArticles();
+
+    const id = blankNode();
+    const partId = blankNode();
+    const article = createArticle({ id })
+      .add(quad(id, schema.hasPart, partId))
+      .add(quad(partId, schema.isPartOf, id));
+
+    const expectedId = namedNode('http://example.com/path-to/article');
+    const expectedPartId = blankNode();
+    const expectedArticle = createArticle({ id: expectedId })
+      .add(quad(expectedId, schema.hasPart, expectedPartId))
+      .add(quad(expectedPartId, schema.isPartOf, expectedId));
+
+    await makeRequest(article, undefined, articles);
+
+    const [[newId, newArticle]] = (await all(articles));
+
+    expect(newId).toStrictEqual(expectedId);
+    expect(newArticle).toBeRdfIsomorphic(expectedArticle);
   });
 
   it('should throw an error if it is not a schema:Article', async (): Promise<void> => {

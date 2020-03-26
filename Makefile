@@ -45,7 +45,7 @@ start-db:
 	${DOCKER_COMPOSE} up --detach db
 
 init-db:
-	$(MAKE) start-db
+	$(MAKE) start-db wait-healthy
 	${DOCKER_COMPOSE} run --rm app npm run ${INITDB}
 
 stop: ## Stop the containers
@@ -88,7 +88,7 @@ fix: ## Fix linting issues in the code
 
 test: export TARGET = dev
 test: ## Run all the Jest tests
-	$(MAKE) start-db
+	$(MAKE) start-db wait-healthy
 	${DOCKER_COMPOSE} run --rm app npm run test; ${STOP}
 
 unit-test: export TARGET = dev
@@ -97,7 +97,7 @@ unit-test: ## Run the unit tests
 
 integration-test: export TARGET = dev
 integration-test: ## Run the integration tests
-	$(MAKE) start-db
+	$(MAKE) start-db wait-healthy
 	${DOCKER_COMPOSE} run --rm app npm run test:integration; ${STOP}
 
 api-validate: ## Run the API analysis

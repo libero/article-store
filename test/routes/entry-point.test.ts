@@ -1,15 +1,15 @@
-import { namedNode, quad } from '@rdfjs/data-model';
+import { literal, namedNode, quad } from '@rdfjs/data-model';
 import { OK } from 'http-status-codes';
 import 'jest-rdf';
 import { Response } from 'koa';
 import { WithDataset } from '../../src/middleware/dataset';
 import { hydra, rdf, schema } from '../../src/namespaces';
 import entryPoint from '../../src/routes/entry-point';
-import createContext from '../context';
+import { createAppContext } from '../context';
 import runMiddleware, { NextMiddleware } from '../middleware';
 
 const makeRequest = async (next?: NextMiddleware): Promise<WithDataset<Response>> => (
-  runMiddleware(entryPoint(), createContext(), next)
+  runMiddleware(entryPoint(), createAppContext(), next)
 );
 
 describe('entry-point', (): void => {
@@ -23,9 +23,21 @@ describe('entry-point', (): void => {
     const { dataset } = await makeRequest();
     const id = namedNode('http://example.com/path-to/entry-point');
 
-    expect(dataset).toBeRdfDatasetContaining(quad(id, rdf.type, schema.EntryPoint));
-    expect(dataset).toBeRdfDatasetMatching({ subject: id, predicate: schema('name') });
-    expect(dataset).toBeRdfDatasetMatching({ subject: id, predicate: hydra.collection });
+    expect(dataset).toBeRdfDatasetContaining(
+      quad(id, rdf.type, schema.EntryPoint),
+      quad(id, schema('name'), literal('Article Store', 'en')),
+    );
+  });
+
+  it('should return the article list', async (): Promise<void> => {
+    const { dataset } = await makeRequest();
+    const id = namedNode('http://example.com/path-to/entry-point');
+    const collection = namedNode('http://example.com/path-to/article-list');
+
+    expect(dataset).toBeRdfDatasetContaining(
+      quad(id, hydra.collection, collection),
+      quad(collection, rdf.type, hydra.Collection),
+    );
   });
 
   it('should call the next middleware', async (): Promise<void> => {
