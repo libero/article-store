@@ -8,7 +8,7 @@ export type NextMiddleware<CustomT extends ExtendableContext = AppContext> =
 
 export const throwingNext = <CustomT extends ExtendableContext = AppContext>
   (error: UnknownError = new Error()): NextMiddleware<CustomT> => (): never => {
-    throw error;
+    throw error; // eslint-disable-line @typescript-eslint/no-throw-literal
   };
 
 export default async <CustomT extends ExtendableContext>(

@@ -49,6 +49,7 @@ COPY .eslintignore \
     .eslintrc.js \
     jest.config.js \
     tsconfig.json \
+    tsconfig.lint.json \
     ./
 COPY --from=npm-dev /app/ .
 COPY test/ test/
