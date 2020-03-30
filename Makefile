@@ -1,5 +1,5 @@
 .DEFAULT_GOAL = help
-.PHONY: help install gitmodules build start start-db init-db stop wait-healthy sh exec logs watch lint fix test unit-test integration-test api-validate api-test run dev prod
+.PHONY: help install gitmodules build start start-db init-db stop wait-healthy sh exec logs watch lint fix test unit-test integration-test api-validate api-test mutation-test run dev prod
 
 SHELL = /usr/bin/env bash
 
