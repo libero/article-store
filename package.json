@@ -17,7 +17,7 @@
     "koa-compose": "^4.1.0",
     "koa-logger": "^3.2.1",
     "p-event": "^4.1.0",
-    "pg-promise": "^10.4.4",
+    "pg-promise": "^10.5.0",
     "rdf-dataset-ext": "^1.0.0",
     "rdf-dataset-indexed": "^0.4.0",
     "rdf-literal": "^1.1.0",
