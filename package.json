@@ -32,7 +32,7 @@
     "@types/format-link-header": "^2.1.0",
     "@types/http-errors": "^1.6.3",
     "@types/it-all": "^1.0.0",
-    "@types/jest": "^25.1.4",
+    "@types/jest": "^25.2.1",
     "@types/jsonld": "^1.5.1",
     "@types/koa": "^2.11.3",
     "@types/koa-compose": "^3.2.5",
