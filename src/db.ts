@@ -1,6 +1,6 @@
-import { ConnectionConfig } from 'pg';
+import { IConnectionParameters } from 'pg-promise/typescript/pg-subset';
 
-const config: Readonly<ConnectionConfig> = {
+const config: Readonly<IConnectionParameters> = {
   user: process.env.DATABASE_USER,
   password: process.env.DATABASE_PASSWORD,
   database: process.env.DATABASE_NAME,
