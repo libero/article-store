@@ -1,4 +1,4 @@
-FROM node:12.16.1-alpine AS node
+FROM node:lts-alpine@sha256:12b2154fb459fa5f42c54771524609db041e7ef3465935d0ca82940d2d72669d AS node
 ENV NODE_OPTIONS --unhandled-rejections=strict
 WORKDIR /app
 
